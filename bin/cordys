@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+# CORDYS CRM CLI 工具
+# 使用 X-Access-Key / X-Secret-Key 进行鉴权
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+SKILL_DIR="$(dirname "$SCRIPT_DIR")"
+ENV_FILE="${SKILL_DIR}/.env"
+
+# ── 加载环境变量 ──────────────────────────────────────────────────────
+if [[ -f "$ENV_FILE" ]]; then
+  set -a
+  source "$ENV_FILE"
+  set +a
+fi
+
+CORDYS_CRM_DOMAIN="${CORDYS_CRM_DOMAIN:-https://www.cordys.cn}"
+
+# ── 辅助函数 ───────────────────────────────────────────────────────────
+die()  { echo "错误: $*" >&2; exit 1; }
+info() { echo ":: $*" >&2; }
+
+check_keys() {
+  [[ -n "${CORDYS_ACCESS_KEY:-}" ]] || die "未设置 CORDYS_ACCESS_KEY"
+  [[ -n "${CORDYS_SECRET_KEY:-}" ]] || die "未设置 CORDYS_SECRET_KEY"
+}
+
+# ── API 封装（Header Key 鉴权）────────────────────────────────────────
+api() {
+  local method="$1" url="$2"
+  shift 2
+
+  check_keys
+
+  curl -s -X "$method" "$url" \
+    -H "X-Access-Key: ${CORDYS_ACCESS_KEY}" \
+    -H "X-Secret-Key: ${CORDYS_SECRET_KEY}" \
+    -H "Content-Type: application/json" \
+    "$@"
+}
+
+api_form() {
+  local method="$1" url="$2"
+  shift 2
+
+  check_keys
+
+  curl -s -X "$method" "$url" \
+    -H "X-Access-Key: ${CORDYS_ACCESS_KEY}" \
+    -H "X-Secret-Key: ${CORDYS_SECRET_KEY}" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    "$@"
+}
+
+# ── CRM 辅助函数 ──────────────────────────────────────────────────────
+crm_base="${CORDYS_CRM_DOMAIN}"
+
+crm_list() {
+  local module="$1"; shift
+  local params=""
+  [[ $# -gt 0 ]] && params="?$1"
+  api GET "${crm_base}/${module}${params}"
+}
+
+crm_get() {
+  local module="$1" id="$2"
+  api GET "${crm_base}/${module}/${id}"
+}
+
+crm_search() {
+  local module="$1" json="${2:-}"
+  local path="global/search/${module}"
+  api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$json"
+}
+
+# ── 原始 API 调用 ─────────────────────────────────────────────────────
+# 用法: raw <METHOD> <完整URL或路径> [curl参数...]
+# 如果路径以 /crm 开头 → 使用 CRM 域名
+raw_api() {
+  local method="$1" path="$2"
+  shift 2
+
+  if [[ "$path" == http* ]]; then
+    api "$method" "$path" "$@"
+  else
+    api "$method" "${CORDYS_CRM_DOMAIN}${path}" "$@"
+  fi
+}
+
+# ── CLI 分发 ──────────────────────────────────────────────────────────
+usage() {
+  cat <<'EOF'
+cordys — CORDYS CRM CLI 工具（X-Access-Key 模式）
+
+使用方法:
+  cordys <命令> [参数...]
+
+CRM 操作:
+  crm list <模块> [参数]         列出记录
+  crm get <模块> <ID>            获取单条记录
+  crm search <模块> <条件>       搜索记录
+
+原始 API:
+  raw <方法> <路径> [curl参数...]
+
+示例:
+  cordys crm list Deals "page=1&per_page=5"
+  cordys crm search lead '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
+  cordys raw GET /settings/fields?module=account
+
+环境变量要求:
+  CORDYS_ACCESS_KEY
+  CORDYS_SECRET_KEY
+  CORDYS_CRM_DOMAIN
+
+支持的 CRM 模块:
+  lead, opportunity, account ...
+EOF
+}
+
+cmd="${1:-help}"
+shift || true
+
+case "$cmd" in
+  crm)
+    sub="${1:-}"; shift || die "crm 需要子命令"
+    case "$sub" in
+      list)    crm_list "$@" ;;
+      get)     crm_get "$@" ;;
+      search)  crm_search "$@" ;;
+      *)       die "未知的 crm 子命令: $sub" ;;
+    esac
+    ;;
+  raw)
+    raw_api "$@"
+    ;;
+  help|--help|-h)
+    usage
+    ;;
+  *)
+    die "未知命令: $cmd（尝试 cordys help）"
+    ;;
+esac
