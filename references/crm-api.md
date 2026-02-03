@@ -35,22 +35,33 @@
 - `filters`：具体字段筛选器（数组形式）
 
 ## API 端点
-| 方法       | 路径                        | 说明 |
-|----------|---------------------------| --- |
-| `POST`   | `/{module}/page`          | 分页列出模块记录 |
-| `GET`    | `/{module}/{id}`          | 获取单条记录详情 |
-| `POST`   | `/global/search/{module}` | 搜索记录（关键词+复杂条件） |
-
-> 示例完整 URL：`https://cordys-crm.fit2cloud.cn/global/search/lead`
+| 方法      | 路径                  | 说明               |
+|---------|---------------------|------------------|
+| `GET`   | `/{module}/view/view` | 分页列出模块视图记录       |
+| `GET`   | `/{module}/{id}`    | 获取单条记录详情         |
+| `POST`  | `/{module}/page`    | 列表分页记录（关键词+复杂条件） |
+| `POST`  | `/search/{module}` | 全局搜索记录（关键词+复杂条件） |
 
 ## 搜索示例
-### 关键词查询（默认结构）
+### 列表关键词查询（默认结构）
 ```bash
+# 列表基础名称查询
+cordys crm page lead "测试" 
+# 列表高级搜索
+cordys crm page account '{"current":1,"pageSize":50,"sort":{"followTime":"desc"},"combineSearch":{"searchMode":"AND","conditions":[{"field":"phone","operator":"equals","value":"18900001234"}]},"keyword":"","viewId":"ALL","filters":[]}'
 
-cordys crm search lead '{"current":1,"pageSize":50,"sort":{"followTime":"desc"},"combineSearch":{"searchMode":"AND","conditions":[{"field":"phone","operator":"equals","value":"18900001234"}]},"keyword":"","viewId":"ALL","filters":[]}'
 
 ```
-CLI 会自动填充 `current/pageSize/sort/combineSearch/viewId/filters`，只需要提供关键词即可。
+
+### 全局关键词查询（默认结构）
+```bash
+
+# 全局搜索
+cordys crm search account '{"current":1,"pageSize":50,"sort":{"followTime":"desc"},"combineSearch":{"searchMode":"AND","conditions":[{"field":"phone","operator":"equals","value":"18900001234"}]},"keyword":"","viewId":"ALL","filters":[]}'
+
+
+```
+CLI 会自动填充只需要提供关键词即可。
 
 ### 自定义请求体
 ```bash

@@ -56,7 +56,15 @@ CORDYS_CRM_DOMAIN=你的 CRM 域名 URL
 `CordysCRM` CLI也可以独立使用 — 你不需要 OpenClaw 就能使用它。
 
 ```bash
-cordys help                          # 所有命令
-cordys crm page lead                # 列出CRM线索
-cordys crm search lead '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
+cordys help                                  # 所有命令
+cordys crm view account                        # 列出列表视图
+cordys crm page lead "测试关键词"           # 自动构造分页/过滤结构并调用 /lead/page
+cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
+cordys crm search account '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xxx","viewId":"ALL","filters":[]}'
+cordys raw GET /settings/fields?module=account # 原始 API 调用
 ```
+
+### 搜索模式
+`crm search` / `crm page` 支持两种调用方式：
+1. **单个关键词**（例如 `cordys crm search lead "测试"`）：CLI 会自动构造标准请求体，包含 `current`/`pageSize`/`sort`/`combineSearch`/`viewId`/`filters`，并调用 `/lead/page`。
+2. **完整 JSON**：如果你需要自定义条件（分页、视图、filters、排序等），直接传完整 JSON 请求体（确保包含 `viewId` 和 `filters`）。

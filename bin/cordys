@@ -25,6 +25,24 @@ check_keys() {
   [[ -n "${CORDYS_SECRET_KEY:-}" ]] || die "未设置 CORDYS_SECRET_KEY"
 }
 
+page_payload() {
+  local keyword="${1:-}"
+  python3 - <<PY
+import json, sys
+keyword = sys.argv[1] if len(sys.argv) > 1 else ""
+payload = {
+  "current": 1,
+  "pageSize": 30,
+  "sort": {},
+  "combineSearch": {"searchMode": "AND", "conditions": []},
+  "keyword": keyword,
+  "viewId": "ALL",
+  "filters": []
+}
+print(json.dumps(payload, ensure_ascii=False))
+PY
+}
+
 # ── API 封装（Header Key 鉴权）────────────────────────────────────────
 api() {
   local method="$1" url="$2"
@@ -55,16 +73,28 @@ api_form() {
 # ── CRM 辅助函数 ──────────────────────────────────────────────────────
 crm_base="${CORDYS_CRM_DOMAIN}"
 
-crm_page() {
-  local module="$1"; shift
-  local params=""
-  [[ $# -gt 0 ]] && params="?$1"
-  api POST "${crm_base}/${module}${params}"
+crm_list() {
+  local module="$1" opts="${2:-}"
+  api GET "${crm_base}/${module}/view/list" $opts
 }
 
 crm_get() {
   local module="$1" id="$2"
   api GET "${crm_base}/${module}/${id}"
+}
+
+crm_page() {
+  local module="$1"
+  shift
+  local first="${1:-}"
+  local body
+  if [[ "$first" == \{* ]]; then
+    body="$first"
+  else
+    body=$(page_payload "${first:-}")
+  fi
+  local path="${module}/page"
+  api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$body"
 }
 
 crm_search() {
@@ -74,8 +104,6 @@ crm_search() {
 }
 
 # ── 原始 API 调用 ─────────────────────────────────────────────────────
-# 用法: raw <METHOD> <完整URL或路径> [curl参数...]
-# 如果路径以 /crm 开头 → 使用 CRM 域名
 raw_api() {
   local method="$1" path="$2"
   shift 2
@@ -96,16 +124,19 @@ cordys — CORDYS CRM CLI 工具（X-Access-Key 模式）
   cordys <命令> [参数...]
 
 CRM 操作:
-  crm page <模块> [参数]         列出记录
-  crm get <模块> <ID>            获取单条记录
-  crm search <模块> <条件>       搜索记录
+  crm view <模块> [参数]             列出视图记录（例：account/lead/opportunity）
+  crm get <模块> <ID>               获取单条记录详情
+  crm search <模块> [关键词|JSON]    全局搜索记录
+  crm page <模块> [关键词|JSON]      列表分页记录 /<module>/page （例：account/lead/opportunity）
 
 原始 API:
   raw <方法> <路径> [curl参数...]
 
 示例:
-  cordys crm page Deals "page=1&per_page=5"
-  cordys crm search lead '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
+  cordys crm view lead
+  cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
+  cordys crm page lead "测试"
+  cordys crm search account '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
   cordys raw GET /settings/fields?module=account
 
 环境变量要求:
@@ -114,27 +145,30 @@ CRM 操作:
   CORDYS_CRM_DOMAIN
 
 支持的 CRM 模块:
-  lead, opportunity, account ...
+  lead, opportunity, account
 EOF
 }
 
-cmd="${1:-help}"
+cmd="${1:-}"
 shift || true
 
 case "$cmd" in
   crm)
     sub="${1:-}"; shift || die "crm 需要子命令"
     case "$sub" in
-      page)    crm_page "$@" ;;
+      view)    crm_list "$@" ;;
       get)     crm_get "$@" ;;
       search)  crm_search "$@" ;;
+      page)    crm_page "$@" ;;
       *)       die "未知的 crm 子命令: $sub" ;;
     esac
     ;;
   raw)
-    raw_api "$@"
+    method="${1:-}"; shift || die "raw 需要 HTTP 方法"
+    path="${1:-}"; shift || die "raw 需要路径"
+    raw_api "$method" "$path" "$@"
     ;;
-  help|--help|-h)
+  help|-h|--help)
     usage
     ;;
   *)
