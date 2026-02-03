@@ -60,7 +60,7 @@ cordys raw GET /xxx?module=lead
 cordys crm list account
 
 # 根据名称搜索商机
-cordys crm search opportunity "{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}"
+cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
 
 # 自定义 raw API 请求
 cordys raw GET /opportunity/view/list
