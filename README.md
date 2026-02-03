@@ -57,6 +57,6 @@ CORDYS_CRM_DOMAIN=你的 CRM 域名 URL
 
 ```bash
 cordys help                          # 所有命令
-cordys crm list lead                # 列出CRM线索
+cordys crm page lead                # 列出CRM线索
 cordys crm search lead '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
 ```

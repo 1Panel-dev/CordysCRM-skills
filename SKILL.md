@@ -22,10 +22,10 @@ CORDYS_CRM_DOMAIN=你的 CRM 域名 URL
 
 ```bash
 # 列出任何模块的记录
-cordys crm list lead
-cordys crm list opportunity
-cordys crm list account
-cordys crm list pool
+cordys crm page lead
+cordys crm page opportunity
+cordys crm page account
+cordys crm page pool
 
 # 获取特定记录
 cordys crm get lead "1234567890"
@@ -57,12 +57,12 @@ cordys raw GET /xxx?module=lead
 ### 销售分析查询等
 ```bash
 # 列出一页客户
-cordys crm list account
+cordys crm page account
 
 # 根据名称搜索商机
 cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
 
 # 自定义 raw API 请求
-cordys raw GET /opportunity/view/list
+cordys raw GET /opportunity/view/page
 
 ```

@@ -55,11 +55,11 @@ api_form() {
 # ── CRM 辅助函数 ──────────────────────────────────────────────────────
 crm_base="${CORDYS_CRM_DOMAIN}"
 
-crm_list() {
+crm_page() {
   local module="$1"; shift
   local params=""
   [[ $# -gt 0 ]] && params="?$1"
-  api GET "${crm_base}/${module}${params}"
+  api POST "${crm_base}/${module}${params}"
 }
 
 crm_get() {
@@ -96,7 +96,7 @@ cordys — CORDYS CRM CLI 工具（X-Access-Key 模式）
   cordys <命令> [参数...]
 
 CRM 操作:
-  crm list <模块> [参数]         列出记录
+  crm page <模块> [参数]         列出记录
   crm get <模块> <ID>            获取单条记录
   crm search <模块> <条件>       搜索记录
 
@@ -104,7 +104,7 @@ CRM 操作:
   raw <方法> <路径> [curl参数...]
 
 示例:
-  cordys crm list Deals "page=1&per_page=5"
+  cordys crm page Deals "page=1&per_page=5"
   cordys crm search lead '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
   cordys raw GET /settings/fields?module=account
 
@@ -125,7 +125,7 @@ case "$cmd" in
   crm)
     sub="${1:-}"; shift || die "crm 需要子命令"
     case "$sub" in
-      list)    crm_list "$@" ;;
+      page)    crm_page "$@" ;;
       get)     crm_get "$@" ;;
       search)  crm_search "$@" ;;
       *)       die "未知的 crm 子命令: $sub" ;;
