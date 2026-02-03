@@ -65,6 +65,12 @@ cordys raw GET /settings/fields?module=account # 原始 API 调用
 ```
 
 ### 搜索模式
-`crm search` / `crm page` 支持两种调用方式：
-1. **单个关键词**（例如 `cordys crm search lead "测试"`）：CLI 会自动构造标准请求体，包含 `current`/`pageSize`/`sort`/`combineSearch`/`viewId`/`filters`，并调用 `/lead/page`。
+ `crm page` 列表页搜索支持两种调用方式：
+1. **单个关键词**（例如 `cordys crm page lead "测试"`）：CLI 会自动构造标准请求体，包含 `current`/`pageSize`/`sort`/`combineSearch`/`viewId`/`filters`，并调用 `/lead/page`。
 2. **完整 JSON**：如果你需要自定义条件（分页、视图、filters、排序等），直接传完整 JSON 请求体（确保包含 `viewId` 和 `filters`）。
+
+`crm search` 全局搜索
+**仅支持完整 JSON**：（例如 `'{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'`）：CLI 会自动构造标准请求体，包含 `current`/`pageSize`/`sort`/`combineSearch`/`viewId`/`filters`，并调用 `/lead/page`。
+
+
+
