@@ -87,7 +87,7 @@ cordys raw GET /settings/fields?module=account
 | “查看 lead #ID” | `cordys crm get lead ID` |
 | “创建联系人” | `cordys crm create Contacts '{"data":[{…}]}'` |
 
-你也可以直接给出 JSON body，让我原样传给 `search`/`page`；也可以要求我先构造基础 structure 再根据你的 “条件” 细化。
+如果你是技术佬也可以直接给出 JSON body，让 OpenClaw 原样传给 `search`/`page`；也可以要求先构造基础 structure 再根据你的 “条件” 细化。
 
 ## 深度操作参考
 - 查看 module 字段定义：`cordys raw GET /settings/fields?module={模块}`
