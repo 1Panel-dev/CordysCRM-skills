@@ -1,16 +1,26 @@
 # CORDYS CRM API 参考
 
-## 概览
-这是 Cordys CRM API 的简要参考，涵盖线索（lead）、客户（account）、商机（opportunity）模块的常见用法。所有请求均需通过 `X-Access-Key` + `X-Secret-Key` 鉴权，并以你的 `CORDYS_CRM_DOMAIN` 为基准域名。
+此文档聚焦 Cordys CRM CLI 背后的原始 API，帮助 OpenClaw 理解请求结构、标准参数、模块定义、错误处理和最佳实践。
+无论是让 OpenClaw 助手自动构建 `cordys crm` 命令，还是自己发起 `cordys raw` 请求，都能从这里快速查到细节。
 
-## 模块清单
-| 模块名称 | 描述 |
+---
+
+## 1. 模块概览
+| 模块 | 描述 |
 | --- | --- |
-| `lead` | 线索（潜在客户）记录 |
-| `account` | 客户/公司信息 |
-| `opportunity` | 商机数据 |
+| `lead` | 潜在客户（线索）记录，用于销售团队初步跟进。|
+| `account` | 客户/公司基础信息，包含行业、地点、负责人等。|
+| `opportunity` | 商机（机会）记录，表示销售流程中的具体案子。|
+| `pool` | 公共资源池（可选），用于共享线索或商机。|
+| 其他模块 | 可以根据 API 文档继续扩展，如 `task`、`contact`、`product` 等。|
 
-## 通用请求体结构
+你在自然语言中提到的模块名，扭转成命令时就能直接定位到本文档中所列的模块。
+
+---
+
+## 2. 通用请求结构
+Cordys CRM 的分页和搜索均遵循以下 JSON 模板：
+
 ```json
 {
   "current": 1,
@@ -20,55 +30,99 @@
     "searchMode": "AND",
     "conditions": []
   },
-  "keyword": "测试",
+  "keyword": "",
   "viewId": "ALL",
   "filters": []
 }
 ```
-字段解释：
-- `current`：页码，从 1 开始
-- `pageSize`：每页记录数
-- `sort`：排序对象（例如 `{"createTime":"desc"}`）
-- `combineSearch`：组合查询结构，可定义多个条件
-- `keyword`：全局关键词（名称、电话、说明等）
-- `viewId`：视图 ID，默认 `ALL`
-- `filters`：具体字段筛选器（数组形式）
 
-## API 端点
-| 方法      | 路径                  | 说明               |
-|---------|---------------------|------------------|
-| `GET`   | `/{module}/view/view` | 分页列出模块视图记录       |
-| `GET`   | `/{module}/{id}`    | 获取单条记录详情         |
-| `POST`  | `/{module}/page`    | 列表分页记录（关键词+复杂条件） |
-| `POST`  | `/search/{module}` | 全局搜索记录（关键词+复杂条件） |
+**字段含义：**
+- `current`：页码（从 1 开始），用于 `page` 命令。
+- `pageSize`：每页条数，默认 30。
+- `sort`：排序对象，例如 `{"followTime":"desc"}`。
+- `combineSearch.conditions`：组合筛选条件，支持多个 `field/operator/value`。
+- `keyword`：全局关键词，模糊匹配名称/说明/电话等。
+- `viewId`：视图 ID（例如 `ALL`、`MY`），通常根据用户意图调用视图 API 获取对应ID。
+- `filters`：与 `conditions` 类似，但用于更加精细的字段级过滤，CLI 通常会同步构造。
 
-## 搜索示例
-### 列表关键词查询（默认结构）
+CLI 会在你不提供某些字段时自动填默认值；如果你直接给出 JSON，OpenClaw 保持结构并补全缺省字段。
+
+---
+
+## 3. 常用 HTTP 端点
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| `GET` | `/{module}/view/view` | 
+| `GET` | `/{module}/{id}` | 获取单条记录详情。 |
+| `POST` | `/{module}/page` | 发送上面模型的 JSON 进行分页查询（支持复杂过滤 + 关键词）。 |
+| `POST` | `/search/{module}` | 全局搜索，JSON body 结构同上，但会额外在多个字段里查关键词。 |
+| `POST` / `PUT` / `DELETE` | `/{module}` / `/{module}/{id}` | 创建、更新、删除记录，body 限定 `{"data":[{...}]}` 结构。 |
+
+> `cordys raw {METHOD} {PATH}` 就是让你任意组合上述请求，并手动填写 body/headers。
+
+---
+
+## 4. 请求示例
+### 分页列出商机（默认结构）
 ```bash
-# 列表基础名称查询
-cordys crm page lead "测试" 
-# 列表高级搜索
-cordys crm page account '{"current":1,"pageSize":50,"sort":{"followTime":"desc"},"combineSearch":{"searchMode":"AND","conditions":[{"field":"phone","operator":"equals","value":"18900001234"}]},"keyword":"","viewId":"ALL","filters":[]}'
-
-
+cordys crm page opportunity "{\"current\":1,\"pageSize\":20,\"keyword\":\"线索\"}"
 ```
+会调用 `POST /opportunity/page`，body 同上。
 
-### 全局关键词查询（默认结构）
+### 高级 search（带 filters + sort）
 ```bash
-
-# 全局搜索
-cordys crm search account '{"current":1,"pageSize":50,"sort":{"followTime":"desc"},"combineSearch":{"searchMode":"AND","conditions":[{"field":"phone","operator":"equals","value":"18900001234"}]},"keyword":"","viewId":"ALL","filters":[]}'
-
-
+cordys crm search account '{
+  "current":1,
+  "pageSize":40,
+  "keyword":"云",
+  "sort":{"followTime":"desc"},
+  "combineSearch":{
+    "searchMode":"AND",
+    "conditions":[
+      {"field":"industry","operator":"equals","value":"科技"}
+    ]
+  },
+  "filters":[
+    {"field":"province","operator":"equals","value":"广东"}
+  ]
+}'
 ```
-CLI 会自动填充只需要提供关键词即可。
+CLI 会请求 `/search/account`，按关键词+filters 精确过滤。
 
-### 自定义请求体
+### 获取某条记录
+```
+cordys crm get lead 987654321
+```
+等价于 `GET /lead/987654321`。
+
+---
+
+## 5. 创建/更新/删除（data 结构）--规划中
 ```bash
-cordys crm search account '{"current":1,"pageSize":50,"sort":{"followTime":"desc"},"combineSearch":{"searchMode":"AND","conditions":[{"field":"phone","operator":"equals","value":"18900001234"}]},"keyword":"","viewId":"ALL","filters":[]}'
+cordys crm create opportunity '{
+  "data":[
+    {
+      "name":"新客户项目",
+      "stage":"Qualification",
+      "amount":150000
+    }
+  ]
+}'
 ```
+更新需要 `id`：
+```bash
+cordys crm update opportunity 123456 '{"data":[{"stage":"Proposal"}]}'
+```
+删除：
+```
+cordys crm delete opportunity 123456
+```
+这些命令背后是 `POST /opportunity`、`PUT /opportunity/{id}`、`DELETE /opportunity/{id}`。
 
-## 响应结构
+---
+
+## 6. 响应解析
+所有调用返回统一结构：
 ```json
 {
   "code": 100200,
@@ -82,24 +136,44 @@ cordys crm search account '{"current":1,"pageSize":50,"sort":{"followTime":"desc
   }
 }
 ```
-`list` 中每条记录常见字段：`id`、`name`、`owner`、`ownerName`、`products`、`phone`、`moduleFields`、`followTime`，以实际返回为准。
+正常响应 `code=100200`。异常时会返回 `ACCESS_DENIED`、`INVALID_KEY`、`INVALID_REQUEST` 等，`message` 字段含具体原因。
 
-## 错误示例
-```json
-{
-  "code": "INVALID_KEY",
-  "message": "无效的 Access Key",
-  "details": {}
-}
+---
+
+## 7. 错误处理建议
+1. **Token/密钥错误**：`INVALID_KEY`、`ACCESS_DENIED` → 检查 `CORDYS_ACCESS_KEY`/`CORDYS_SECRET_KEY`。
+2. **参数问题**：`INVALID_REQUEST`、`INVALID_FILTER` → 检查 JSON 格式、字段名拼写。
+3. **404/资源不存在**：要么 `id` 写错，要么没有访问权限。
+4. **500+**：建议记录 `messageDetail` 并稍后重试。
+
+对于任何非 `100200` 响应，我会把 `code`+`message` 反馈给你。
+
+---
+
+## 8. 最佳实践
+- **分页不要太大**：大于 200 会容易超时。
+- **关键词 + filters 组合**：先用 `keyword` 粗筛，再在 `combineSearch.conditions` 中加精确字段。
+- **排序字段稳定**：使用 `sort` 降序 `followTime` 或 `createTime`，避免每次结果顺序浮动。
+- **多条件用 `combineSearch`**：传多个 `conditions` 会自动 AND（或 OR，取决于 `searchMode`）。
+- **控制层级**：JSON body 里按模块字段命名（大小写敏感）。
+
+---
+
+## 9. 附录：字段/filters 例子
+| 字段 | 描述 | 示例值 |
+| --- | --- | --- |
+| `name` | 名称/标题 | `"Acme 商机"` |
+| `stage` | 商机阶段 | `"Qualification"` |
+| `owner` | 负责人 ID | `"user123"` |
+| `industry` | 行业 | `"科技"` |
+| `province` | 省份 | `"上海"` |
+
+过滤示例：
 ```
-常见错误码还有 `ACCESS_DENIED`、`INVALID_REQUEST` 等，`message` 会说明原因。
+{"field":"stage","operator":"equals","value":"Closed Won"}
+```
+更多字段可以在 CLI 输出的 `moduleFields` 里查看或用 `cordys raw GET /settings/fields?module={module}` 查询。
 
-## 最佳实践
-1. **分页**：处理大数据时用 `current/pageSize` 控制，避免一次拉取太多。
-2. **关键词 + filters 组合**：先用关键词粗筛，再用 `filters` 精细过滤。
-3. **排序**：通过 `sort` 让结果稳定（如按 `followTime` 降序）。
-4. **错误处理**：对 `code` 非 `100200` 的响应做重试或报警。
-5. **密钥管理**：不要把 `Access Key`/`Secret Key` 提交到版本库。
+---
 
-## 参考链接
-- [Cordys CRM 官方文档](https://cordys.cn/docs/)
+后续扩展，在 `references/` 下添加更多模块的字段列表（例如 `contacts.md`、`tasks.md`）或写出常用 JSON 模板。
