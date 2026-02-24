@@ -106,7 +106,7 @@ cron.add({
   "sessionTarget": "isolated",
   "payload": {
     "kind": "agentTurn",
-    "message": "cd /Users/zhaoyong/work/CordysCRM-skills && cordys crm page opportunity \"{\"current\":1,\"pageSize\":30,\"keyword\":\"Closed Won\"}\""
+    "message": "cd /work/CordysCRM-skills && cordys crm page opportunity \"{\"current\":1,\"pageSize\":30,\"keyword\":\"Closed Won\"}\""
   }
 })
 ```
