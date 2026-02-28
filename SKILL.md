@@ -29,15 +29,27 @@ cordys crm page account
 cordys crm page pool
 cordys crm get lead 1234567890
 cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
-
-# 跟进计划与记录（通用查询）
-#通过 `cordys crm follow plan|record <module> <json>` 调用 `/lead|account/.../follow/plan|record/page` 接口，JSON body 支持 `sourceId`、`keyword`、分页等参数。只提供关键词时 CLI 会自动补齐 `current=1`、`pageSize=30` 等默认值。
 cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
 cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
-
 cordys raw GET /settings/fields?module=account
 ```
 
+## 跟进计划与记录（自然语言 -> CLI）
+当用户想要查看某条潜在客户、客户或商机的跟进计划/记录时，用 `follow plan|record`，示例命令如下：
+```
+cordys crm follow plan <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+cordys crm follow record <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+```
+- `sourceId` 必须指向目标模块的 ID，否则接口只会返回空列表。
+- `status` 只对计划有效，可传 `ALL`、`UNFINISHED` 等，`myPlan` 控制是否只看本人创建。
+- 默认只传关键词时 CLI 会当 keyword，自动补齐 `current=1,pageSize=30,sort={},filters=[]`；任何定制字段必须在 JSON body 中显式传入。
+
+常见自然语言示例：
+- “帮我看 lead 9276 的跟进记录。”
+- “列出 account 1751 的所有未完成跟进计划。”
+- “关键词‘合同’筛出与 opportunity 相关的跟进记录。”
+
+如果用户以中文描述“跟进计划”“跟进记录”，优先将意图映射到 `cordys crm follow plan` 或 `follow record`，并补全 body（`sourceId`、`status`/`myPlan`）后再调用。
 
 ## 环境变量（必须）
 ```bash
@@ -59,9 +71,9 @@ CORDYS_CRM_DOMAIN=https://your-cordys-domain
 | 列出/分页/分页查看 | `corsys crm page {module}`，填 `keyword` 或 `filters` |
 | 搜索/查找/筛选 | `cordys crm search {module}`（构造 `combineSearch`） |
 | 查看/打开/详情 | `cordys crm get {module} {id}` |
-| 创建/添加/新建 | `cordys crm create {module} '{"data":[{...}]}'` |
-| 更新/改变/修改 | `cordys crm update {module} {id} '{"data":[{...}]}'` |
-| 删除/移除 | `cordys crm delete {module} {id}` |
+| 跟进计划/记录 | `cordys crm follow plan|record <module>` （补齐 `sourceId`、`status`、`myPlan`） |
+
+推荐让用户明确 “sourceId” + “status/myPlan” 这类字段，而不是只说“跟进”。
 
 ## 兼容 JSON 请求示例
 在用户给出 JSON 字符串时，保持原样传递，避免再次 escape；若已提供结构但缺部分字段，自动补齐 `current`、`pageSize`、`combineSearch` 等默认值。

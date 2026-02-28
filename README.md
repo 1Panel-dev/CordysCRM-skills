@@ -37,10 +37,11 @@ CORDYS_CRM_DOMAIN=https://{你的域名}
 ```
 
 4. 运行 `cordys help` 确认 CLI 可用
-5. 在 OpenClaw 会话中以自然语言告诉我你想要做什么，我会把它翻译成命令
+5. 你也可以直接在仓库根目录运行 `./bin/cordys`（会继承 `.env`）来验证连接是否成功，若 domain 包含非标准路径（例如 `https://crm.example.com/api`），请在 `.env` 中完整写出。
+6. 在 OpenClaw 会话中以自然语言告诉我你想要做什么，我会把它翻译成命令
 
 ## CLI 常用命令
-```bash
+```
 # 分页列表
 cordys crm page lead
 cordys crm page opportunity
@@ -63,43 +64,48 @@ cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AN
 cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
 cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
 
-# 跟进计划与记录（通用查询）
-对于商机/客户/潜在客户的跟进计划或跟进记录，你可以通过 `follow` 子命令调用对应的分页接口：
-
-cordys crm follow plan <module> <json>
-cordys crm follow record <module> <json>
-
-例如：
-- `cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'` 会调用 `/lead/follow/plan/page`。
-- `cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'` 会调用 `/account/follow/record/page`。
-默认情况下，如果你只提供关键词，CLI 会自动补齐分页结构（current=1、pageSize=30等）。
 # 原始 API 调用
 cordys raw GET /settings/fields?module=account
-
 ```
 
+## 跟进计划与记录（通用查询）
+商机、客户、潜在客户的跟进计划和跟进记录都可以复用同一套接口。
+```
+cordys crm follow plan <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+cordys crm follow record <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+```
+
+- `sourceId` 指向某条商机/客户/线索的唯一 ID，必须传入才能拉到与之关联的计划或记录；只提供 `keyword` 时只做关键字模糊搜索，无法替代 `sourceId`。
+- `status` 面向 `plan` 接口，支持 `ALL`、`UNFINISHED`、`FINISHED` 等（以 Cordys 枚举为准），用来控制计划流转；`myPlan` 控制是否只看本人创建的计划。
+- `page_payload` 默认只补齐 `current/pageSize/sort/filters`，所以当你希望筛选特定 `sourceId`/`status`/`myPlan`，必须以 JSON body 形式传入完整字段。
+
+默认情况下，如果你只提供关键词，CLI 会自动补齐分页结构（current=1、pageSize=30、sort={}、filters=[]）。
 
 ## 如何告诉 AI 你的意图（让提示词更清晰）
 
 | 意图类别 | 示例
 | --- | --- |
 | 列表/分页 | “帮我列出本月新增的商机，按金额排序，每页 20 条。” |
-| 全局搜索 | “搜索所有账户，关键词是‘铁塔’，只看跟进中状态。”
-| 获取详情 | “打开编号 xxx 客户的潜在客户详情。”
+| 全局搜索 | “搜索所有账户，关键词是‘铁塔’，只看跟进中状态。” |
+| 获取详情 | “打开编号 xxx 客户的潜在客户详情。” |
 | 创建/更新 | “创建一个新客户：名称`Acme Inc.`，行业`制造`，负责人`李雷`。” |
-| 删除/其他 | “删除名称 为 xxx 的潜在客户。”
+| 删除/其他 | “删除名称 为 xxx 的潜在客户。” |
+| 跟进计划/记录 | “帮我找出 lead 9276 相关的未完成计划，按创建时间倒序。” |
 
 > 推荐模板：
-> 1. 明确“做什么”（列表/搜索/创建/更新/删除）
+> 1. 明确“做什么”（列表/搜索/创建/更新/删除/跟进）
 > 2. 指定“哪个模块”（lead/account/opportunity/其他）
 > 3. 说明“条件/过滤/关键词”或要修改的字段
-> 4. 说明“输出格式”或“分页”信息（可选）
+> 4. 说明“分页/命令”信息（例如 `current`、`pageSize`、`follow plan` 等）
+>
+> 如果要调用跟进接口，记得带上 `sourceId`，并指明是否需要 `status`-类过滤或只查看自己的计划/记录（`myPlan`）。
 
 ### 例子（Assistant 可直接转换成命令）
 - “查看本周创建的所有潜在客户，分页 30 条，按创建时间倒序。”
 - “搜索 opportunity 中名称里包含‘征信’的记录，只返回前 10 条。”
 - “把商机 112233 的阶段改为‘商务洽谈’，金额更新为 180000。”
 - “列出所有上海地区客户并导出手机号。”
+- “帮我看 lead 9276 相关的跟进记录。”
 
 ## 键值映射（提示词 → 实际命令）
 | 用户说法 | CLI/API 推理 |
@@ -108,6 +114,7 @@ cordys raw GET /settings/fields?module=account
 | “搜索账户” + “关键词” | `cordys crm search account {…}`，把关键词设置在 JSON 里 |
 | “查看 lead #ID” | `cordys crm get lead ID` |
 | “创建联系人” | `cordys crm create Contacts '{"data":[{…}]}'` |
+| “查看某条线索的跟进计划” | `cordys crm follow plan lead '{"sourceId":"...","status":"ALL"}'` |
 
 如果你是技术佬也可以直接给出 JSON body，让 OpenClaw 原样传给 `search`/`page`；也可以要求先构造基础 structure 再根据你的 “条件” 细化。
 
