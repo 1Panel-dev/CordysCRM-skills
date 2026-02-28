@@ -103,6 +103,16 @@ crm_search() {
   api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$json"
 }
 
+# 获取组织架构
+crm_org() {
+  api GET "${crm_base}/department/tree"
+}
+
+# 根据部门ID获取成员
+crm_members() {
+  api POST "${crm_base}/user/list" -d "$1"
+}
+
 # ── 原始 API 调用 ─────────────────────────────────────────────────────
 raw_api() {
   local method="$1" path="$2"
@@ -128,6 +138,8 @@ CRM 操作:
   crm get <模块> <ID>               获取单条记录详情
   crm search <模块> [关键词|JSON]    全局搜索记录
   crm page <模块> [关键词|JSON]      列表分页记录 /<module>/page （例：account/lead/opportunity）
+  crm org                          获取组织架构树
+  crm members <部门IDs>             获取部门成员列表
 
 原始 API:
   raw <方法> <路径> [curl参数...]
@@ -137,6 +149,8 @@ CRM 操作:
   cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
   cordys crm page lead "测试"
   cordys crm search account '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
+  cordys crm org
+  cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
   cordys raw GET /settings/fields?module=account
 
 环境变量要求:
@@ -160,6 +174,8 @@ case "$cmd" in
       get)     crm_get "$@" ;;
       search)  crm_search "$@" ;;
       page)    crm_page "$@" ;;
+      org)     crm_org ;;
+      members) crm_members "$@" ;;
       *)       die "未知的 crm 子命令: $sub" ;;
     esac
     ;;

@@ -53,6 +53,12 @@ cordys crm get lead "1234567890"
 # 搜索（需要完整 JSON body）
 cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
 
+# 获取组织架构，需要有系统管理权限才能调用
+cordys crm org
+
+# 获取部门成员列表
+cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
+
 # 原始 API 调用
 cordys raw GET /settings/fields?module=account
 ```
