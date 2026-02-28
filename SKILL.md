@@ -29,8 +29,15 @@ cordys crm page account
 cordys crm page pool
 cordys crm get lead 1234567890
 cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
+
+# 跟进计划与记录（通用查询）
+#通过 `cordys crm follow plan|record <module> <json>` 调用 `/lead|account/.../follow/plan|record/page` 接口，JSON body 支持 `sourceId`、`keyword`、分页等参数。只提供关键词时 CLI 会自动补齐 `current=1`、`pageSize=30` 等默认值。
+cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+
 cordys raw GET /settings/fields?module=account
 ```
+
 
 ## 环境变量（必须）
 ```bash

@@ -59,9 +59,25 @@ cordys crm org
 # 获取部门成员列表
 cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
 
+# 跟进计划/记录查询
+cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+
+# 跟进计划与记录（通用查询）
+对于商机/客户/潜在客户的跟进计划或跟进记录，你可以通过 `follow` 子命令调用对应的分页接口：
+
+cordys crm follow plan <module> <json>
+cordys crm follow record <module> <json>
+
+例如：
+- `cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'` 会调用 `/lead/follow/plan/page`。
+- `cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'` 会调用 `/account/follow/record/page`。
+默认情况下，如果你只提供关键词，CLI 会自动补齐分页结构（current=1、pageSize=30等）。
 # 原始 API 调用
 cordys raw GET /settings/fields?module=account
+
 ```
+
 
 ## 如何告诉 AI 你的意图（让提示词更清晰）
 
