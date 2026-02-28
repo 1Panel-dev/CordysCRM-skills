@@ -22,7 +22,8 @@
 ```
 cordys help
 cordys crm page lead
-cordys crm page opportunity
+cordys crm page opportunity  # 支持关键词参数，例如 `cordys crm page lead "测试"` 会将 `keyword` 填入分页 body。
+
 cordys crm page account
 cordys crm page pool
 cordys crm get lead 1234567890

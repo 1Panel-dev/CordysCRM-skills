@@ -48,6 +48,7 @@ cordys crm page opportunity
 cordys crm page account
 cordys crm page pool
 
+(支持 keyword 参数，如 `cordys crm page lead "测试"`，会把关键词填入 body 的 `keyword` 字段。)
 # 获取单条记录
 cordys crm get lead "1234567890"
 
