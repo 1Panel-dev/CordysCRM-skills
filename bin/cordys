@@ -119,6 +119,18 @@ crm_follow_page() {
   api POST "${crm_base}/${module}/follow/${kind}/page" -d "$body"
 }
 
+# 查询产品
+crm_product() {
+  local keyword="${1:-}"
+  local body
+  if [[ "$keyword" == \{* ]]; then
+    body="$keyword"
+  else
+    body=$(page_payload "${keyword}")
+  fi
+  api POST "${CORDYS_CRM_DOMAIN}/field/source/product" -d "$body"
+}
+
 # ── 原始 API 调用 ─────────────────────────────────────────────────────
 raw_api() {
   local method="$1" path="$2"
@@ -147,6 +159,7 @@ CRM 操作:
   crm org                          获取组织架构树
   crm members <部门IDs>             获取部门成员列表
   crm follow <plan|record> <模块> [关键词|JSON]  查询跟进计划或跟进记录
+  crm product [关键词|JSON]      查询产品列表
 
 原始 API:
   raw <方法> <路径> [curl参数...]
@@ -158,6 +171,9 @@ CRM 操作:
   cordys crm search account '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
   cordys crm org
   cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
+  cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+  cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+  cordys crm product "测试"
   cordys raw GET /settings/fields?module=account
 
 环境变量要求:
@@ -182,6 +198,7 @@ case "$cmd" in
       search)  crm_search "$@" ;;
       page)    crm_page "$@" ;;
       org)     crm_org ;;
+      product)  crm_product "$@" ;;
       members) crm_members "$@" ;;
       follow)
         kind="${1:-}"; shift || die "follow 需要 plan 或 record"
