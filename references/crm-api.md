@@ -56,11 +56,21 @@ CLI 会在你不提供某些字段时自动填默认值；如果你直接给出 
 | `GET` | `/{module}/{id}` | 获取单条记录详情。 |
 | `POST` | `/{module}/page` | 发送上面模型的 JSON 进行分页查询（支持复杂过滤 + 关键词）。 |
 | `POST` | `/search/{module}` | 全局搜索，JSON body 结构同上，但会额外在多个字段里查关键词。 |
-| `POST` / `PUT` / `DELETE` | `/{module}` / `/{module}/{id}` | 创建、更新、删除记录，body 限定 `{"data":[{...}]}` 结构。 |
 
 > `cordys raw {METHOD} {PATH}` 就是让你任意组合上述请求，并手动填写 body/headers。
 
 ---
+
+## 跟进计划与记录 API
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| `POST` | `/{module}/follow/plan/page` | 查询某条资源的跟进计划，必须带 `sourceId`，支持 `status`、`myPlan`、`keyword` 等字段。|
+| `POST` | `/{module}/follow/record/page` | 查询某条资源的跟进记录，以 `sourceId` 为主，并可额外筛 `keyword`。|
+
+`module` 目前常用 `lead`、`account`、`opportunity` 等。需要查计划时请填 `status`（推荐 `ALL` / `UNFINISHED` / `FINISHED`），`myPlan` 表示是否只看本人创建的计划，`keyword` 和 `combineSearch` 仅用于模糊匹配；如果只传 `keyword` 将不带 `sourceId`，接口会返回空内容。
+
+`page_payload` 只会补 `current` / `pageSize` / `sort` / `filters`，所以任何需要的 `sourceId` / `status` / `myPlan` 都必须在 JSON body 里显式提供。
+
 
 ## 4. 请求示例
 ### 分页列出商机（默认结构）
@@ -97,31 +107,27 @@ cordys crm get lead 987654321
 
 ---
 
-## 5. 创建/更新/删除（data 结构）--规划中
+### 跟进计划/记录请求示例
 ```bash
-cordys crm create opportunity '{
-  "data":[
-    {
-      "name":"新客户项目",
-      "stage":"Qualification",
-      "amount":150000
-    }
-  ]
-}'
+cordys crm raw POST /lead/follow/record/page '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"回访"}'
+cordys crm raw POST /account/follow/plan/page '{"sourceId":"1751888184018919","current":1,"pageSize":10,"status":"ALL","myPlan":false}'
 ```
-更新需要 `id`：
-```bash
-cordys crm update opportunity 123456 '{"data":[{"stage":"Proposal"}]}'
-```
-删除：
-```
-cordys crm delete opportunity 123456
-```
-这些命令背后是 `POST /opportunity`、`PUT /opportunity/{id}`、`DELETE /opportunity/{id}`。
+响应返回同样的分页结构，`data.list` 含 `planTime`、`status`、`ownerName`、`content` 等字段，例如：
+```json
+{
+  "code":100200,
+  "data":{
+    "list":[
+      {"id":"plan-1","planTime":"2026-02-28T14:00:00","status":"UNFINISHED","content":"跟进沟通需求"},
+      {"id":"plan-2","planTime":"2026-02-26T10:00:00","status":"FINISHED","content":"确认资料"}
+    ],
+    "current":1,"pageSize":10,"total":2
+  }
+}
 
----
+```
 
-## 6. 响应解析
+## 5. 响应解析
 所有调用返回统一结构：
 ```json
 {
@@ -140,7 +146,7 @@ cordys crm delete opportunity 123456
 
 ---
 
-## 7. 错误处理建议
+## 6. 错误处理建议
 1. **Token/密钥错误**：`INVALID_KEY`、`ACCESS_DENIED` → 检查 `CORDYS_ACCESS_KEY`/`CORDYS_SECRET_KEY`。
 2. **参数问题**：`INVALID_REQUEST`、`INVALID_FILTER` → 检查 JSON 格式、字段名拼写。
 3. **404/资源不存在**：要么 `id` 写错，要么没有访问权限。
@@ -150,7 +156,7 @@ cordys crm delete opportunity 123456
 
 ---
 
-## 8. 最佳实践
+## 7. 最佳实践
 - **分页不要太大**：大于 200 会容易超时。
 - **关键词 + filters 组合**：先用 `keyword` 粗筛，再在 `combineSearch.conditions` 中加精确字段。
 - **排序字段稳定**：使用 `sort` 降序 `followTime` 或 `createTime`，避免每次结果顺序浮动。
@@ -159,7 +165,7 @@ cordys crm delete opportunity 123456
 
 ---
 
-## 9. 附录：字段/filters 例子
+## 8. 附录：字段/filters 例子
 | 字段 | 描述 | 示例值 |
 | --- | --- | --- |
 | `name` | 名称/标题 | `"Acme 商机"` |
