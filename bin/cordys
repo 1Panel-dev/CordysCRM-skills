@@ -171,6 +171,7 @@ CRM 操作:
   cordys crm view lead
   cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
   cordys crm page lead "测试"
+  cordys crm page contract/payment-plan '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
   cordys crm search account '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
   cordys crm org
   cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
@@ -188,8 +189,11 @@ CRM 操作:
   CORDYS_SECRET_KEY
   CORDYS_CRM_DOMAIN
 
-支持的 CRM 模块:
-  lead, opportunity, account
+支持的 CRM 一级模块列表查询 cordys crm page lead:
+  lead（线索）, opportunity（商机）, account（客户）,contact（联系人）,contract（合同）
+
+支持的 CRM 二级模块列表查询 cordys crm page contract/payment-plan:
+  contract/payment-plan(回款计划), invoice（发票）,contract/business-title(工商抬头）,contract/payment-record(回款记录), opportunity/quotation(报价单)
 EOF
 }
 

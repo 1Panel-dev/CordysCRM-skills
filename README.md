@@ -121,6 +121,18 @@ cordys crm follow record <module> '{"sourceId":"<resourceId>","current":1,"pageS
 
 如果你是技术佬也可以直接给出 JSON body，让 OpenClaw 原样传给 `search`/`page`；也可以要求先构造基础 structure 再根据你的 “条件” 细化。
 
+## 二级模块支持
+Cordys CRM 里有一些隐藏在 `contract` 模块下的二级资源（比如回款计划、发票等），`cordys` CLI 通过接受包含斜杠路径的模块名来访问它们。
+
+- `cordys crm page contract/payment-plan`：查询回款计划的分页列表，支持传入关键词/JSON body，实际上调用的是 `POST /contract/payment-plan/page`。
+- `cordys crm page invoice`：查询发票的分页列表，通过 `POST /invoice/page` 获取，每个条件都可以通过 `filters` 精细控制。
+- `cordys crm page contract/business-title`：检索工商抬头列表，同样支持关键词/filters。
+- `cordys crm page contract/payment-record`：查看回款记录列表，可结合关键词、`filters` 或 `viewId` 进行精细筛选。
+
+对这些二级模块的查询依旧遵循 `page_payload` 结构（`current`/`pageSize`/`sort`/`filters`）和关键字补全，因此你只需提供想要筛选的字段，AI 会自动补上分页元数据。
+
+需要更专业的筛选能力时，可以直接把完整 JSON body 透传给 `cordys crm page contract/payment-plan '{…}'`，也可以用 `cordys raw` 指定路径（例如 `cordys raw POST /contract/payment-record/page '{...}'`）来跳过 CLI 结构化限制。
+
 ## 深度操作参考
 - 查看 module 字段定义：`cordys raw GET /settings/fields?module={模块}`
 - 调整排序/过滤：在 `filters` 里填 `[{"field":"Stage","operator":"equals","value":"Closed Won"}]`

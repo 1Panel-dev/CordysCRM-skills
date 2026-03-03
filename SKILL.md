@@ -82,8 +82,17 @@ CORDYS_CRM_DOMAIN=https://your-cordys-domain
 
 ## 兼容 JSON 请求示例
 在用户给出 JSON 字符串时，保持原样传递，避免再次 escape；若已提供结构但缺部分字段，自动补齐 `current`、`pageSize`、`combineSearch` 等默认值。
+## 二级模块支持
+Cordys CRM 里有一类在 `contract` 模块下的二级资源（回款计划、发票、工商抬头、回款记录），CLI 也是用 `cordys crm page <module>` 形式访问，只要模块名中带上斜杠路径即可直接映射到对应接口。
 
-## 调试 & 日志
-- 设置 `CORDYS_DEBUG=true` 获取 CLI 原始请求。
+- `cordys crm page contract/payment-plan` → `POST /contract/payment-plan/page`，列出回款计划；可以带关键词（会填到 `keyword`）或完整 JSON body。
+- `cordys crm page invoice` → `POST /invoice/page`，查询发票信息列表。
+- `cordys crm page contract/business-title` → `POST /contract/business-title/page`，获取工商抬头选项。
+- `cordys crm page contract/payment-record` → `POST /contract/payment-record/page`，拉取回款记录。
+
+二级模块的分页结构与其他模块一致，CLI 会自动补齐 `current/pageSize/sort/filters`，只要你提供关键词或 `filters` 条件即可。若需要更复杂的筛选（例如回款状态、发票类型），直接把完整 JSON body 透传给 `cordys crm page contract/payment-plan '{…}'`，或者用 `cordys raw POST /contract/payment-record/page '{…}'` 手工控制。
+
+## 日志
 - CLI 会默认读取 `.env`，也可以在命令前 `CORDYS_ACCESS_KEY=... CORDYS_SECRET_KEY=...` 临时覆盖。
 - 遇到 `code` 非 `100200` 时，记录 `message` 并提示用户。
+
