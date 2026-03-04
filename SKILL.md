@@ -1,61 +1,50 @@
-# Cordys CRM 集成
+---
+name: cordys-crm
+description: |
+   Cordys CRM CLI 指令映射技能，本技能用于将自然语言需求精准转换为可执行的 `cordys crm` 标准命令，确保输出稳定、可预测、无歧义。
+    
+    【核心能力】
+    - 自动识别用户意图（列表 / 搜索 / 详情 / 跟进 / 原始接口）
+    - 自动识别模块（lead / account / opportunity / contract 等）
+    - 自动补全 JSON 参数
+    - 自动构造 filters / sort / combineSearch
+    - 自动补充分页默认值
+    - 支持二级模块（如 contract/payment-plan）
 
-## 快速指引（OpenClaw 助手用）
+---
 
-这个技能包装了 `CordysCRM` CLI。你的提问会被我转换成 `cordys` 命令，必要时会补全 JSON body。
+# Cordys CRM CLI 使用说明
 
-### 基本流程
-1. 明确操作：**列表/搜索/获取**
-2. 指定模块：`lead`、`account`、`opportunity`、`pool` 等
-3. 补充条件：关键词、过滤器、排序、字段
-4. 给出 pagination 或 JSON body（可选）
-5. 说明输出形式（简短汇总、全部字段、只要某个字段）
+该技能封装了 `cordys crm` 命令，帮助把自然语言转换成标准 CLI 调用。针对不同模块（lead/account/opportunity/pool 等）和常见操作（查询、分页、搜索、跟进计划/记录、原始接口）提供明确的映射策略。
 
-### 样例构造提示词
-- “列出本周提交的潜在客户，按创建时间倒序，每页 30 条。”
-- “搜索账户模块，关键词‘电力’，只返回电话和跟进人。”
-- “获取商机 998877 详情。”
+## 基本流程
+1. 明确意图：列出/搜索/获取/跟进。
+2. 指定目标模块（如 `lead`、`opportunity`）。
+3. 根据需求补充关键词、过滤条件、排序或分页参数。
+4. 确认是否需要 JSON body（如 `search`、`follow plan`、`raw`）。
+5. 说明期望的输出形式（简短摘要/全部字段/只要某字段）。
 
-你也可以说 “帮我写出需要的 filters JSON”。
+## 指令映射（常用）
+| 场景 | 建议命令 | 备注 |
+| --- | --- | --- |
+| 列表或分页查看 | `cordys crm page <module> ["keyword"]` | 若用户只提关键词，会自动构造 `{keyword:..., current:1, pageSize:30}` |
+| 搜索 | `cordys crm search <module> <JSON body>` | 需 `combineSearch`、`filters`、`sort`，可补全默认值 |
+| 详情 | `cordys crm get <module> <id>` | 直接拉取记录 |
+| 跟进计划/记录 | `cordys crm follow plan|record <module> <body>` | `body` 应包含 `sourceId`，计划还需要 `status`/`myPlan` |
+| 原始接口 | `cordys raw <METHOD> <PATH> [<body>]` | 用于自定义端点或二级模块，如 `/contract/payment-plan` |
 
-## CLI 参考（常用命令）
-```
-cordys help
-cordys crm page lead
-cordys crm page opportunity  # 支持关键词参数，例如 `cordys crm page lead "测试"` 会将 `keyword` 填入分页 body。
+## 高级技巧
+- 搜索命令需要完整 JSON，若用户只给关键词或简单条件，可自动补齐 `current=1`、`pageSize=30`、`combineSearch={...}`。
+- 过滤器格式为 `{"field":"字段","operator":"equals","value":"值"}`，排序格式为 `{"field":"desc"}`。
+- 支持二级模块（例如 `contract/payment-plan`、`contract/payment-record`），CLI 命令形式仍为 `cordys crm page <module>`。
+- `cordys raw` 可以按原始 GET/POST 访问 `/settings/fields`、`/contract/business-title` 等非标准接口。
 
-cordys crm page account
-cordys crm page pool
-cordys crm get lead 1234567890
-cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
-cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
-cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
-cordys crm contact opportunity '商机id'
-cordys crm contact account '客户id'
-cordys raw GET /settings/fields?module=account
-```
+## 常用示例
+- `cordys crm page lead "测试"`
+- `cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"电力","filters":[]}'`
+- `cordys crm follow plan account '{"sourceId":"123","current":1,"pageSize":10,"status":"UNFINISHED","myPlan":false}'`
+- `cordys raw GET /settings/fields?module=account`
 
-## 父资源联系人
-当用户表达“查某条商机/客户的联系人”时，映射到 `cordys crm contact <parent> <id>`，`<parent>` 可选 `opportunity` 或 `account`，`<id>` 填入对应记录 ID；其余 key=value 参数会被当作查询串（如 `keyword=张`、`pageSize=20`）。
-
-如果用户只说“某商机的联系人”或“客户联系人列表”，优先使用这个命令并说明它走的是 `GET /{parent}/contact/list/{id}` 这个通用接口。
-
-## 跟进计划与记录（自然语言 -> CLI）
-当用户想要查看某条潜在客户、客户或商机的跟进计划/记录时，用 `follow plan|record`，示例命令如下：
-```
-cordys crm follow plan <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
-cordys crm follow record <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","myPlan":false}'
-```
-- `sourceId` 必须指向目标模块的 ID，否则接口只会返回空列表。
-- `status` 只对计划有效，可传 `ALL`、`UNFINISHED` 等，`myPlan` 控制是否只看本人创建。
-- 默认只传关键词时 CLI 会当 keyword，自动补齐 `current=1,pageSize=30,sort={},filters=[]`；任何定制字段必须在 JSON body 中显式传入。
-
-常见自然语言示例：
-- “帮我看 lead 9276 的跟进记录。”
-- “列出 account 1751 的所有未完成跟进计划。”
-- “关键词‘合同’筛出与 opportunity 相关的跟进记录。”
-
-如果用户以中文描述“跟进计划”“跟进记录”，优先将意图映射到 `cordys crm follow plan` 或 `follow record`，并补全 body（`sourceId`、`status`/`myPlan`）后再调用。
 ## 环境变量（必须）
 ```bash
 CORDYS_ACCESS_KEY=xxx
@@ -63,36 +52,12 @@ CORDYS_SECRET_KEY=xxx
 CORDYS_CRM_DOMAIN=https://your-cordys-domain
 ```
 
-## 进阶提示
-- **搜索**：`cordys crm search {module}` 需要完整 JSON；你可以只提供关键词，我会帮你构造 JSON。
-- **分页**：默认 `current=1`, `pageSize=30`；可根据 `PerPage` 要求调整。
-- **过滤器**：`filters` 数组，格式 `{"field":"字段","operator":"equals","value":"值"}`。
-- **排序**：在 `sort` 里写 `{"field":"desc"}`。
-- **raw**：当需要直接操作 API（比如自定义 endpoint、字段）时使用 `cordys raw {METHOD} {PATH}`。
+## 助手判断意图的提示词
+- “列表”/“分页查看”：映射到 `page` 指令；可补上关键词或 filters
+- “搜索”/“筛选”：使用 `search`，补齐 JSON body
+- “查看详情”：用 `get` + 决定的 ID
+- “跟进”：「跟进计划」→ `follow plan`，「跟进记录」→ `follow record`
 
-## 助手应该怎么理解用户意图
-| 关键词 | 推理 |
-| --- | --- |
-| 列出/分页/分页查看 | `corsys crm page {module}`，填 `keyword` 或 `filters` |
-| 搜索/查找/筛选 | `cordys crm search {module}`（构造 `combineSearch`） |
-| 查看/打开/详情 | `cordys crm get {module} {id}` |
-| 跟进计划/记录 | `cordys crm follow plan|record <module>` （补齐 `sourceId`、`status`、`myPlan`） |
-
-推荐让用户明确 “sourceId” + “status/myPlan” 这类字段，而不是只说“跟进”。
-
-## 兼容 JSON 请求示例
-在用户给出 JSON 字符串时，保持原样传递，避免再次 escape；若已提供结构但缺部分字段，自动补齐 `current`、`pageSize`、`combineSearch` 等默认值。
-## 二级模块支持
-Cordys CRM 里有一类在 `contract` 模块下的二级资源（回款计划、发票、工商抬头、回款记录），CLI 也是用 `cordys crm page <module>` 形式访问，只要模块名中带上斜杠路径即可直接映射到对应接口。
-
-- `cordys crm page contract/payment-plan` → `POST /contract/payment-plan/page`，列出回款计划；可以带关键词（会填到 `keyword`）或完整 JSON body。
-- `cordys crm page invoice` → `POST /invoice/page`，查询发票信息列表。
-- `cordys crm page contract/business-title` → `POST /contract/business-title/page`，获取工商抬头选项。
-- `cordys crm page contract/payment-record` → `POST /contract/payment-record/page`，拉取回款记录。
-
-二级模块的分页结构与其他模块一致，CLI 会自动补齐 `current/pageSize/sort/filters`，只要你提供关键词或 `filters` 条件即可。若需要更复杂的筛选（例如回款状态、发票类型），直接把完整 JSON body 透传给 `cordys crm page contract/payment-plan '{…}'`，或者用 `cordys raw POST /contract/payment-record/page '{…}'` 手工控制。
-
-## 日志
-- CLI 会默认读取 `.env`，也可以在命令前 `CORDYS_ACCESS_KEY=... CORDYS_SECRET_KEY=...` 临时覆盖。
-- 遇到 `code` 非 `100200` 时，记录 `message` 并提示用户。
-
+## 日志与异常
+- CLI 默认读取 `.env`，也可通过前置环境变量覆盖。
+- 若返回 `code` 非 `100200`，要记录 `message` 并向用户说明。
