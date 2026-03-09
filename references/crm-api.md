@@ -115,6 +115,24 @@ cordys crm search account '{
 ```
 CLI 会请求 `/search/account`，按关键词+filters 精确过滤。
 
+### 高级 search（和时间相关的动态搜索）
+```bash
+cordys crm search account '{
+  "current":1,
+  "pageSize":40,
+  "keyword":"云",
+  "sort":{},
+  "combineSearch":{
+    "searchMode":"AND",
+    "conditions":[
+      {"value": "WEEK","operator": "DYNAMICS","name": "createTime","multipleValue": false,"type": "TIME_RANGE_PICKER"}
+    ]
+  },
+  "filters":[]
+}'
+```
+在combineSearch.conditions参数结构中，operator为DYNAMICS,对应的value有TODAY,YESTERDAY,TOMORROW,WEEK,LAST_WEEK,NEXT_WEEK,MONTH,LAST_MONTH,NEXT_MONTH,LAST_SEVEN,SEVEN,THIRTY,LAST_THIRTY,SIXTY,LAST_SIXTY,QUARTER,LAST_QUARTER,NEXT_QUARTER,YEAR,LAST_YEAR,NEXT_YEAR。如果查询n天前，value的值可以写成["CUSTOM,"+n+",BEFORE_DAY"]。如果要查询两个时间段中间的数据，value可以写[较早的毫秒级时间戳，较晚的毫秒级时间戳]，同时operator为BETWEEN。
+
 ### 获取某条记录
 ```
 cordys crm get lead 987654321
