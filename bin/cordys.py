@@ -10,13 +10,8 @@ import json
 import argparse
 from pathlib import Path
 from typing import Optional, Dict, Any
-
-try:
-    import requests
-except ImportError:
-    print("错误: 需要安装 requests 库", file=sys.stderr)
-    print("请运行: pip install requests", file=sys.stderr)
-    sys.exit(1)
+from urllib import parse, request
+from urllib.error import HTTPError, URLError
 
 try:
     from dotenv import load_dotenv
@@ -85,7 +80,7 @@ def page_payload(keyword: str = "") -> Dict[str, Any]:
 
 
 # ── API 封装（Header Key 鉴权）────────────────────────────────────────
-def api_request(method: str, url: str, content_type: str, **kwargs) -> requests.Response:
+def api_request(method: str, url: str, content_type: str, **kwargs) -> str:
     """执行 API 请求"""
     check_keys()
 
@@ -99,29 +94,55 @@ def api_request(method: str, url: str, content_type: str, **kwargs) -> requests.
     if 'headers' in kwargs:
         headers.update(kwargs.pop('headers'))
 
+    params = kwargs.pop("params", None)
+    data = kwargs.pop("data", None)
+
+    if params:
+        if isinstance(params, dict):
+            query = parse.urlencode(params)
+        else:
+            query = str(params).lstrip("?")
+        separator = "&" if "?" in url else "?"
+        url = f"{url}{separator}{query}"
+
+    data_bytes = None
+    if data is not None:
+        if isinstance(data, bytes):
+            data_bytes = data
+        elif isinstance(data, dict):
+            data_bytes = parse.urlencode(data).encode("utf-8")
+        else:
+            data_bytes = str(data).encode("utf-8")
+
     try:
-        response = requests.request(
-            method=method,
+        req = request.Request(
             url=url,
+            data=data_bytes,
             headers=headers,
-            **kwargs
+            method=method.upper()
         )
-        return response
-    except requests.exceptions.RequestException as e:
+        with request.urlopen(req) as response:
+            charset = response.headers.get_content_charset() or "utf-8"
+            return response.read().decode(charset, errors="replace")
+    except HTTPError as e:
+        try:
+            detail = e.read().decode("utf-8", errors="replace")
+        except Exception:
+            detail = str(e)
+        die(f"请求失败: HTTP {e.code} {detail}")
+    except URLError as e:
         die(f"请求失败: {e}")
 
 
 def api(method: str, url: str, **kwargs) -> str:
     """执行 JSON API 请求"""
-    response = api_request(method, url, "application/json", **kwargs)
-    return response.text
+    return api_request(method, url, "application/json", **kwargs)
 
 
 def api_form(method: str, url: str, **kwargs) -> str:
     """执行表单 API 请求"""
-    response = api_request(
+    return api_request(
         method, url, "application/x-www-form-urlencoded", **kwargs)
-    return response.text
 
 
 # ── CRM 辅助函数 ──────────────────────────────────────────────────────

@@ -36,17 +36,17 @@ description: |
 ## 指令映射（常用）
 | 场景 | 建议命令 | 备注 |
 | --- | --- | --- |
-| 列表或分页查看 | `cordys.py crm page <module> ["keyword"]` | 若用户只提关键词，会自动构造 `{keyword:..., current:1, pageSize:30}` |
-| 搜索 | `cordys.py crm search <module> <JSON body>` | 需 `combineSearch`、`filters`、`sort`，可补全默认值 |
-| 详情 | `cordys.py crm get <module> <id>` | 直接拉取记录 |
-| 跟进计划/记录 | `cordys.py crm follow plan|record <module> <body>` | `body` 应包含 `sourceId`，计划还需要 `status`/`myPlan` |
-| 原始接口 | `cordys.py raw <METHOD> <PATH> [<body>]` | 用于自定义端点或二级模块，如 `/contract/payment-plan` |
+| 列表或分页查看 | `python3 bin/cordys.py crm page <module> ["keyword"]` | 若用户只提关键词，会自动构造 `{keyword:..., current:1, pageSize:30}` |
+| 搜索 | `python3 bin/cordys.py crm search <module> <JSON body>` | 需 `combineSearch`、`filters`、`sort`，可补全默认值 |
+| 详情 | `python3 bin/cordys.py crm get <module> <id>` | 直接拉取记录 |
+| 跟进计划/记录 | `python3 bin/cordys.py crm follow plan|record <module> <body>` | `body` 应包含 `sourceId`，计划还需要 `status`/`myPlan` |
+| 原始接口 | `python3 bin/cordys.py raw <METHOD> <PATH> [<body>]` | 用于自定义端点或二级模块，如 `/contract/payment-plan` |
 
 ## 高级技巧
 - 搜索命令需要完整 JSON，若用户只给关键词或简单条件，可自动补齐 `current=1`、`pageSize=30`、`combineSearch={...}`。
 - 过滤器格式为 `{"field":"字段","operator":"equals","value":"值"}`，排序格式为 `{"field":"desc"}`。
-- 支持二级模块（例如 `contract/payment-plan`、`contract/payment-record`），CLI 命令形式仍为 `cordys.py crm page <module>`。
-- `cordys.py raw` 可以按原始 GET/POST 访问 `/settings/fields`、`/contract/business-title` 等非标准接口。
+- 支持二级模块（例如 `contract/payment-plan`、`contract/payment-record`），CLI 命令形式仍为 `python3 bin/cordys.py crm page <module>`。
+- `python3 bin/cordys.py raw` 可以按原始 GET/POST 访问 `/settings/fields`、`/contract/business-title` 等非标准接口。
 
 ## 常用示例
 ```bash
