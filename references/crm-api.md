@@ -115,6 +115,51 @@ cordys crm search account '{
 ```
 CLI 会请求 `/search/account`，按关键词+filters 精确过滤。
 
+### 高级 search（和时间相关的动态搜索）
+```bash
+cordys crm search account '{
+  "current":1,
+  "pageSize":40,
+  "keyword":"云",
+  "sort":{},
+  "combineSearch":{
+    "searchMode":"AND",
+    "conditions":[
+      {"value": "WEEK","operator": "DYNAMICS","name": "createTime","multipleValue": false,"type": "TIME_RANGE_PICKER"}
+    ]
+  },
+  "filters":[]
+}'
+```
+在combineSearch.conditions参数结构中，operator为DYNAMICS时，value为下列常量参数
+
+| 常量 | 描述 |
+| --- | --- |
+| `TODAY` | 今天 |
+| `YESTERDAY` | 昨天 |
+| `TOMORROW` | 明天 |
+| `WEEK` | 本周 | 
+| `LAST_WEEK` | 上周 |
+| `NEXT_WEEK` | 下周 |
+| `MONTH` | 本月 |
+| `LAST_MONTH` | 上个月 |
+| `NEXT_MONTH` | 下个月 |
+| `LAST_SEVEN` | 过去一周 |
+| `SEVEN` | 未来一周 |
+| `THIRTY` | 未来三十天内 |
+| `LAST_THIRTY` | 过去三十天内 |
+| `SIXTY` | 未来60天内 |
+| `LAST_SIXTY` | 过去六十天内 |
+| `QUARTER` | 本季度 |
+| `LAST_QUARTER` | 上季度 |
+| `NEXT_QUARTER` | 下季度 |
+| `YEAR` | 本年度 |
+| `LAST_YEAR` | 上年度 |
+| `NEXT_YEAR` | 下年度 |
+
+如果查询n天前，value的值可以写成["CUSTOM,"+n+",BEFORE_DAY"]。
+如果要查询两个时间段中间的数据，value可以写[较早的毫秒级时间戳，较晚的毫秒级时间戳]，同时operator为BETWEEN。
+
 ### 获取某条记录
 ```
 cordys crm get lead 987654321
