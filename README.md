@@ -19,9 +19,7 @@
 CordysCRM-skills/
 ├── README.md              # 当前工程基本说明
 ├── SKILL.md               # 助手在 OpenClaw 会话里引用的 prompt/reference
-├── bin/
-│   ├── cordys             # Shell 版本 CLI（bash）
-│   └── cordys.py          # Python 版本 CLI（推荐）
+├── bin/cordys             # 内置 CLI，可直接试用
 └── references/
     └── crm-api.md         # API 字段和请求体 RFC
 ```
@@ -52,88 +50,47 @@ CORDYS_SECRET_KEY=你的 Secret Key
 CORDYS_CRM_DOMAIN=https://{你的域名}
 ```
 
-### 选择 CLI 版本
-
-项目提供了两个版本的 CLI 工具：
-
-#### Python 版本（推荐）
-
-```bash
-# 安装依赖
-pip install requests python-dotenv  # python-dotenv 可选
-
-# 使用示例
-./bin/cordys.py crm page lead
-./bin/cordys.py crm org
-./bin/cordys.py help
-```
-
-**优势：**
-- 跨平台兼容性更好（Windows/macOS/Linux）
-- 代码更易维护和扩展
-- 更好的错误处理
-
-#### Shell 版本（传统）
-
-```bash
-# 直接使用
-./bin/cordys crm page lead
-./bin/cordys crm org
-./bin/cordys help
-```
-
-**优势：**
-- 无需安装额外依赖（除 curl 外）
-- 适合纯 Unix/Linux 环境
-
-### 验证安装
-
-4. 运行 `cordys.py help` 或 `cordys help` 确认 CLI 可用
-5. 你也可以直接在仓库根目录运行 `./bin/cordys.py` 或 `./bin/cordys`（会继承 `.env`）来验证连接是否成功，若 domain 包含非标准路径（例如 `https://crm.example.com/api`），请在 `.env` 中完整写出。
+4. 运行 `cordys help` 确认 CLI 可用
+5. 你也可以直接在仓库根目录运行 `./bin/cordys`（会继承 `.env`）来验证连接是否成功，若 domain 包含非标准路径（例如 `https://crm.example.com/api`），请在 `.env` 中完整写出。
 6. 在 OpenClaw 会话中以自然语言告诉我你想要做什么，我会把它翻译成命令
 
 ## CLI 常用命令
-
-> 以下示例使用 Python 版本（`cordys.py`），如使用 Shell 版本请将 `cordys.py` 替换为 `cordys`
-
-```bash
+```
 # 分页列表
-python3 bin/cordys.py crm page lead
-python3 bin/cordys.py crm page opportunity
-python3 bin/cordys.py crm page account
+cordys crm page lead
+cordys crm page opportunity
+cordys crm page account
 
-# 支持 keyword 参数
-python3 bin/cordys.py crm page lead "测试"
-
+(支持 keyword 参数，如 `cordys crm page lead "测试"`，会把关键词填入 body 的 `keyword` 字段。)
 # 获取单条记录
-python3 bin/cordys.py crm get lead "1234567890"
+cordys crm get lead "1234567890"
 
 # 搜索（需要完整 JSON body）
-python3 bin/cordys.py crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
+cordys crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"测试","filters":[]}'
 
 # 获取组织架构，需要有系统管理权限才能调用
-python3 bin/cordys.py crm org
+cordys crm org
 
 # 获取部门成员列表
-python3 bin/cordys.py crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
+cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
 
 # 跟进计划/记录查询
-python3 bin/cordys.py crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
-python3 bin/cordys.py crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
 
 # 查询 客户｜商机 联系人
-python3 bin/cordys.py crm contact opportunity '商机id'
-python3 bin/cordys.py crm contact account '客户id'
+cordys crm contact opportunity '商机id'
+cordys crm contact account '客户id'
 
 # 原始 API 调用
-python3 bin/cordys.py raw GET /settings/fields?module=account
+cordys raw GET /settings/fields?module=account
 ```
 
 ## 跟进计划与记录（通用查询）
 商机、客户、潜在客户的跟进计划和跟进记录都可以复用同一套接口。
-```bash
-python3 bin/cordys.py crm follow plan <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
-python3 bin/cordys.py crm follow record <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+```
+cordys crm follow plan <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+cordys crm follow record <module> '{"sourceId":"<resourceId>","current":1,"pageSize":10,"keyword":"","myPlan":false}'
 ```
 
 - `sourceId` 指向某条商机/客户/线索的唯一 ID，必须传入才能拉到与之关联的计划或记录；只提供 `keyword` 时只做关键字模糊搜索，无法替代 `sourceId`。
