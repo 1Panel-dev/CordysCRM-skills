@@ -1,7 +1,7 @@
 # Cordys CRM Skill for OpenClaw
 
 像与人交谈一样与你的 **Cordys CRM 工作区**交互。  
-商机、联系人、潜在客户 —— 全部通过自然对话与你的 AI 助手完成。
+商机、联系人、潜在客户 —— 全部通过自然对话与你的 AI 助理完成。
 
 这个 Skill 将 **Cordys CRM CLI** 包装进 **OpenClaw 会话环境**：
 
