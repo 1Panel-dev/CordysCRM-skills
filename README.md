@@ -42,20 +42,10 @@ CordysCRM-skills/
     └── crm-api.md         # API 字段和请求体 RFC
 ```
 
-通过 **ClawdHub** 安装
+快速安装
 
 ```bash
-clawdhub install cordys-crm
-```
-
----
-
-## 方式二 手动安装
-
-### 克隆仓库
-
-```bash
-git clone https://github.com/1Panel-dev/CordysCRM-skills ~/.openclaw/skills/cordys-crm
+git clone https://github.com/1Panel-dev/CordysCRM-skills ~/.openclaw/workspace/skills/cordys-crm
 ```
 
 ---
