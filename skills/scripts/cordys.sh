@@ -173,18 +173,29 @@ CRM 操作:
   crm product [关键词|JSON]      查询产品列表
   crm contact <模块> <ID>             获取联系人列表
 
-示例:
+支持的 CRM 一级模块:
+ [lead（线索）, opportunity（商机）, account（客户）,contact（联系人）,contract（合同）]
+
+列表查询示例:
   cordys crm view lead
-  cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
+  cordys crm page lead
   cordys crm page lead "测试"
+  cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
   cordys crm page contract/payment-plan '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
-  cordys crm search account '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
+  cordys crm search account '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
   cordys crm org
-  cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
+  cordys crm members '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
   cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
   cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
   cordys crm product "测试"
   cordys crm contact account '927627065163785'
+
+支持的 CRM 二级模块 :
+  [contract/payment-plan(回款计划), invoice（发票）,contract/business-title(工商抬头）,contract/payment-record(回款记录), opportunity/quotation(报价单)]
+
+列表查询示例：
+  cordys crm page contract/payment-plan
+  cordys crm page contract/business-title
 
 原始 API:
   raw <方法> <路径> [curl参数...]
@@ -195,11 +206,6 @@ CRM 操作:
   CORDYS_SECRET_KEY
   CORDYS_CRM_DOMAIN
 
-支持的 CRM 一级模块列表查询 cordys crm page lead:
-  lead（线索）, opportunity（商机）, account（客户）,contact（联系人）,contract（合同）
-
-支持的 CRM 二级模块列表查询 cordys crm page contract/payment-plan:
-  contract/payment-plan(回款计划), invoice（发票）,contract/business-title(工商抬头）,contract/payment-record(回款记录), opportunity/quotation(报价单)
 EOF
 }
 

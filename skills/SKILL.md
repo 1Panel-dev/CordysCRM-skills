@@ -65,7 +65,7 @@ Python 版本仅在以下情况使用：
 ## 指令映射（常用）
 | 场景       | 建议命令                                              | 备注                                                     |
 |----------|---------------------------------------------------|--------------------------------------------------------|
-| 列表或分页查看  | `cordys.sh crm page <module> ["keyword"]`            | 若用户只提关键词，会自动构造 `{keyword:..., current:1, pageSize:50}` |
+| 列表或分页查看  | `cordys.sh crm page <module> ["keyword"]`            | 若用户只提关键词，会自动构造 `{keyword:..., current:1, pageSize:30}` |
 | 全局搜索     | `cordys.sh crm search <module> <JSON body>`          | 需 `combineSearch`、`filters`、`sort`，可补全默认值              |
 | 详情       | `cordys.sh crm get <module> <id>`                    | 直接拉取记录                                                 |
 | 跟进计划或记录  | `cordys.sh crm follow plan 或 record <module> <body>` | `body` 应包含 `sourceId`，计划还需要 `status`/`myPlan` |
@@ -84,7 +84,7 @@ cordys.sh crm page account
 cordys.sh crm page lead "测试"
 
 # 搜索（完整 JSON）
-cordys.sh crm search opportunity '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"电力","filters":[]}'
+cordys.sh crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"电力","filters":[]}'
 
 # 跟进计划
 cordys.sh crm follow plan account '{"sourceId":"123","current":1,"pageSize":10,"status":"UNFINISHED","myPlan":false}'
@@ -121,10 +121,10 @@ Cordys CRM 部分资源属于二级模块。
  cordys.sh crm page contract/payment-record 
  
  # 查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，必填属性是 poolId 通过 lead-pool 接口获取。
- cordys.sh crm page pool/lead '{"current":1,"pageSize":50,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 lead-pool API 获取","viewId":"ALL","filters":[]}'
+ cordys.sh crm page pool/lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 lead-pool API 获取","viewId":"ALL","filters":[]}'
  
  #查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，必填属性是 poolId 通过 account-pool 接口获取。
- cordys.sh crm page pool/account '{"current":1,"pageSize":50,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 account-pool API 获取","viewId":"ALL","filters":[]}'
+ cordys.sh crm page pool/account '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 account-pool API 获取","viewId":"ALL","filters":[]}'
 
  
 ```
@@ -145,12 +145,12 @@ cordys.sh crm search opportunity '{"filters":[{"field":"Stage","operator":"equal
 
 ## 分页查询交互优化
 为了避免分页查询的交互断层，优先执行一次识别出的指令并返回结果：
-1. **分页控制**：默认 `current=1`、`pageSize=50`，根据响应判断是否有多页，如果有则提示用户是否要翻下一页。
+1. **分页控制**：默认 `current=1`、`pageSize=30`，根据响应判断是否有多页，如果有则提示用户是否要翻下一页。
 2. **字段与输出范围**：默认全部字段、摘要、特定字段组合。
 3. **默认格式**：表格或列表形式展示，除非用户特别说明要 JSON 或其他格式。
 
 ## 高级技巧
-- 搜索命令需要完整 JSON，若用户只给关键词或简单条件，可自动补齐 `current=1`、`pageSize=50`、`combineSearch={...}`。
+- 搜索命令需要完整 JSON，若用户只给关键词或简单条件，可自动补齐 `current=1`、`pageSize=30`、`combineSearch={...}`。
 - 过滤器格式为 `{"field":"字段","operator":"equals","value":"值"}`，排序格式为 `{"field":"desc"}`。
 - 支持二级模块（例如 `contract/payment-plan`、`contract/payment-record`），CLI 命令形式仍为 `cordys.sh crm page <module>`。
 - `cordys.sh raw` 可以按原始 GET/POST 访问 `/settings/fields`、`/contract/business-title` 等非标准接口。
