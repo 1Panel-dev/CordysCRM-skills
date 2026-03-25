@@ -29,6 +29,14 @@ description: |
 | **Shell 版本 `cordys`** |  推荐 | 无需 Python，执行更轻量 |
 | Python 版本 `cordys.py` | 备用 | 需要 Python3 + requests |
 
+目录结构里，`scripts/` 目录存放这两个 CLI 实现，标准化排列为：
+
+```
+scripts/
+├── cordys       # 优先的 Shell 可执行脚本
+└── cordys.py    # 不支持 Shell 时可选择 Python 实现
+```
+
 **默认优先使用 Shell 版本。**
 
 Python 版本仅在以下情况使用：
