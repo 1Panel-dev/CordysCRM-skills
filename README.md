@@ -56,6 +56,8 @@ curl -fsSL https://raw.githubusercontent.com/1Panel-dev/CordysCRM-skills/main/in
 git clone --branch main https://github.com/1Panel-dev/CordysCRM-skills ~/.openclaw/workspace/skills/CordysCRM-skills
 # 将克隆的目录重命名为 cordys-crm
 mv ~/.openclaw/workspace/skills/CordysCRM-skills/skills ~/.openclaw/workspace/skills/cordys-crm
+# 删除克隆的仓库目录
+rm -rf ~/.openclaw/workspace/skills/CordysCRM-skills
 
 ```
 ## 环境配置
