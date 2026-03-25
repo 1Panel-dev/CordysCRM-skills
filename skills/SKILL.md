@@ -56,11 +56,16 @@ Python 版本仅在以下情况使用：
 | 场景       | 建议命令                                              | 备注                                                     |
 |----------|---------------------------------------------------|--------------------------------------------------------|
 | 列表或分页查看  | `cordys crm page <module> ["keyword"]`            | 若用户只提关键词，会自动构造 `{keyword:..., current:1, pageSize:30}` |
-| 查询全部/拉全量 | `cordys crm page <module> <JSON body>`            | 从 `current=1` 开始循环请求：每取一页先回传该页，再请求下一页，直到无更多数据 |
 | 全局搜索     | `cordys crm search <module> <JSON body>`          | 需 `combineSearch`、`filters`、`sort`，可补全默认值              |
 | 详情       | `cordys crm get <module> <id>`                    | 直接拉取记录                                                 |
 | 跟进计划或记录  | `cordys crm follow plan 或 record <module> <body>` | `body` 应包含 `sourceId`，计划还需要 `status`/`myPlan` |
 | 原始接口     | `cordys raw <METHOD> <PATH> [<body>]`             | 用于自定义端点或二级模块，如 `/contract/payment-plan`                |
+
+## 分页查询交互优化
+为了避免分页查询的交互断层，优先执行一次识别出的指令并返回结果：
+1. **分页控制**：默认 `current=1`、`pageSize=50`，根据响应判断是否有多页，如果有则提示用户是否要翻下一页。
+2. **字段与输出范围**：默认全部字段、摘要、特定字段组合。
+3. **默认格式**：表格或列表形式展示，除非用户特别说明要 JSON 或其他格式。
 
 ## 高级技巧
 - 搜索命令需要完整 JSON，若用户只给关键词或简单条件，可自动补齐 `current=1`、`pageSize=30`、`combineSearch={...}`。
@@ -68,70 +73,6 @@ Python 版本仅在以下情况使用：
 - 支持二级模块（例如 `contract/payment-plan`、`contract/payment-record`），CLI 命令形式仍为 `cordys crm page <module>`。
 - `cordys raw` 可以按原始 GET/POST 访问 `/settings/fields`、`/contract/business-title` 等非标准接口。
 
-## 全量查询（自动翻页）
-当用户表达“全部数据 / 拉全量 / 查完所有页 / 全部导出”时，按以下策略执行：
-
-1. 优先走分页接口（`page` 或 `search`），一定要先返回一页数据，然后提示用户正在继续查询下一页，避免长时间无响应。
-2. 初始化分页参数：`current=1`，`pageSize` 默认 50（用户指定则用用户值，上限按接口限制）。
-3. 在后台循环请求下一页；每成功拿到一页，先向用户返回该页摘要/明细，再继续下一页。
-4. 停止条件任一满足即可：
-   - 返回列表为空
-   - 返回数量 `< pageSize`
-   - 已达到返回体中的总页数/总条数字段（若接口提供）
-5. 每页都保留用户原始筛选条件（`keyword` / `filters` / `combineSearch` / `sort`），仅递增 `current`。
-6. 若总量过大，先告知预计页数并建议用户限制条件；用户坚持全量时继续翻页。
-7. 任一页报错时，返回“已完成页数 + 失败页 + 错误信息”，并提示是否从失败页继续。
-
-对外回复建议格式：
-- `第 N/M 页`（若 M 未知则写 `第 N 页`）
-- `本页条数`
-- `关键字段摘要`
-- 最后一页追加 `✅ 全部查询完成，总计 X 条`
-
-### 全量查询标准执行模板（推荐直接套用）
-
-#### 1) 启动全量查询时
-```text
-已开始全量查询：<module>
-筛选条件：<keyword/filters/summary>
-分页参数：current=1, pageSize=<size>
-我会每拿到一页就立刻回传，直到全部完成。
-```
-
-#### 2) 每页回传模板
-```text
-【第 <N>/<M或?> 页】
-- 本页条数：<count>
-- 累计条数：<sum>
-- 关键摘要：
-  1) <主键/名称/状态/...>
-  2) <主键/名称/状态/...>
-  3) <主键/名称/状态/...>
-```
-
-#### 3) 最终完成模板
-```text
-✅ 全部查询完成
-- 模块：<module>
-- 总页数：<pages>
-- 总条数：<total>
-- 查询条件：<keyword/filters/summary>
-如需我导出为清单（按字段整理），可以继续处理。
-```
-
-#### 4) 中途失败模板
-```text
-⚠️ 全量查询在第 <N> 页失败
-- 已完成页数：<donePages>
-- 已获取条数：<sum>
-- 失败原因：<message>
-是否从第 <N> 页继续重试？
-```
-
-#### 5) 续跑规则
-- 用户同意续跑后，从失败页 `current=<N>` 继续。
-- 续跑时保持原筛选条件和 `pageSize` 不变。
-- 若连续失败 2 次，建议用户缩小条件或稍后重试。
 
 ## 常用示例
 ```bash
@@ -175,11 +116,12 @@ Cordys CRM 部分资源属于二级模块。
  #查看回款记录列表，可结合关键词、filters 或 viewId 进行精细筛选。
  cordys crm page contract/payment-record 
  
- # 查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，关键属性是 poolId 通过 lead-pool 接口获取。
- cordys crm page pool/lead 
+ # 查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，必填属性是 poolId 通过 lead-pool 接口获取。
+ cordys crm page pool/lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 lead-pool API 获取","viewId":"ALL","filters":[]}'
  
- #查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，关键属性是 poolId 通过 account-pool 接口获取。
- cordys crm page pool/account 
+ #查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，必填属性是 poolId 通过 account-pool 接口获取。
+ cordys crm page pool/account '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 account-pool API 获取","viewId":"ALL","filters":[]}'
+
  
 ```
 
@@ -199,6 +141,7 @@ cordys crm search opportunity '{"filters":[{"field":"Stage","operator":"equals",
 
 ## 环境变量（必须）
 ```bash
+# 从 `.env` 文件或环境变量中读取，包含访问 Cordys CRM API 的必要信息：
 CORDYS_ACCESS_KEY=xxx
 CORDYS_SECRET_KEY=xxx
 CORDYS_CRM_DOMAIN=https://your-cordys-domain
@@ -206,7 +149,7 @@ CORDYS_CRM_DOMAIN=https://your-cordys-domain
 
 ## 助手判断意图的提示词
 - “列表”/“分页查看”：映射到 `page` 指令；可补上关键词或 filters
-- “查询全部”/“全部数据”/“拉全量”/“查完所有页”：触发“自动翻页”流程（循环 `current`）
+- “查询全部”/“全部数据”/“拉全量”/“查完所有页”：自动补充上翻页参数，并根据响应提示用户是否继续翻页
 - “搜索”/“筛选”：使用 `search`，补齐 JSON body
 - “查看详情”：用 `get` + 决定的 ID
 - “跟进”：「跟进计划」→ `follow plan`，「跟进记录」→ `follow record`
@@ -214,3 +157,4 @@ CORDYS_CRM_DOMAIN=https://your-cordys-domain
 ## 日志与异常
 - CLI 默认读取 `.env`，也可通过前置环境变量覆盖。
 - 若返回 `code` 非 `100200`，要记录 `message` 并向用户说明。
+- 若返回 401 或 403，提示用户检查认证信息。
