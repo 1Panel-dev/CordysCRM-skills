@@ -10,6 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 OUTPUT_FILE="$ROOT_DIR/rules/platform/fields.md"
 ENV_FILE="$ROOT_DIR/.env"
+TEMP_DIR=$(mktemp -d)
 
 # 颜色输出
 RED='\033[0;31m'
@@ -31,13 +32,23 @@ fi
 # 加载环境变量
 source "$ENV_FILE"
 
-# 检查环境变量
+# 检查环境变量（支持两种格式）
+ACCESS_KEY="${ACCESS_KEY:-$CORDYS_ACCESS_KEY}"
+SECRET_KEY="${SECRET_KEY:-$CORDYS_SECRET_KEY}"
+
+# CRM_DOMAIN 优先用 CRM_DOMAIN，其次 CORDYS_CRM_DOMAIN，最后默认值
+if [ -n "$CRM_DOMAIN" ]; then
+    CRM_DOMAIN="$CRM_DOMAIN"
+elif [ -n "$CORDYS_CRM_DOMAIN" ]; then
+    CRM_DOMAIN="$CORDYS_CRM_DOMAIN"
+else
+    CRM_DOMAIN="https://crm.fit2cloud.com"
+fi
+
 if [ -z "$ACCESS_KEY" ] || [ -z "$SECRET_KEY" ]; then
     echo -e "${RED}错误：ACCESS_KEY 或 SECRET_KEY 未配置${NC}"
     exit 1
 fi
-
-CRM_DOMAIN="${CRM_DOMAIN:-https://crm.fit2cloud.com}"
 
 echo ""
 echo -e "${YELLOW}CRM 域名：${NC}$CRM_DOMAIN"
@@ -51,17 +62,26 @@ if [ -f "$OUTPUT_FILE" ]; then
     echo -e "${YELLOW}已备份现有文件：${NC}$BACKUP_FILE"
 fi
 
-# 创建临时文件
-TEMP_FILE=$(mktemp)
+# 通用请求函数
+fetch_option_map() {
+    local module=$1
+    local output_file=$2
+    
+    curl -s -X POST "$CRM_DOMAIN/$module/page" \
+        -H "X-Access-Key: $ACCESS_KEY" \
+        -H "X-Secret-Key: $SECRET_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{"current":1,"pageSize":1}' | jq '.data.optionMap' > "$output_file"
+}
 
 # 写入 Markdown 头部
-cat > "$TEMP_FILE" << 'EOF'
+cat > "$OUTPUT_FILE" << 'EOF'
 # Cordys CRM 字段映射表
 
 > 最后更新：
 EOF
-echo "$(date +%Y-%m-%d)" >> "$TEMP_FILE"
-cat >> "$TEMP_FILE" << 'EOF'
+echo "$(date +%Y-%m-%d)" >> "$OUTPUT_FILE"
+cat >> "$OUTPUT_FILE" << 'EOF'
 > 用途：将字段 ID 转换为可读的字段名和选项值
 
 ---
@@ -77,52 +97,39 @@ cat >> "$TEMP_FILE" << 'EOF'
 
 ---
 
-## 🔄 同步各模块字段
-
 EOF
 
 # 同步各模块字段
 MODULES=("lead" "account" "opportunity" "contract")
+MODULE_NAMES=("线索" "客户" "商机" "合同")
 
-for module in "${MODULES[@]}"; do
-    echo -e "${YELLOW}正在同步 ${module} 模块...${NC}"
+for i in "${!MODULES[@]}"; do
+    module="${MODULES[$i]}"
+    module_name="${MODULE_NAMES[$i]}"
     
-    RESPONSE=$(curl -s -X GET "$CRM_DOMAIN/settings/fields?module=$module" \
-        -H "X-Access-Key: $ACCESS_KEY" \
-        -H "X-Secret-Key: $SECRET_KEY" \
-        -H "Content-Type: application/json")
+    echo -e "${YELLOW}正在同步 ${module_name} (${module}) 模块...${NC}"
     
-    # 检查响应是否有效
-    if echo "$RESPONSE" | jq -e '.code == 100200' > /dev/null 2>&1; then
+    OPTION_FILE="$TEMP_DIR/${module}_option.json"
+    
+    if fetch_option_map "$module" "$OPTION_FILE"; then
         echo -e "${GREEN}  ✓ ${module} 模块同步成功${NC}"
         
-        # 提取字段信息并写入 Markdown
-        echo "## ${module^} ($(echo $module | sed 's/.*/\U&/'))" >> "$TEMP_FILE"
-        echo "" >> "$TEMP_FILE"
-        echo "| 字段 ID | 字段名 | 类型 | 说明 |" >> "$TEMP_FILE"
-        echo "|--------|--------|------|------|" >> "$TEMP_FILE"
+        # 解析 optionMap 并生成 Markdown
+        echo "## ${module_name} ($module)" >> "$OUTPUT_FILE"
+        echo "" >> "$OUTPUT_FILE"
         
-        # 解析字段列表（简化版）
-        FIELDS=$(echo "$RESPONSE" | jq -r '.data.fields // [] | .[] | "| \(.id) | \(.name) | \(.type) | \(.description // "") |"' 2>/dev/null)
+        # 提取所有字段
+        jq -r 'to_entries[] | "### \(.key)\n\n\(.value | if type == "array" then "| ID | 名称 |\n|-----|------|\n" + (.[] | "| \(.id) | \(.name) |") else . end)\n"' "$OPTION_FILE" >> "$OUTPUT_FILE" 2>/dev/null || true
         
-        if [ -n "$FIELDS" ]; then
-            echo "$FIELDS" >> "$TEMP_FILE"
-        else
-            echo "| - | - | - | 无字段数据 |" >> "$TEMP_FILE"
-        fi
-        
-        echo "" >> "$TEMP_FILE"
-        echo "---" >> "$TEMP_FILE"
-        echo "" >> "$TEMP_FILE"
+        echo "---" >> "$OUTPUT_FILE"
+        echo "" >> "$OUTPUT_FILE"
     else
         echo -e "${RED}  ✗ ${module} 模块同步失败${NC}"
-        echo "响应：$RESPONSE" | head -c 200
-        echo ""
     fi
 done
 
 # 写入尾部说明
-cat >> "$TEMP_FILE" << 'EOF'
+cat >> "$OUTPUT_FILE" << 'EOF'
 ## 📝 注意事项
 
 1. **时间戳格式**：所有时间字段都是毫秒级时间戳 (JavaScript 格式)
@@ -136,18 +143,18 @@ cat >> "$TEMP_FILE" << 'EOF'
 
 ```bash
 # 获取线索字段
-cordys raw GET /settings/fields?module=lead
+cordys crm page lead '{"current":1,"pageSize":1}' | jq '.data.optionMap'
 
 # 获取客户字段
-cordys raw GET /settings/fields?module=account
+cordys crm page account '{"current":1,"pageSize":1}' | jq '.data.optionMap'
 
 # 获取商机字段
-cordys raw GET /settings/fields?module=opportunity
+cordys crm page opportunity '{"current":1,"pageSize":1}' | jq '.data.optionMap'
 ```
 EOF
 
-# 移动临时文件到目标位置
-mv "$TEMP_FILE" "$OUTPUT_FILE"
+# 清理临时文件
+rm -rf "$TEMP_DIR"
 
 echo ""
 echo -e "${GREEN}================================${NC}"
