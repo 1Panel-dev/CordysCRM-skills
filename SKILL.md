@@ -116,24 +116,26 @@ cordys raw <METHOD> <PATH> [body]
 
 ## 🔄 字段同步
 
-**⚠️ 重要提醒规则：**
+**首次使用建议配置自动同步**（字段定义可能更新）
 
-当用户遇到以下情况时，主动提醒同步字段：
+**一键配置（推荐）：**
+```bash
+./scripts/setup-cron.sh
+```
 
-1. **首次使用技能** → 提醒配置定时任务
-2. **查询返回字段 ID 无法识别** → 建议运行 `./scripts/sync-fields.sh`
-3. **字段映射文件超过 30 天未更新** → 提醒同步
-
-**同步方式（选一种）：**
+**手动配置（选一种）：**
 
 ```bash
-# 手动同步
-./scripts/sync-fields.sh
+# 方式 1: Crontab（简单通用）
+crontab scripts/cron-example
 
-# 自动同步（推荐）
-crontab scripts/cron-example              # Cron Job
-sudo systemctl enable crm-fields-sync.timer  # systemd
-openclaw cron add --file scripts/openclaw-cron.json  # OpenClaw
+# 方式 2: OpenClaw Cron
+openclaw cron add --file scripts/openclaw-cron.json
+```
+
+**手动同步：**
+```bash
+./scripts/sync-fields.sh
 ```
 
 **同步内容：** 字段 ID、字段名称、字段类型  

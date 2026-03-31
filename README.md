@@ -145,26 +145,28 @@ cordys raw GET /settings/fields?module=account
 
 ---
 
-## 🤖 自动化
+## 🤖 自动同步（可选）
 
-### OpenClaw Cron
+字段定义可能更新，建议配置自动同步：
+
+**一键配置：**
+```bash
+./scripts/setup-cron.sh
+```
+
+**或手动配置：**
 
 ```bash
+# 方式 1: Crontab
+crontab scripts/cron-example
+
+# 方式 2: OpenClaw Cron
 openclaw cron add --file scripts/openclaw-cron.json
 ```
 
-### Systemd Timer（Linux）
-
+**手动同步：**
 ```bash
-sudo cp scripts/systemd/*.service /etc/systemd/system/
-sudo cp scripts/systemd/*.timer /etc/systemd/system/
-sudo systemctl enable crm-fields-sync.timer
-```
-
-### Crontab
-
-```bash
-crontab scripts/cron-example
+./scripts/sync-fields.sh
 ```
 
 ---
