@@ -340,4 +340,6 @@ cordys crm raw POST /account/follow/plan/page '{"sourceId":"1751888184018919","c
 
 ---
 
-后续扩展，在 `references/` 下添加更多模块的字段列表（例如 `contacts.md`、`tasks.md`）或写出常用 JSON 模板。
+后续扩展，在 `rules/platform/` 下添加更多通用规则文件。
+
+**字段映射表：** `rules/platform/fields.md`

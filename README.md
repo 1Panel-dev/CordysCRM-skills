@@ -49,12 +49,12 @@ cordys crm page opportunity '{"owner":"你的用户 ID"}'
 ```
 cordys-crm-new/
 ├── bin/                    # CLI 工具（Shell/Node.js/Python 三版本）
-├── references/             # 通用文档（任何公司都需要）
-│   ├── api.md              # API 接口参考 + search/page 规则
-│   ├── fields.md           # 字段映射表
-│   └── sync.md             # 字段同步指南
+├── references/             # API 参考文档
+│   └── api.md              # API 接口参考 + search/page 规则
 ├── rules/                  # 规则系统
 │   ├── platform/           # 平台级规则（通用，不需要改）
+│   │   ├── fields.md       # 字段映射表
+│   │   └── sync.md         # 字段同步指南
 │   └── company/            # 公司级规则（需要替换成自己的）
 │       ├── README.md       # 替换说明
 │       ├── region.md       # 区域映射
@@ -173,8 +173,8 @@ crontab scripts/cron-example
 | 文档 | 说明 |
 |------|------|
 | `references/api.md` | API 接口参考 + search/page 规则 + "我的"查询 |
-| `references/fields.md` | 字段映射表（线索/客户/商机/产品） |
-| `references/sync.md` | 字段同步指南 |
+| `rules/platform/fields.md` | 字段映射表（线索/客户/商机/产品） |
+| `rules/platform/sync.md` | 字段同步指南 |
 | `rules/company/README.md` | 公司级规则替换说明 |
 | `SKILL.md` | OpenClaw 技能定义 + CLI 命令映射 |
 

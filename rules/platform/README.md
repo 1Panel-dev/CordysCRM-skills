@@ -18,7 +18,11 @@
 
 ## 文件列表
 
-目前为空，通用规则已整合到 `references/api.md` 和 `references/fields.md` 中。
+| 文件 | 内容 | 更新频率 |
+|------|------|---------|
+| `fields.md` | 字段映射表（线索/客户/商机/产品） | 定期同步 |
+| `sync.md` | 字段同步指南 | 偶尔更新 |
+| `README.md` | 当前说明文件 | 偶尔更新 |
 
 ---
 
@@ -34,5 +38,5 @@
 ## 相关文档
 
 - `references/api.md` - API 接口参考
-- `references/fields.md` - 字段映射表
+- `rules/platform/fields.md` - 字段映射表
 - `rules/company/README.md` - 公司级规则说明
