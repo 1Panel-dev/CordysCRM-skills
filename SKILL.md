@@ -116,20 +116,29 @@ cordys raw <METHOD> <PATH> [body]
 
 ## 🔄 字段同步
 
-CRM 字段定义可能更新，建议定期同步：
+**⚠️ 重要提醒规则：**
+
+当用户遇到以下情况时，主动提醒同步字段：
+
+1. **首次使用技能** → 提醒配置定时任务
+2. **查询返回字段 ID 无法识别** → 建议运行 `./scripts/sync-fields.sh`
+3. **字段映射文件超过 30 天未更新** → 提醒同步
+
+**同步方式（选一种）：**
 
 ```bash
 # 手动同步
 ./scripts/sync-fields.sh
 
-# 自动同步（选择一种）
+# 自动同步（推荐）
 crontab scripts/cron-example              # Cron Job
 sudo systemctl enable crm-fields-sync.timer  # systemd
 openclaw cron add --file scripts/openclaw-cron.json  # OpenClaw
 ```
 
 **同步内容：** 字段 ID、字段名称、字段类型  
-**输出文件：** `rules/platform/fields.md`
+**输出文件：** `rules/platform/fields.md`  
+**建议频率：** 每周一次
 
 ---
 
@@ -145,6 +154,35 @@ openclaw cron add --file scripts/openclaw-cron.json  # OpenClaw
 ---
 
 ## 🚀 快速开始
+
+### 首次使用必读
+
+**当用户首次安装或配置此技能时，主动提醒以下内容：**
+
+1. ⚠️ **配置 API 密钥**
+   ```bash
+   cp .env.example .env
+   vim .env  # 填写 ACCESS_KEY 和 SECRET_KEY
+   ```
+
+2. ⚠️ **建议配置自动同步**（重要！）
+   ```
+   Cordys CRM 字段定义可能更新，建议配置定时任务定期同步字段映射。
+   
+   选择一种方式：
+   - Crontab: crontab scripts/cron-example
+   - systemd: sudo systemctl enable crm-fields-sync.timer
+   - OpenClaw: openclaw cron add --file scripts/openclaw-cron.json
+   
+   或手动同步：./scripts/sync-fields.sh
+   ```
+
+3. ✅ **测试连接**
+   ```bash
+   cordys crm page lead
+   ```
+
+### 标准流程
 
 ```bash
 # 1. 配置环境变量
