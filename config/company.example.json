@@ -1,0 +1,22 @@
+{
+  "_comment": "公司自定义配置 - 此文件不会提交到 Git",
+  "_instructions": "复制此文件为 company.json 并修改为公司自定义配置",
+  
+  "customRules": {
+    "region": "rules/company/region-custom.md",
+    "industry": "rules/company/industry-custom.md",
+    "product": "rules/company/product-custom.md"
+  },
+  
+  "customFields": {
+    "_comment": "公司自定义字段 ID 覆盖",
+    "lead": {
+      "customField1": "your_field_id"
+    }
+  },
+  
+  "customProducts": {
+    "_comment": "公司自定义产品 ID 覆盖",
+    "your-product": "your_product_id"
+  }
+}

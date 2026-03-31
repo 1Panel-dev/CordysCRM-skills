@@ -1,0 +1,242 @@
+#!/usr/bin/env bash
+# CORDYS CRM CLI 工具
+# 使用 X-Access-Key / X-Secret-Key 进行鉴权
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+SKILL_DIR="$(dirname "$SCRIPT_DIR")"
+ENV_FILE="${SKILL_DIR}/.env"
+
+# ── 加载环境变量 ──────────────────────────────────────────────────────
+if [[ -f "$ENV_FILE" ]]; then
+  set -a
+  source "$ENV_FILE"
+  set +a
+fi
+
+CORDYS_CRM_DOMAIN="${CORDYS_CRM_DOMAIN:-https://www.cordys.cn}"
+
+# ── 辅助函数 ───────────────────────────────────────────────────────────
+die()  { echo "错误: $*" >&2; exit 1; }
+info() { echo ":: $*" >&2; }
+
+check_keys() {
+  [[ -n "${CORDYS_ACCESS_KEY:-}" ]] || die "未设置 CORDYS_ACCESS_KEY"
+  [[ -n "${CORDYS_SECRET_KEY:-}" ]] || die "未设置 CORDYS_SECRET_KEY"
+}
+
+page_payload() {
+  local keyword="${1:-}"
+  python3 - "$keyword" <<PY
+import json, sys
+keyword = sys.argv[1] if len(sys.argv) > 1 else ""
+payload = {
+  "current": 1,
+  "pageSize": 30,
+  "sort": {},
+  "combineSearch": {"searchMode": "AND", "conditions": []},
+  "keyword": keyword,
+  "viewId": "ALL",
+  "filters": []
+}
+print(json.dumps(payload, ensure_ascii=False))
+PY
+}
+
+# ── API 封装（Header Key 鉴权）────────────────────────────────────────
+api_request() {
+  local method="$1" url="$2" content_type="$3"
+  shift 3
+
+  check_keys
+
+  # 通过 `"$@"` 保证额外的参数能够传递给 curl
+  curl -s -X "$method" "$url" \
+    -H "X-Access-Key: ${CORDYS_ACCESS_KEY}" \
+    -H "X-Secret-Key: ${CORDYS_SECRET_KEY}" \
+    -H "Content-Type: $content_type" \
+    "$@"  # 传递剩余的所有参数
+}
+
+api() {
+  api_request "$1" "$2" "application/json" "${@:3}"  # 传递 method, url 和其余的参数
+}
+
+api_form() {
+  api_request "$1" "$2" "application/x-www-form-urlencoded" "${@:3}"  # 同样地，传递其余的参数
+}
+
+# ── CRM 辅助函数 ──────────────────────────────────────────────────────
+crm_base="${CORDYS_CRM_DOMAIN}"
+
+crm_list() {
+  local module="$1" opts="${2:-}"
+  api GET "${crm_base}/${module}/view/list" $opts
+}
+
+crm_get() {
+  local module="$1" id="$2"
+  api GET "${crm_base}/${module}/${id}"
+}
+
+crm_contact() {
+  local module="$1" id="$2"
+  api GET "${crm_base}/${module}/contact/list/${id}"
+}
+
+crm_page() {
+  local module="$1"
+  shift
+  local first="${1:-}"
+  local body
+  if [[ "$first" == \{* ]]; then
+    body="$first"
+  else
+    body=$(page_payload "${first:-}")
+  fi
+  local path="${module}/page"
+  api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$body"
+}
+
+crm_search() {
+  local module="$1" json="${2:-}"
+  local path="global/search/${module}"
+  api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$json"
+}
+
+crm_follow_page() {
+  local kind="$1" module="$2" payload="${3:-}"
+
+  [[ "${kind}" == "plan" || "${kind}" == "record" ]] || die "follow 子命令只支持 plan/record"
+  [[ -n "${module}" ]] || die "follow ${kind} 需要指定模块（lead/account 等）"
+
+  local body
+  if [[ "${payload}" == \{* ]]; then
+    body="${payload}"
+  else
+    body=$(page_payload "${payload}")
+  fi
+
+  api POST "${crm_base}/${module}/follow/${kind}/page" -d "$body"
+}
+
+# 查询产品
+crm_product() {
+  local keyword="${1:-}"
+  local body
+  if [[ "$keyword" == \{* ]]; then
+    body="$keyword"
+  else
+    body=$(page_payload "${keyword}")
+  fi
+  api POST "${CORDYS_CRM_DOMAIN}/field/source/product" -d "$body"
+}
+
+# 获取组织架构
+crm_org() {
+  api GET "${crm_base}/department/tree"
+}
+
+# 根据部门ID获取成员
+crm_members() {
+  api POST "${crm_base}/user/list" -d "$1"
+}
+
+# ── 原始 API 调用 ─────────────────────────────────────────────────────
+raw_api() {
+  local method="$1" path="$2"
+  shift 2
+
+  if [[ "$path" == http* ]]; then
+    api "$method" "$path" "$@"
+  else
+    api "$method" "${CORDYS_CRM_DOMAIN}${path}" "$@"
+  fi
+}
+
+# ── CLI 分发 ──────────────────────────────────────────────────────────
+usage() {
+  cat <<'EOF'
+cordys — CORDYS CRM CLI 工具（X-Access-Key 模式）
+
+使用方法:
+  cordys <命令> [参数...]
+
+CRM 操作:
+  crm view <模块> [参数]             列出视图记录（例：account/lead/opportunity）
+  crm get <模块> <ID>               获取单条记录详情
+  crm search <模块> [关键词|JSON]    全局搜索记录
+  crm page <模块> [关键词|JSON]      列表分页记录 /<module>/page （例：account/lead/opportunity）
+  crm org                          获取组织架构树
+  crm members <部门IDs>             获取部门成员列表
+  crm follow <plan|record> <模块> [关键词|JSON]  查询跟进计划或跟进记录
+  crm product [关键词|JSON]      查询产品列表
+  crm contact <模块> <ID>             获取联系人列表
+
+示例:
+  cordys crm view lead
+  cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
+  cordys crm page lead "测试"
+  cordys crm page contract/payment-plan '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
+  cordys crm search account '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
+  cordys crm org
+  cordys crm members '{"current":1,"pageSize":50,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
+  cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
+  cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
+  cordys crm product "测试"
+  cordys crm contact account '927627065163785'
+
+原始 API:
+  raw <方法> <路径> [curl参数...]
+  cordys raw GET /settings/fields?module=account
+
+环境变量要求:
+  CORDYS_ACCESS_KEY
+  CORDYS_SECRET_KEY
+  CORDYS_CRM_DOMAIN
+
+支持的 CRM 一级模块列表查询 cordys crm page lead:
+  lead（线索）, opportunity（商机）, account（客户）,contact（联系人）,contract（合同）
+
+支持的 CRM 二级模块列表查询 cordys crm page contract/payment-plan:
+  contract/payment-plan(回款计划), invoice（发票）,contract/business-title(工商抬头）,contract/payment-record(回款记录), opportunity/quotation(报价单)
+EOF
+}
+
+cmd="${1:-}"
+shift || true
+
+case "$cmd" in
+  crm)
+    sub="${1:-}"; shift || die "crm 需要子命令"
+    case "$sub" in
+      view)    crm_list "$@" ;;
+      get)     crm_get "$@" ;;
+      search)  crm_search "$@" ;;
+      page)    crm_page "$@" ;;
+      org)     crm_org ;;
+      product)  crm_product "$@" ;;
+      members) crm_members "$@" ;;
+      contact) crm_contact "$@" ;;
+      follow)
+        kind="${1:-}"; shift || die "follow 需要 plan 或 record"
+        case "${kind}" in
+          plan|record) crm_follow_page "${kind}" "$@" ;;
+          *) die "follow 只支持 plan 或 record" ;;
+        esac
+        ;;
+      *)       die "未知的 crm 子命令: $sub" ;;
+    esac
+    ;;
+  raw)
+    method="${1:-}"; shift || die "raw 需要 HTTP 方法"
+    path="${1:-}"; shift || die "raw 需要路径"
+    raw_api "$method" "$path" "$@"
+    ;;
+  help|-h|--help)
+    usage
+    ;;
+  *)
+    die "未知命令: $cmd（尝试 cordys help）"
+    ;;
+esac

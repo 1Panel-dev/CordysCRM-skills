@@ -1,0 +1,49 @@
+{
+  "version": "2026-03-27",
+  "lastSync": "2026-03-27T19:00:00+08:00",
+  "modules": {
+    "lead": {
+      "region": "1751888184000015",
+      "industry": "1751888184000005",
+      "source": "1751888184000018",
+      "sourceDetail": "1751888184000019",
+      "products": "products",
+      "stage": "stage"
+    },
+    "account": {
+      "region": "1751888184000009",
+      "industry": "1751888184000005"
+    },
+    "opportunity": {
+      "region": "1751888184000030",
+      "amount": "1751888184000041",
+      "stage": "stage",
+      "products": "products"
+    },
+    "contract": {
+      "amount": "amount",
+      "products": "products"
+    }
+  },
+  "products": {
+    "jumpserver": "1751888184000091",
+    "maxkb-pro": "1751888184000102",
+    "maxkb-ent": "8327632349528064",
+    "dataease-pro": "1751888184000092",
+    "dataease-ent": "1751888184000101",
+    "sqlbot-pro": "8366853990875136",
+    "metersphere-ent": "1751888184000098",
+    "1panel-openclaw": "329298398169903104",
+    "1panel-pro": "1751888184000088"
+  },
+  "regions": {
+    "east": "东区",
+    "north": "北区",
+    "south": "南区",
+    "ka": "KA"
+  },
+  "pagination": {
+    "defaultPageSize": 30,
+    "maxPageSize": 100
+  }
+}

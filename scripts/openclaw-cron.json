@@ -1,0 +1,17 @@
+{
+  "name": "crm-fields-sync",
+  "schedule": {
+    "kind": "cron",
+    "expr": "0 2 * * 0",
+    "tz": "Asia/Shanghai"
+  },
+  "payload": {
+    "kind": "systemEvent",
+    "text": "🔄 同步 CRM 字段定义 - Cordys CRM Skill"
+  },
+  "sessionTarget": "isolated",
+  "enabled": true,
+  "delivery": {
+    "mode": "announce"
+  }
+}

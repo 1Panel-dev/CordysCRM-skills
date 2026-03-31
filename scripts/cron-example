@@ -1,0 +1,10 @@
+# Cordys CRM 字段同步定时任务配置
+# 安装方法：crontab /path/to/cordys-crm/scripts/cron-example
+# 查看已安装：crontab -l
+# 删除：crontab -r
+
+# 每周日凌晨 2:00 自动同步字段
+0 2 * * 0 /root/.openclaw/skills/cordys-crm/scripts/sync-fields.sh >> /var/log/crm-fields-sync.log 2>&1
+
+# 或者每天凌晨 3:00 同步（更频繁）
+# 0 3 * * * /root/.openclaw/skills/cordys-crm/scripts/sync-fields.sh >> /var/log/crm-fields-sync.log 2>&1

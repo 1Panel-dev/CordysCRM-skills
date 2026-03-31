@@ -1,0 +1,13 @@
+[Unit]
+Description=Cordys CRM Fields Sync
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/.openclaw/skills/cordys-crm
+EnvironmentFile=/root/.openclaw/skills/cordys-crm/.env
+ExecStart=/root/.openclaw/skills/cordys-crm/scripts/sync-fields.sh
+
+[Install]
+WantedBy=multi-user.target
