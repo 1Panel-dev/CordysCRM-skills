@@ -73,7 +73,8 @@ cordys-crm-new/
 ### 通用能力（不需要改）
 
 - ✅ `references/api.md` - API 接口参考
-- ✅ `references/fields.md` - 字段映射表
+- ✅ `rules/platform/fields.md` - 字段映射表
+- ✅ `rules/platform/sync.md` - 字段同步指南
 - ✅ `bin/` - CLI 工具
 - ✅ `scripts/` - 同步脚本
 

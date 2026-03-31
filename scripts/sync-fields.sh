@@ -8,7 +8,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-CONFIG_FILE="$ROOT_DIR/config/fields.json"
+CONFIG_FILE="$ROOT_DIR/rules/platform/fields.md"
 ENV_FILE="$ROOT_DIR/.env"
 
 # 颜色输出

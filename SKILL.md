@@ -47,8 +47,8 @@
 | 配置项 | 位置 | 说明 |
 |--------|------|------|
 | API 密钥 | `.env` | 从 CRM 系统获取 |
-| 字段 ID | `config/fields.json` | 可定期同步更新 |
-| 平台规则 | `rules/platform/` | 通用规则（如区域映射） |
+| 字段 ID | `rules/platform/fields.md` | 可定期同步更新 |
+| 平台规则 | `rules/platform/` | 通用规则（如字段映射） |
 | 公司规则 | `rules/company/` | 自定义规则（可选） |
 
 ---
@@ -59,11 +59,15 @@
 
 ```
 SKILL.md (边界定义)
-    ├── rules/platform/    # 平台级规则（通用，任何公司适用）
-    │   └── region.md      # 区域映射（北/东/南区）
+    ├── rules/platform/         # 平台级规则（通用，任何公司适用）
+    │   ├── fields.md           # 字段映射表
+    │   └── sync.md             # 字段同步指南
     │
-    └── rules/company/     # 公司级规则（可插拔，自定义）
-        └── README.md      # 自定义说明模板
+    └── rules/company/          # 公司级规则（可插拔，自定义）
+        ├── README.md           # 自定义说明模板
+        ├── region.md           # 区域映射
+        ├── query-scenarios.md  # 查询场景
+        └── glossary.md         # 术语映射
 ```
 
 ### 规则优先级
@@ -125,7 +129,7 @@ openclaw cron add --file scripts/openclaw-cron.json  # OpenClaw
 ```
 
 **同步内容：** 字段 ID、字段名称、字段类型  
-**输出文件：** `config/fields.json`
+**输出文件：** `rules/platform/fields.md`
 
 ---
 
@@ -133,10 +137,10 @@ openclaw cron add --file scripts/openclaw-cron.json  # OpenClaw
 
 | 文档 | 说明 |
 |------|------|
-| `docs/api.md` | API 接口参考 + 查询语法 |
-| `docs/fields.md` | 字段映射说明 |
-| `docs/sync.md` | 字段同步配置指南 |
-| `rules/platform/region.md` | 区域映射规则 |
+| `references/api.md` | API 接口参考 + 查询语法 |
+| `rules/platform/fields.md` | 字段映射说明 |
+| `rules/platform/sync.md` | 字段同步配置指南 |
+| `rules/company/README.md` | 公司级规则说明 |
 
 ---
 
@@ -162,12 +166,12 @@ cordys crm search lead '{"keyword":"公司名"}'
 ## 📝 版本信息
 
 - **Skill 版本**：2.0.0
-- **最后更新**：2026-03-27
+- **最后更新**：2026-03-31
 - **兼容 CRM 版本**：Cordys CRM 2026.x
 
 ---
 
 ## 📞 支持
 
-- **上游仓库**：https://github.com/1Panel-dev/CordysCRM-skills
-- **问题反馈**：https://github.com/1Panel-dev/CordysCRM-skills/issues
+- **上游仓库**：https://github.com/hao65103940/CordysCRM-skills
+- **问题反馈**：https://github.com/hao65103940/CordysCRM-skills/issues
