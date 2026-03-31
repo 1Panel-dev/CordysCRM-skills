@@ -1,9 +1,6 @@
 # 环境变量（敏感信息）
 .env
 
-# 公司自定义配置（不上传）
-config/company.json
-
 # 备份文件
 *.backup
 *.backup.*
@@ -15,7 +12,6 @@ logs/
 # 临时文件
 *.tmp
 *.temp
-.tmp/
 
 # 编辑器文件
 .vscode/
@@ -33,4 +29,3 @@ node_modules/
 # Python
 __pycache__/
 *.pyc
-.pytest_cache/

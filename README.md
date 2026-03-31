@@ -47,38 +47,30 @@ cordys crm page opportunity '{"owner":"你的用户 ID"}'
 ## 📁 项目结构
 
 ```
-cordys-crm-new/
-├── bin/                    # CLI 工具（Shell/Node.js/Python 三版本）
-├── references/             # API 参考文档
-│   └── api.md              # API 接口参考 + search/page 规则
-├── rules/                  # 规则系统
-│   ├── platform/           # 平台级规则（通用，不需要改）
-│   │   ├── fields.md       # 字段映射表
-│   │   └── sync.md         # 字段同步指南
-│   └── company/            # 公司级规则（需要替换成自己的）
-│       ├── README.md       # 替换说明
-│       ├── region.md       # 区域映射
+cordys-crm/
+├── bin/                        # CLI 工具（Shell/Node.js/Python）
+├── references/
+│   └── api.md                  # API 接口参考
+├── rules/
+│   ├── platform/               # 平台级规则（通用）
+│   │   ├── fields.md           # 字段映射表
+│   │   └── sync.md             # 同步指南
+│   └── company/                # 公司级规则（可替换）
+│       ├── region.md           # 区域映射
 │       ├── query-scenarios.md  # 查询场景
-│       └── glossary.md     # 术语映射
-├── scripts/                # 同步脚本 + Cron 配置
-├── SKILL.md                # OpenClaw 技能定义
-├── README.md               # 当前文档
-└── .env.example            # 环境变量模板
+│       └── glossary.md         # 术语映射
+├── scripts/
+│   ├── sync-fields.sh          # 字段同步脚本
+│   ├── setup-cron.sh           # 定时任务配置
+│   └── get-search-fields.sh    # 搜索字段查询
+├── SKILL.md                    # OpenClaw 技能定义
+├── README.md                   # 使用说明
+└── .env.example                # 环境变量模板
 ```
 
 ---
 
 ## 🏢 其他公司如何使用
-
-### 通用能力（不需要改）
-
-- ✅ `references/api.md` - API 接口参考
-- ✅ `rules/platform/fields.md` - 字段映射表
-- ✅ `rules/platform/sync.md` - 字段同步指南
-- ✅ `bin/` - CLI 工具
-- ✅ `scripts/` - 同步脚本
-
-### 需要替换的内容
 
 **`rules/company/` 目录下的文件需要替换成你们自己的规则：**
 
@@ -88,18 +80,11 @@ cordys-crm-new/
 
 **替换步骤：**
 ```bash
-# 1. 删除飞致云的规则
-rm rules/company/*.md
-
-# 2. 创建你们自己的规则
-vim rules/company/region.md
-vim rules/company/query-scenarios.md
-vim rules/company/glossary.md
+cd ~/.openclaw/skills/cordys-crm/rules/company
+vim region.md
+vim query-scenarios.md
+vim glossary.md
 ```
-
-**如果不想用公司级规则：**
-- 删除 `rules/company/` 目录下所有文件
-- 所有查询都使用通用规则
 
 ---
 
@@ -154,14 +139,10 @@ cordys raw GET /settings/fields?module=account
 ./scripts/setup-cron.sh
 ```
 
-**或手动配置：**
-
+**或手动配置（Crontab）：**
 ```bash
-# 方式 1: Crontab
-crontab scripts/cron-example
-
-# 方式 2: OpenClaw Cron
-openclaw cron add --file scripts/openclaw-cron.json
+crontab -e
+# 添加：0 2 * * 0 /path/to/cordys-crm/scripts/sync-fields.sh
 ```
 
 **手动同步：**

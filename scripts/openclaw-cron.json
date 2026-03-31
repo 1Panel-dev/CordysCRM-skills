@@ -7,11 +7,7 @@
   },
   "payload": {
     "kind": "systemEvent",
-    "text": "🔄 同步 CRM 字段定义 - Cordys CRM Skill"
+    "text": "🔄 同步 CRM 字段定义"
   },
-  "sessionTarget": "isolated",
-  "enabled": true,
-  "delivery": {
-    "mode": "announce"
-  }
+  "sessionTarget": "isolated"
 }
