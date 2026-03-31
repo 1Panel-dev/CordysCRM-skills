@@ -99,8 +99,21 @@ crm_page() {
 }
 
 crm_search() {
-  local module="$1" json="${2:-}"
+  local module="$1" param="${2:-}"
   local path="global/search/${module}"
+  local json
+  
+  # 如果没有提供参数，使用默认结构
+  if [[ -z "$param" ]]; then
+    json='{"keyword":"","current":1,"pageSize":30}'
+  # 如果参数以 { 开头，说明是 JSON
+  elif [[ "$param" == \{* ]]; then
+    json="$param"
+  # 否则是纯关键词
+  else
+    json=$(jq -n --arg k "$param" '{"keyword":$k,"current":1,"pageSize":30}')
+  fi
+  
   api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$json"
 }
 
