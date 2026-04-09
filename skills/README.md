@@ -50,7 +50,7 @@ cordys crm page opportunity '{"owner":"你的用户 ID"}'
 cordys-crm/
 ├── bin/                        # CLI 工具（Shell/Node.js/Python）
 ├── references/
-│   └── api.md                  # API 接口参考
+│   └── crm-api.md              # API 接口参考
 ├── rules/
 │   ├── platform/               # 平台级规则（通用）
 │   │   ├── fields.md           # 字段映射表
