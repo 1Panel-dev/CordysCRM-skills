@@ -1,3 +1,10 @@
+---
+name: cordys-crm
+description: "Cordys CRM CLI 指令映射技能，支持将自然语言高效转换为标准 `cordys crm` 命令，具备意图识别、模块匹配、参数补全及分页与全量查询处理能力"
+version: 2.0.0
+license: MIT
+---
+
 # Cordys CRM Skill
 
 > 基于 Cordys CRM 平台的通用查询技能，支持线索/客户/商机/合同等模块的查询与搜索。
