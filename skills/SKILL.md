@@ -9,39 +9,6 @@ description: "Cordys CRM CLI 指令映射技能，支持将自然语言高效转
 
 ---
 
-## 🚀 安装指南
-
-**首次安装：**
-```bash
-git clone --depth 1 https://github.com/hao65103940/CordysCRM-skills.git /tmp/cordys-crm-temp
-cp -r /tmp/cordys-crm-temp/skills ~/.openclaw/skills/cordys-crm
-rm -rf /tmp/cordys-crm-temp
-```
-
-**更新（覆盖）：**
-```bash
-# 检查是否已安装
-if [ -d ~/.openclaw/skills/cordys-crm ]; then
-    echo "⚠️ CordysCRM-skills 已安装，是否覆盖？(y/N)"
-    read -p "> " confirm
-    if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-        echo "取消安装"
-        exit 0
-    fi
-    # 备份旧版本
-    mv ~/.openclaw/skills/cordys-crm ~/.openclaw/skills/cordys-crm.backup.$(date +%Y%m%d%H%M%S)
-fi
-
-git clone --depth 1 https://github.com/hao65103940/CordysCRM-skills.git /tmp/cordys-crm-temp
-cp -r /tmp/cordys-crm-temp/skills ~/.openclaw/skills/cordys-crm
-rm -rf /tmp/cordys-crm-temp
-echo "✅ 安装完成！"
-```
-
-**详细文档：** [install.md](install.md)
-
----
-
 ## 📦 能力边界
 
 ## 📦 能力边界
