@@ -1,3 +1,31 @@
-*.env
-.token_cache
+# 环境变量（敏感信息）
+.env
+
+# 备份文件
+*.backup
+*.backup.*
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.temp
+
+# 编辑器文件
+.vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+*.pyc

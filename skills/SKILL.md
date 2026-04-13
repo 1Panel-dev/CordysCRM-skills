@@ -1,208 +1,434 @@
 ---
 name: cordys-crm
-description: Cordys CRM CLI 指令映射技能，支持将自然语言高效转换为标准 `cordys crm` 命令，具备意图识别、模块匹配、参数补全及分页与全量查询处理能力，输出简洁稳定、无歧义。
-environment:
-  required:
-    - CORDYS_ACCESS_KEY
-    - CORDYS_SECRET_KEY
-    - CORDYS_CRM_DOMAIN
-  optional: []
-security:
-  requiresSecrets: true
-  sensitiveEnvironment: true
-  externalNetworkAccess: true
-  notes: 此技能需要访问Cordys CRM API，使用X-Access-Key和X-Secret-Key进行身份验证。请确保只向可信的CORDYS_CRM_DOMAIN发送请求。
+description: "Cordys CRM CLI 指令映射技能，支持将自然语言高效转换为标准 `cordys crm` 命令，具备意图识别、模块匹配、参数补全及分页与全量查询处理能力"
 ---
 
-# Cordys CRM CLI 使用说明
+# Cordys CRM Skill
 
-  Cordys CRM CLI 指令映射技能，本技能用于将自然语言需求精准转换为可执行的 `cordys crm` 标准命令，确保输出稳定、可预测、无歧义。
-  
-【核心能力】
+> 基于 Cordys CRM 平台的通用查询技能，支持线索/客户/商机/合同等模块的查询与搜索。
 
-  - 自动识别用户意图（列表 / 搜索 / 详情 / 跟进 / 原始接口）
-  - 自动识别模块（lead / account / opportunity / contract 等）
-  - 自动补全 JSON 参数
-  - 自动构造 filters / sort / combineSearch
-  - 自动补充分页默认值
-  - 支持“查询全部/全部导出/拉全量”等语义下的自动翻页拉取
-  - 支持二级模块（如 contract/payment-plan,pool/account,pool/lead）
+---
 
-## 安装
+## 📦 能力边界
+
+### ✅ 支持的功能
+
+| 类型 | 功能 | 命令 |
+|------|------|------|
+| **分页查询** | 按条件查询列表 | `cordys crm page <module>` |
+| **全局搜索** | 搜索名称/电话 | `cordys crm search <module>` |
+| **查详情** | 获取单条记录 | `cordys crm get <module> <id>` |
+| **跟进管理** | 查跟进计划/记录 | `cordys crm follow plan/record` |
+| **特殊查询** | 产品/组织架构/联系人 | `cordys crm product/org/contact` |
+| **原始 API** | 任意接口调用 | `cordys raw <METHOD> <PATH>` |
+
+### ❌ 不支持的功能
+
+| 功能 | 说明 | 替代方案 |
+|------|------|---------|
+| 数据写入 | 创建/更新/删除记录 | 使用 `raw` 命令手动调用 API |
+| 批量操作 | 批量创建/更新 | 使用 `raw` 命令循环调用 |
+
+---
+
+## 🔧 使用条件
+
+### 1. 环境要求
+
+- **CLI 工具**：三选一
+  - `cordys` (Shell) - **推荐**，依赖 `curl`
+  - `cordys.js` (Node.js) - 跨平台，依赖 `Node.js`
+  - `cordys.py` (Python) - 备用，依赖 `Python3`
+
+- **环境变量**（必需）：
+  ```bash
+  ACCESS_KEY=your_access_key
+  SECRET_KEY=your_secret_key
+  CRM_DOMAIN=https://your-crm-domain.com
+  ```
+
+### 2. 配置说明
+
+| 配置项 | 位置 | 说明 |
+|--------|------|------|
+| API 密钥 | `.env` | 从 CRM 系统获取 |
+| 字段 ID | `rules/platform/fields.md` | 可定期同步更新 |
+| 平台规则 | `rules/platform/` | 通用规则（如字段映射） |
+| 公司规则 | `rules/company/` | 自定义规则（可选） |
+
+---
+
+## 📚 规则系统
+
+### 规则层级
+
+```
+SKILL.md (边界定义)
+    ├── rules/platform/         # 平台级规则（通用，任何公司适用）
+    │   ├── fields.md           # 字段映射表
+    │   └── sync.md             # 字段同步指南
+    │
+    └── rules/company/          # 公司级规则（可插拔，自定义）
+        ├── README.md           # 自定义说明模板
+        ├── region.md           # 区域映射
+        ├── query-scenarios.md  # 查询场景
+        └── glossary.md         # 术语映射
+```
+
+### 规则优先级
+
+**公司规则 > 平台规则 > 默认规则**
+
+- 平台规则：所有公司通用（如飞致云区域划分）
+- 公司规则：覆盖平台规则（如自定义区域名称）
+
+---
+
+## ⚠️ 线索跟进提醒规则（重要）
+
+当用户查询**自己名下的线索**时，必须检查以下时间阈值并给出友好提醒：
+
+### 触发条件
+
+| 检查项 | 字段 | 预警阈值 | 超期阈值 |
+|-------|------|---------|---------|
+| 领取时间 | `collectionTime` | ≥ 87 天（剩余≤3 天） | ≥ 90 天 |
+| 跟进时间 | `followTime` | ≥ 27 天未跟进 | ≥ 30 天未跟进 |
+
+### 执行流程
+
+1. **判断是否查询自己的线索**：检查查询条件是否包含 `owner` 或 `follower`
+2. **计算时间差**：对比当前时间与 `collectionTime` / `followTime`
+3. **输出提醒**：在查询结果**之前**先输出提醒表格
+
+### 输出模板
+
+```
+🔔 线索跟进提醒
+
+⚠️ 领取即将超期（2 条）：
+| 公司名称 | 领取时间 | 已领取天数 | 剩余天数 |
+|---------|---------|-----------|---------|
+| 山西移动 | 2026-01-15 | 88 天 | 2 天 |
+
+🚨 跟进严重超时（1 条）：
+| 公司名称 | 最后跟进时间 | 未跟进天数 |
+|---------|------------|-----------|
+| 上海 XX 公司 | 2026-03-10 | 34 天 |
+
+────────────────────────────────────────
+
+📊 查询结果（共 5 条）：
+...
+```
+
+**详细规则：** `rules/company/reminder-rules.md`
+
+---
+
+## 📋 命令格式
 
 ```bash
-clawdhub install cordys-crm
+# 基础查询
+cordys crm page <module> [params]      # 权限内高级查询
+cordys crm search <module> [params]    # 全局搜索（固定字段）
+cordys crm get <module> <id>           # 获取单条记录
+
+# 跟进管理
+cordys crm follow plan <module> [params]
+cordys crm follow record <module> [params]
+
+# 特殊查询
+cordys crm product [keyword]
+cordys crm org
+cordys crm contact <module> <id>
+
+# 原始 API
+cordys raw <METHOD> <PATH> [body]
 ```
 
-## 环境变量（必须）
+### search vs page 区别
 
-此技能需要以下环境变量才能正常工作。这些变量可以通过两种方式提供：
+| 命令 | 用途 | 权限 | 支持字段 |
+|------|------|------|---------|
+| `search` | 全局搜索 | 无权限限制 | 仅固定字段（名称/电话等） |
+| `page` | 高级查询 | **个人权限内** | 任意字段（产品/区域/阶段等） |
 
-1. **系统环境变量**：直接设置在当前shell环境中
-2. **`.env`文件**：在技能目录中创建`.env`文件（注意：此文件包含敏感信息，不应提交到版本控制）
+**简单记：**
+- `search` → 搜**固定字段**（公司名/手机号），全局搜索
+- `page` → 查**个人权限内**数据，支持高级过滤
 
-### 必需变量
+### 模块别名
+
+| 别名 | 实际模块 | 说明 |
+|------|---------|------|
+| `lead` | `lead` | 线索 |
+| `account` | `account` | 客户 |
+| `opportunity` | `opportunity` | 商机 |
+| `contract` | `contract` | 合同 |
+| `pool` | `pool` | 客户池 |
+| `product` | `product` | 产品 |
+| `contact` | `contact` | 联系人 |
+
+### 二级模块（子资源）
+
+| 二级模块 | 说明 | API 路径 |
+|---------|------|---------|
+| `contract/payment-plan` | 回款计划 | `/contract/payment-plan/page` |
+| `contract/payment-record` | 回款记录 | `/contract/payment-record/page` |
+| `contract/business-title` | 工商抬头 | `/contract/business-title/page` |
+| `contract/invoice` | 发票 | `/invoice/page` |
+| `opportunity/quotation` | 报价单 | `/opportunity/quotation/page` |
+
+**使用示例：**
 ```bash
-# 访问 Cordys CRM API 的必要信息：
-CORDYS_ACCESS_KEY=你的 Access Key
-CORDYS_SECRET_KEY=你的 Secret Key
-CORDYS_CRM_DOMAIN=https://your-cordys-domain
+cordys crm page contract/payment-plan '{"current":1,"pageSize":10}'
+cordys crm page contract/payment-record '{"sourceId":"合同 ID"}'
 ```
 
-### 安全注意事项
-- `.env`文件中的凭证是高度敏感的，应妥善保管
-- 建议使用环境变量而非`.env`文件，以避免凭证泄露
-- 定期轮换API密钥
-- 确保`CORDYS_CRM_DOMAIN`指向可信的Cordys CRM实例
+---
 
-## ⚠️ 安全警告
+## 🔄 字段同步
 
-此技能需要敏感的环境变量（API密钥和域名）。请注意以下安全事项：
+**首次使用建议配置自动同步**（字段定义可能更新）
 
-1. **凭证安全**：`CORDYS_ACCESS_KEY` 和 `CORDYS_SECRET_KEY` 是敏感凭证，请妥善保管
-2. **域名验证**：确保 `CORDYS_CRM_DOMAIN` 指向可信的Cordys CRM实例
-3. **网络请求**：此技能会向指定的域名发送HTTP请求，包含您的API凭证
-4. **`raw`命令风险**：使用 `cordys.sh raw` 命令时，脚本会将您的凭证发送到指定的URL。请勿向不受信任的域名发送请求
-5. **环境隔离**：建议在受控环境中使用此技能，避免凭证泄露
-
-建议仅在信任的Cordys CRM实例上使用此技能，并定期轮换API密钥。
-## CLI 版本选择
-
-本项目提供两个版本 CLI：
-
-| 版本                       | 推荐程度 | 说明 |
-|--------------------------|----|----|
-| **Shell 版本 `cordys.sh`** |  推荐 | 无需 Python，执行更轻量 |
-| Python 版本 `cordys.py`    | 备用 | 需要 Python3 + requests |
-
-
-目录结构里，`scripts/` 目录存放这两个 CLI 实现，标准化排列为：
-```
-scripts/
-├── cordys.sh       # 优先的 Shell 可执行脚本
-└── cordys.py    # 不支持 Shell 时可选择 Python 实现
-```
-
-**默认优先使用 Shell 版本。**
-
-Python 版本仅在以下情况使用：
-
-- 系统不支持 Bash
-- Windows 环境
-- Shell CLI 不可用
-
-## 基本流程
-1. 明确意图：列出/搜索/获取/跟进。
-2. 指定目标模块（如 `lead`、`opportunity`）。
-3. 根据需求补充关键词、过滤条件、排序或分页参数。
-4. 确认是否需要 JSON body（如 `search`、`follow plan`、`raw`）。
-5. 说明期望的输出形式（简短摘要/全部字段/只要某字段）。
-
-## 指令映射（常用）
-| 场景       | 建议命令                                              | 备注                                                     |
-|----------|---------------------------------------------------|--------------------------------------------------------|
-| 列表或分页查看  | `cordys.sh crm page <module> ["keyword"]`            | 若用户只提关键词，会自动构造 `{keyword:..., current:1, pageSize:30}` |
-| 全局搜索     | `cordys.sh crm search <module> <JSON body>`          | 需 `combineSearch`、`filters`、`sort`，可补全默认值              |
-| 详情       | `cordys.sh crm get <module> <id>`                    | 直接拉取记录                                                 |
-| 跟进计划或记录  | `cordys.sh crm follow plan 或 record <module> <body>` | `body` 应包含 `sourceId`，计划还需要 `status`/`myPlan` |
-| 原始接口     | `cordys raw <METHOD> <PATH> [<body>]`             | 用于自定义端点或二级模块，如 `/contract/payment-plan`                |
-
-## 常用示例
+**一键配置（推荐）：**
 ```bash
-# 分页查询线索列表（默认分页参数）
-cordys.sh crm page lead
-# 分页查询商机列表（默认分页参数）
-cordys.sh crm page opportunity
-# 分页查询客户列表（默认分页参数）
-cordys.sh crm page account
-
-# 分页列表（带关键词）
-cordys.sh crm page lead "测试"
-
-# 搜索（完整 JSON）
-cordys.sh crm search opportunity '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"电力","filters":[]}'
-
-# 跟进计划
-cordys.sh crm follow plan account '{"sourceId":"123","current":1,"pageSize":10,"status":"UNFINISHED","myPlan":false}'
-
-# 获取组织架构
-cordys.sh crm org
-
-# 查询产品
-cordys.sh crm product "测试产品"
-
-# 获取联系人
-cordys.sh crm contact account "927627065163785"
-
+./scripts/setup-cron.sh
 ```
 
-## 二级模块支持
-
-Cordys CRM 部分资源属于二级模块。
-
-例如：
+**手动配置（选一种）：**
 
 ```bash
+# 方式 1: Crontab（简单通用）
+crontab scripts/cron-example
 
- #查询回款计划的分页列表，支持传入关键词/JSON body，实际上调用的是 POST /contract/payment-plan/page。
- cordys.sh crm page contract/payment-plan
- 
- #查询发票的分页列表，通过 POST /invoice/page 获取，每个条件都可以通过 filters 精细控制。
- cordys.sh crm page invoice 
- 
- #检索工商抬头列表，同样支持关键词/filters。
- cordys.sh crm page contract/business-title 
- 
- #查看回款记录列表，可结合关键词、filters 或 viewId 进行精细筛选。
- cordys.sh crm page contract/payment-record 
- 
- # 查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，必填属性是 poolId 通过 lead-pool 接口获取。
- cordys.sh crm page pool/lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 lead-pool API 获取","viewId":"ALL","filters":[]}'
- 
- #查看线索池中的线索，可结合关键词、filters 或 viewId 进行精细筛选，必填属性是 poolId 通过 account-pool 接口获取。
- cordys.sh crm page pool/account '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","poolId":"必填项，通过 account-pool API 获取","viewId":"ALL","filters":[]}'
-
- 
+# 方式 2: OpenClaw Cron
+openclaw cron add --file scripts/openclaw-cron.json
 ```
 
-## 深度 API 调用
+**手动同步：**
+```bash
+./scripts/sync-fields.sh
+```
 
-查看字段
+**同步内容：** 字段 ID、字段名称、字段类型  
+**输出文件：** `rules/platform/fields.md`  
+**建议频率：** 每周一次
+
+---
+
+## 🗣️ 术语映射（公司规则）
+
+**本技能包含飞致云（Fit2Cloud）的自定义术语映射**，位于 `rules/company/glossary.md`：
+
+### 产品简称
+| 简称 | 产品 |
+|------|------|
+| `js` / `jms` | JumpServer 企业版 |
+| `mk` | MaxKB 专业版/企业版 |
+| `ms` | MeterSphere 企业版 |
+| `de` | DataEase 系列 |
+| `1p` | 1Panel 专业版 |
+| `oc` | OpenClaw 一体机 |
+
+### 行业映射
+| 用户输入 | 标准化行业 |
+|---------|-----------|
+| 汽车 | 制造 |
+| 医院、医药 | 医疗（医药、医院、医学检测等） |
+| 证券、基金、保险 | 非银金融 |
+| 政府 | 政府和军工 |
+| 互联网 | 高科技和互联网 |
+
+### 商机阶段
+| 用户用语 | CRM 阶段 |
+|---------|---------|
+| 赢单、下单、成交 | `SUCCESS` |
+| 输单、丢单 | `FAILURE` |
+| 新签 | ≠ "多期续费" |
+| 续费 | 多期续费、维保、扩容、增购 |
+
+> ⚠️ **其他公司使用时，请替换 `rules/company/` 下的文件为自己公司的规则！**
+
+---
+
+## 🔗 关联查询
+
+**原则：能单模块就不关联**
+
+某些查询需要跨模块关联（如"查 XX 行业客户的商机"），因为商机本身没有行业字段。
+
+**关联查询步骤：**
+```bash
+# 步骤 1: 查政务行业客户，拿 customerId 列表
+CUSTOMER_IDS=$(cordys crm page account '{
+  "combineSearch":{"conditions":[{"value":["政府和军工"],"operator":"IN","name":"1751888184000005"}]}
+}' | jq -r '.data.list[].id')
+
+# 步骤 2: 转 JSON 数组
+IDS_JSON=$(echo "$CUSTOMER_IDS" | jq -R . | jq -s .)
+
+# 步骤 3: 查这些客户的商机（默认查已成交）
+cordys crm page opportunity "{
+  \"combineSearch\": {
+    \"conditions\": [
+      {\"value\": $IDS_JSON, \"operator\": \"IN\", \"name\": \"customerId\"},
+      {\"value\": [\"SUCCESS\"], \"operator\": \"IN\", \"name\": \"stage\"}
+    ]
+  }
+}"
+```
+
+**详细场景：** `rules/company/query-scenarios.md`
+
+---
+
+## 🛠️ jq 依赖
+
+**部分高级功能需要 `jq` 工具**（JSON 处理）：
 
 ```bash
-cordys.sh raw GET /settings/fields?module=account
+# 安装 jq
+apt-get install jq      # Debian/Ubuntu
+yum install jq          # CentOS/RHEL
+brew install jq         # macOS
 ```
 
-复杂过滤示例：
+**常用命令：**
+```bash
+# 提取 ID 列表
+jq -r '.data.list[].id'
+
+# 转 JSON 数组
+jq -R . | jq -s .
+
+# 筛选金额大于 50 万
+jq '[.data.list[] | select(.amount != null and .amount > 500000)]'
+```
+
+---
+
+## 📖 文档导航
+
+### 核心文档
+| 文档 | 说明 |
+|------|------|
+| `references/crm-api.md` | **API 接口参考** + 查询语法 + **全量查询最佳实践** |
+| `rules/platform/fields.md` | 字段映射说明 |
+| `rules/platform/sync.md` | 字段同步配置指南 |
+| `rules/company/README.md` | 公司级规则说明 |
+
+### 公司规则（飞致云）
+| 文档 | 说明 |
+|------|------|
+| `rules/company/region.md` | 区域映射（北/东/南区） |
+| `rules/company/glossary.md` | 术语映射（产品简称/行业别名） |
+| `rules/company/query-scenarios.md` | 关联查询场景 |
+
+### 实战经验
+| 文档 | 说明 |
+|------|------|
+| `docs/REPORT.md` | 功能验证报告 |
+| `docs/PAGINATION-BEST-PRACTICE.md` | 全量查询实战案例（详细版） |
+
+---
+
+## 🚀 快速开始
+
+### 首次使用必读
+
+**当用户首次安装或配置此技能时，主动提醒以下内容：**
+
+1. ⚠️ **配置 API 密钥**
+   ```bash
+   cp .env.example .env
+   vim .env  # 填写 ACCESS_KEY 和 SECRET_KEY
+   ```
+
+2. ⚠️ **建议配置自动同步**（重要！）
+   ```
+   Cordys CRM 字段定义可能更新，建议配置定时任务定期同步字段映射。
+   
+   选择一种方式：
+   - Crontab: crontab scripts/cron-example
+   - systemd: sudo systemctl enable crm-fields-sync.timer
+   - OpenClaw: openclaw cron add --file scripts/openclaw-cron.json
+   
+   或手动同步：./scripts/sync-fields.sh
+   ```
+
+3. ✅ **测试连接**
+   ```bash
+   cordys crm page lead
+   ```
+
+### 标准流程
 
 ```bash
-cordys.sh crm search opportunity '{"filters":[{"field":"Stage","operator":"equals","value":"Closed Won"}]}'
+# 1. 配置环境变量
+cp .env.example .env
+vim .env  # 填写 ACCESS_KEY 和 SECRET_KEY
+
+# 2. 测试连接
+cordys crm page lead
+
+# 3. 同步字段（可选）
+./scripts/sync-fields.sh
+
+# 4. 开始使用
+cordys crm search lead '{"keyword":"公司名"}'
 ```
 
-## 分页查询交互优化
-为了避免分页查询的交互断层，优先执行一次识别出的指令并返回结果：
-1. **分页控制**：默认 `current=1`、`pageSize=30`，根据响应判断是否有多页，如果有则提示用户是否要翻下一页。
-2. **字段与输出范围**：默认全部字段、摘要、特定字段组合。
-3. **默认格式**：表格或列表形式展示，除非用户特别说明要 JSON 或其他格式。
+---
 
-## 高级技巧
-- 搜索命令需要完整 JSON，若用户只给关键词或简单条件，可自动补齐 `current=1`、`pageSize=30`、`combineSearch={...}`。
-- 过滤器格式为 `{"field":"字段","operator":"equals","value":"值"}`，排序格式为 `{"field":"desc"}`。
-- 支持二级模块（例如 `contract/payment-plan`、`contract/payment-record`），CLI 命令形式仍为 `cordys.sh crm page <module>`。
-- `cordys.sh raw` 可以按原始 GET/POST 访问 `/settings/fields`、`/contract/business-title` 等非标准接口。
+## 📝 版本信息
 
-## 助手判断意图的提示词
-- “列表”/“分页查看”：映射到 `page` 指令；可补上关键词或 filters
-- “查询全部”/“全部数据”/“拉全量”/“查完所有页”：自动补充上翻页参数，并根据响应提示用户是否继续翻页
-- “搜索”/“筛选”：使用 `search`，补齐 JSON body
-- “查看详情”：用 `get` + 决定的 ID
-- “跟进”：「跟进计划」→ `follow plan`，「跟进记录」→ `follow record`
+- **Skill 版本**：2.0.0
+- **最后更新**：2026-04-01
+- **兼容 CRM 版本**：Cordys CRM 2026.x
 
-## 日志与异常
-- CLI 默认读取 `.env`，也可通过前置环境变量覆盖。
-- 若返回 `code` 非 `100200`，要记录 `message` 并向用户说明。
-- 若返回 401 或 403，提示用户检查认证信息。
+### 更新日志
 
-## 问题反馈
-如有任何问题或建议，请通过以下方式联系我们：
-- GitHub Issues: https://github.com/1Panel-dev/CordysCRM-skills/issues
+**v2.0.0 (2026-04-01)**
+- ✅ 添加全量查询最佳实践（分页循环标准流程）
+- ✅ 补充二级模块查询支持（回款计划/回款记录/发票等）
+- ✅ 完善术语映射说明（产品简称/行业别名/商机阶段）
+- ✅ 添加关联查询场景示例
+- ✅ 补充 jq 依赖说明
+
+**v1.0.0 (2026-03-31)**
+- 初始版本发布
+
+---
+
+## 📞 支持
+
+- **上游仓库**：https://github.com/hao65103940/CordysCRM-skills
+- **问题反馈**：https://github.com/hao65103940/CordysCRM-skills/issues
+
+---
+
+## ⚠️ 重要提示
+
+### 其他公司使用时
+
+**本技能包含飞致云（Fit2Cloud）的自定义规则**，位于 `rules/company/` 目录：
+
+| 文件 | 内容 | 是否需要替换 |
+|------|------|-------------|
+| `region.md` | 区域映射（北/东/南区） | ✅ **必须替换** |
+| `glossary.md` | 术语映射（产品简称/行业） | ✅ **必须替换** |
+| `query-scenarios.md` | 关联查询场景 | ✅ **建议替换** |
+
+**最小化配置：** 如果不想用公司级规则，可以删除 `rules/company/` 目录所有文件，只使用通用规则（`references/` 和 `rules/platform/`）。
+
+### 敏感配置
+
+**请勿将以下文件提交到 Git 或分享到公开仓库：**
+
+| 文件 | 内容 |
+|------|------|
+| `.env` | API 密钥（ACCESS_KEY/SECRET_KEY/CRM_DOMAIN） |
+
+**建议：** 将 `.env` 加入 `.gitignore`，使用 `.env.example` 作为模板。
