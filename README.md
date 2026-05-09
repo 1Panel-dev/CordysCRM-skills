@@ -11,7 +11,7 @@
 Cordys CRM Skill 的解法很简单：**让 AI 在开口之前，先知道坐在屏幕前的是谁。**
 
 你只需要输入 API Key，剩下的由系统自动完成：
-1. 自动调用 `GET /personal/center/info` 获取你的身份
+1. 自动获取你的身份
 2. 根据岗位自动匹配角色（销售、经理、财务）
 3. 加载该角色的工作模式——查询范围、输出重点、预警规则
 4. 开始对话，**就像你已经用了很久一样**
@@ -20,7 +20,7 @@ Cordys CRM Skill 的解法很简单：**让 AI 在开口之前，先知道坐在
 
 ---
 
-## 三种角色，三种视角
+## 不同角色，不同视角
 
 | 角色 | 他关心的是 | 他不需要的是 |
 |------|-----------|------------|
@@ -124,25 +124,6 @@ flowchart TB
 输出侧重：金额精确——汇总 + 明细 + 逾期
 主动预警：回款逾期、未开票、计划集中到期
 ```
-
----
-
-## 只需要三步
-
-```bash
-# 1. 安装
-clawdhub install cordys-crm
-
-# 2. 配置（3 行）
-CORDYS_ACCESS_KEY=***
-CORDYS_SECRET_KEY=***
-CORDYS_CRM_DOMAIN=https://your-domain
-
-# 3. 对话
-# 不需要培训，不需要写提示词，不需要指定身份
-# 系统自动感知你是谁，然后按你的角色工作
-```
-
 ---
 
 ## 能力边界
@@ -185,18 +166,44 @@ CordysCRM-skills/
 ```
 
 ---
+#  快速开始
 
-## 环境要求
+```bash
+# 通过 Clawdhub 安装（推荐，自动处理依赖和更新）
+clawdhub install cordys-crm
 
-- OpenClaw
-- Bash 3.2+ / Python 3.6+
-- curl
-- Cordys CRM 访问凭证（Access Key + Secret Key）
+# 直接使用安装脚本（适合有 Bash 环境的用户）
+curl -fsSL https://raw.githubusercontent.com/1Panel-dev/CordysCRM-skills/main/install.sh | bash
+```
+## 手动安装
 
----
+```bash
+# 克隆 CordysCRM-skills 仓库到 OpenClaw 的 skills 目录 （如果已有同名目录请先备份或删除）版本号可根据需要调整
+git clone --branch main https://github.com/1Panel-dev/CordysCRM-skills ~/.openclaw/workspace/skills/CordysCRM-skills
+# 将克隆的目录重命名为 cordys-crm
+mv ~/.openclaw/workspace/skills/CordysCRM-skills/skills ~/.openclaw/workspace/skills/cordys-crm
+# 删除克隆的仓库目录
+rm -rf ~/.openclaw/workspace/skills/CordysCRM-skills
 
-## 安全
+```
+## 环境配置
 
-- `.env` 含敏感凭证，不提交版本控制
-- `raw` 命令仅限信任域名
+```bash 
+# 将克隆的目录重命名为 cordys-crm
+vi ~/.openclaw/workspace/skills/cordys-crm/.env
+
+# 编辑 .env 文件，配置 Cordys CRM 的 API 访问地址和认证信息
+
+# 示例：
+# CORDYS_BASE_URL=https://your-cordys-instance.com
+# CORDYS_API_KEY=your_api_key
+# CORDYS_API_SECRET=your_api_secret
+
+```
+
+# 安全边界
+
+- `.env` 包含敏感凭证，不要提交版本控制
+- `raw` 命令会向指定域名发送你的 API 凭证，仅限信任域名
+- 系统默认拒绝非配置域名的请求（可设置 `CORDYS_ALLOW_UNTRUSTED=1` 强制放行）
 - 定期轮换 API Key
