@@ -1,6 +1,6 @@
 # Cordys CRM Skill
 
-## 同一个问题，不同角色需要不同的答案
+## 会 **认人** 的 CRM AI 助手
 
 一个销售和一个销售经理问同一个问题"看看线索"，得到的应该是不一样的答案：
 - 销售想看的是「**我的**线索，哪些该跟进了」
@@ -54,38 +54,37 @@ Cordys CRM Skill 的解法很简单：**让 AI 在开口之前，先知道坐在
 ## 怎么做到的
 
 ```mermaid
-flowchart TB
-    subgraph Input["你的一句话"]
-        NL["看看最近有什么要注意的"]
-    end
+flowchart TD
 
-    subgraph Engine["角色感知引擎"]
-        direction TB
-        WHO["whoami → 你是谁"]
-        MATCH["position → 匹配角色"]
-        LOAD["加载角色专属配置"]
-        WHO --> MATCH --> LOAD
-    end
+A[自然语言输入] --> B[身份解析层]
 
-    subgraph Roles["三种角色视角"]
-        S["销售·只看自己"]
-        M["经理·看全部门"]
-        F["财务·按时间"]
-    end
+B --> C[角色感知引擎]
 
-    subgraph CLI["CLI 翻译层"]
-        CMD["自然语言 → crm page/search/get/follow"]
-    end
+C --> C1[销售]
+C --> C2[销售经理]
+C --> C3[财务]
+C --> C4[管理员]
 
-    subgraph API["Cordys CRM API"]
-        RESP["返回数据 → 输出结论"]
-    end
+C1 --> D1[个人视角]
+C2 --> D2[团队视角]
+C3 --> D3[资金视角]
+C4 --> D4[系统视角]
 
-    NL --> Engine
-    Engine --> Roles
-    Roles --> CLI
-    CLI --> API
+D1 --> E[CLI 语义翻译层]
+D2 --> E
+D3 --> E
+D4 --> E
+
+E --> F[CRM API]
+
+F --> G[JSON 标准化]
+
+G --> H[智能解释层]
+
+H --> I[结构化输出]
 ```
+
+---
 
 
 四个核心模块各自独立、互不耦合：
