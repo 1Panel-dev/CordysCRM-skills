@@ -144,10 +144,10 @@ pool/account         公海
 本月有 13 条线索，其中 3 条超期：
 
 ┌──────────────┬──────────┬────────┐
-│ 客户          │ 时间      │ 状态   │
+│ 客户 │ 时间 │ 状态 │
 ├──────────────┼──────────┼────────┤
-│ XXX 公司      │ 05-06    │ 新     │
-│ YYY 集团      │ 05-02    │ 超期   │
+│ XXX 公司 │ 05-06 │ 新 │
+│ YYY 集团 │ 05-02 │ 超期 │
 └──────────────┴──────────┴────────┘
 ```
 
@@ -189,26 +189,26 @@ CordysCRM-skills/
 ├── README.md
 ├── skills/
 │
-│   ├── core/
-│   │   ├── role-engine.md        # 🧠 角色感知引擎（核心）
-│   │   ├── cli-spec.md           # ⚙️ CLI 语义规范
-│   │   ├── output-engine.md      # 🧾 输出解释层
-│   │   └── risk-engine.md        # ⚠️ 风险识别引擎
+│ ├── core/
+│ │ ├── role-engine.md  # 角色感知引擎（核心）
+│ │ ├── cli-spec.md  # CLI 语义规范
+│ │ ├── output-engine.md  # 输出解释层
+│ │ └── risk-engine.md  # 风险识别引擎
 │
-│   ├── profiles/
-│   │   ├── sales.md              # 👤 销售角色配置
-│   │   ├── sales-manager.md      # 👔 经理角色配置
-│   │   └── finance.md            # 💰 财务角色配置
+│ ├── profiles/
+│ │ ├── sales.md  # 销售角色配置
+│ │ ├── sales-manager.md  # 经理角色配置
+│ │ └── finance.md  # 财务角色配置
 │
-│   ├── scripts/
-│   │   ├── cordys.sh             # CLI Shell 版本
-│   │   └── cordys.py             # CLI Python 版本
+│ ├── scripts/
+│ │ ├── cordys.sh  # CLI Shell 版本
+│ │ └── cordys.py  # CLI Python 版本
 │
-│   ├── .env.example              # 🔐 配置模版
-│   └── User.md                   # 🧠 用户身份上下文
+│ ├── .env.example  # 配置模版
+│ └── User.md  # 用户身份上下文
 │
 └── references/
-    └── crm-api.md                # 📚 API 文档
+ └── crm-api.md  # API 文档
 ```
 
 ---
