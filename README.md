@@ -182,32 +182,33 @@ cordys crm whoami
 
 ---
 
-# 📁 项目结构（完整）
+# 📁 项目结构
 
 ```text
-├── README.md                     # 说明文档
-└── skills/
-    ├── SKILL.md                  # ℹ️ 入口编排
-    │
-    ├── core/
-    │   ├── role-engine.md        # 🧠 角色感知引擎
-    │   ├── cli-spec.md           # ⚙️ CLI 语义规范
-    │   ├── output-engine.md      # 🧾 输出解释层
-    │   └── risk-engine.md        # ⚠️ 风险识别引擎
-    │
-    ├── profiles/
-    │   ├── sales.md              # 👤 销售角色配置
-    │   ├── sales-manager.md      # 👔 经理角色配置
-    │   └── finance.md            # 💰 财务角色配置
-    │
-    ├── scripts/
-    │   ├── cordys.sh             # Shell CLI（推荐）
-    │   └── cordys.py             # Python CLI（备用）
-    │
-    ├── .env                      # 🔐 API 凭证（不提交）
-    ├── User.md                   # 🧠 运行时用户身份（不提交）
-    └── references/
-        └── crm-api.md            # 📚 API 参考文档
+CordysCRM-skills/
+├── README.md
+├── skills/
+│
+│   ├── core/
+│   │   ├── role-engine.md        # 🧠 角色感知引擎（核心）
+│   │   ├── cli-spec.md           # ⚙️ CLI 语义规范
+│   │   ├── output-engine.md      # 🧾 输出解释层
+│   │   └── risk-engine.md        # ⚠️ 风险识别引擎
+│
+│   ├── profiles/
+│   │   ├── sales.md              # 👤 销售角色配置
+│   │   ├── sales-manager.md      # 👔 经理角色配置
+│   │   └── finance.md            # 💰 财务角色配置
+│
+│   ├── scripts/
+│   │   ├── cordys.sh             # CLI Shell 版本
+│   │   └── cordys.py             # CLI Python 版本
+│
+│   ├── .env                      # 🔐 API 配置（不提交）
+│   └── User.md                   # 🧠 用户身份上下文
+│
+└── references/
+    └── crm-api.md                # 📚 API 文档
 ```
 
 ---
@@ -215,25 +216,37 @@ cordys crm whoami
 # 🚀 快速开始
 
 ```bash
-# 1. 安装（二选一）
-clawdhub install cordys-crm                                   # 推荐
-git clone --branch main https://github.com/1Panel-dev/CordysCRM-skills \
-  ~/.openclaw/workspace/skills/cordys-crm                      # 手动
+# 通过 Clawdhub 安装（推荐，自动处理依赖和更新）
+clawdhub install cordys-crm
 
-# 2. 配置
-cp .env.example skills/.env
-vi skills/.env    # 填入 CORDYS_ACCESS_KEY / CORDYS_SECRET_KEY / CORDYS_CRM_DOMAIN
-
-# 3. 验证
-cd skills/scripts
-bash cordys.sh crm verify   # ✅ 密钥验证成功 → 自动获取用户信息
-bash cordys.sh crm whoami   # 查看你的角色信息
-bash cordys.sh crm page lead  # 试试看线索
+# 直接使用安装脚本（适合有 Bash 环境的用户）
+curl -fsSL https://raw.githubusercontent.com/1Panel-dev/CordysCRM-skills/main/install.sh | bash
 ```
+## 手动安装
 
+```bash
+# 克隆 CordysCRM-skills 仓库到 OpenClaw 的 skills 目录 （如果已有同名目录请先备份或删除）版本号可根据需要调整
+git clone --branch main https://github.com/1Panel-dev/CordysCRM-skills ~/.openclaw/workspace/skills/CordysCRM-skills
+# 将克隆的目录重命名为 cordys-crm
+mv ~/.openclaw/workspace/skills/CordysCRM-skills/skills ~/.openclaw/workspace/skills/cordys-crm
+# 删除克隆的仓库目录
+rm -rf ~/.openclaw/workspace/skills/CordysCRM-skills
 
+```
+## 环境配置
 
----
+```bash 
+# 将克隆的目录重命名为 cordys-crm
+vi ~/.openclaw/workspace/skills/cordys-crm/.env
+
+# 编辑 .env 文件，配置 Cordys CRM 的 API 访问地址和认证信息
+
+# 示例：
+# CORDYS_BASE_URL=https://your-cordys-instance.com
+# CORDYS_API_KEY=your_api_key
+# CORDYS_API_SECRET=your_api_secret
+
+```
 
 # 安全边界
 
