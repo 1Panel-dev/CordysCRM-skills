@@ -1,179 +1,218 @@
-# Cordys CRM Skill — 会认人的 CRM 助手
+# 🚀 Cordys CRM Skill
+## 会“认人”的 CRM AI 助手
 
-> 给 API Key 就够了。剩下的交给它。
-
-你的 CRM 助手不该是个公式化的查表工具。  
-**它应该知道你是什么角色**，然后在你问出半句话之前，已经准备好了你真正想看的内容。
+> 给 API Key 就够了，其余交给系统自动完成。
 
 ---
 
-## 一句话
+## 🧠 核心理念
 
-```text
-普通 CRM 助手：你要看什么？
-我们的：销售经理您好，团队今天有 12 条新线索，其中 3 条超过 48h 未跟进，先看哪个？
-```
+传统 CRM：
 
-这不是模板化的开场白。  
-这是 **动态角色感知** 的结果——它自动调用了 `GET /personal/center/info`，知道你是谁，然后按你的角色加载了专属工作模式。
+> ❌ 你告诉系统“我要看什么”
 
----
+Cordys CRM Skill：
 
-## 一个常见的误区
-
-很多 CRM 助手期望值很高，用起来很累：
-
-| 你以为的 | 实际体验 | 我们的做法 |
-|---------|---------|----------|
-| 给个 API Key 就能用 | 还得反复告诉 AI 你是谁、看什么、怎么展示 | API Key → 自动感知身份 → 直接干活 |
-| AI 会猜你要什么 | 每次问半句就断，反问一大堆才能开始 | 追问最小化，有默认行为，异议再调整 |
-| 数据很清楚 | 贴一堆 JSON/字段列表，自己找重点 | 按角色输出关键字段+结论+预警+建议 |
-| 谁用都一样 | 销售看到的是客户数，财务想看的是金额 | 角色不同，看到的世界不同 |
-| 不用学就会 | 文档几十页，命令记不住 | 说人话就够了，AI 替你翻译成命令 |
-
-**我们的答案很直接：** 把 `CORDYS_ACCESS_KEY` / `CORDYS_SECRET_KEY` / `CORDYS_CRM_DOMAIN` 填入 `.env`，然后直接跟它说话。剩下的交给系统。
+> ✅ 系统先知道“你是谁”，再决定“你该看什么”
 
 ---
 
-## 核心架构
+## ⚡ 一句话体验
 
-```mermaid id="m3c9aa"
+普通 CRM：
+→ 你要看什么？
+
+Cordys CRM：
+→ 销售经理您好，团队今天新增 12 条线索，其中 3 条已超 48 小时未跟进，需要优先处理。
+
+---
+
+# 🧩 系统架构
+
+```mermaid
 flowchart TD
 
-    A[自然语言输入] --> B[角色感知层 Role Awareness]
+A[自然语言输入] --> B[身份解析层]
 
-    B --> B1[销售]
-    B --> B2[销售经理]
-    B --> B3[财务]
+B --> C[角色感知引擎]
 
-    B1 --> C1[个人目标 / 我的线索 / 商机 / 跟进]
-    B2 --> C2[团队管理 / 排名 / 风险 / 执行情况]
-    B3 --> C3[回款 / 发票 / 资金 / 逾期分析]
+C --> C1[销售]
+C --> C2[销售经理]
+C --> C3[财务]
+C --> C4[管理员]
 
-    C1 --> D[cordys CLI 语义翻译层]
-    C2 --> D
-    C3 --> D
+C1 --> D1[个人视角]
+C2 --> D2[团队视角]
+C3 --> D3[资金视角]
+C4 --> D4[系统视角]
 
-    D --> D1[crm/search]
-    D --> D2[crm/get]
-    D --> D3[crm/list]
-    D --> D4[crm/page]
+D1 --> E[CLI 语义翻译层]
+D2 --> E
+D3 --> E
+D4 --> E
 
-    D --> E[CRM API 层]
+E --> F[CRM API]
 
-    E --> F[统一 JSON 数据]
+F --> G[JSON 标准化]
 
-    F --> G[结果解释层]
-    G --> H[表格 + 结论 + 风险提示]
-```
+G --> H[智能解释层]
 
-**零配置。**  
-你只需要在 `.env` 里写好三分信息：
-
-```ini
-CORDYS_ACCESS_KEY=xxx
-CORDYS_SECRET_KEY=xxx
-CORDYS_CRM_DOMAIN=https://your-domain
+H --> I[结构化输出]
 ```
 
 ---
 
-## 角色工作模式对比
+# 🧠 角色感知能力
 
-| | 销售 | 销售经理 | 财务 |
-|---|---|---|---|
-| **默认过滤** | 只看我的 | 看部门 | 按本月时间 |
-| **数据深度** | 列表 + 摘要 | 团队统计 + 排名 | 金额汇总 + 明细 |
-| **主动提醒** | 超期线索、商机卡点、今日计划 | 跟进覆盖率、低产出成员、目标落后 | 回款逾期、未开票、计划到期 |
-| **查询范围** | lead / opportunity / account | 同上 + org / members | contract / payment / invoice |
-| **输出侧重** | 操作建议 | 管理决策 | 数值精确 |
-| **输出示例** | `⚠️ Xxx 线索已 5 天未跟进` | `🚨 部门跟进率仅 60%` | `🚨 Xxx 合同回款逾期 15 天` |
+角色不是标签，而是**上下文系统**
 
-> 如果你问"全部数据"或"看别人的"，系统自动尊重你的意图，不强制过滤。
+| 角色 | 默认视角 | 自动关注 |
+|------|----------|----------|
+| 销售 | 我的客户 | 跟进 / 商机 |
+| 销售经理 | 团队 | KPI / 风险 |
+| 财务 | 资金 | 回款 / 逾期 |
 
 ---
 
-## CLI 命令族
+# ⚙️ CLI 命令
 
 ```text
-cordys crm page    <模块> [关键词|JSON]    分页列表
-cordys crm get     <模块> <ID>             获取详情
-cordys crm search  <模块> [关键词|JSON]    全局搜索
-cordys crm follow  plan|record <模块> <JSON>   跟进计划/记录
-cordys crm contact <模块> <ID>             联系人列表
-cordys crm product [关键词|JSON]           产品列表
-cordys crm org                             组织架构
-cordys crm members <JSON>                  部门成员
-cordys crm whoami                          当前用户信息（角色来源）
-cordys crm verify                          验证 API 密钥
-cordys raw          <METHOD> <PATH> [body]  原始 API 调用
-```
-
-### 二级模块
-
-```text
-contract/payment-plan      回款计划
-contract/payment-record    回款记录
-contract/business-title    工商抬头
-invoice                    发票
-opportunity/quotation      报价单
-pool/lead                  线索池（需 poolId）
-pool/account               公海（需 poolId）
+cordys crm page <module>
+cordys crm get <module> <id>
+cordys crm search <module>
+cordys crm list <module>
+cordys crm follow <module>
+cordys crm org
+cordys crm members
+cordys crm whoami
+cordys crm verify
+cordys raw <method> <path>
 ```
 
 ---
 
-## 交互原则
-
-### 追问最小化
+# 📦 业务模块
 
 ```text
-❌ 用户："看看线索"
-❌ AI："您想看哪个模块的线索？什么时间范围？要不要加过滤条件？"
-
-✅ 用户："看看线索"
-✅ AI（销售）：加载我的线索列表，直接展示
-✅ AI（经理）：加载部门线索统计，优先展示异常项
-```
-
-### 输出人性化
-
-```text
-❌ {"code":100200,"data":{"list":[{"id":"...","name":"..."}],"total":13}}
-✅ 您本月有 13 条线索，其中 3 条超过 48 小时未跟进：
-   ┌───────────────────────────────────────────┐
-   │ 客户名称           │ 创建时间   │ 状态    │
-   ├───────────────────────────────────────────┤
-   │ XXX 科技有限公司   │ 05-06      │ 🟢 新   │
-   │ YYY 集团           │ 05-02      │ ⚠️ 超期 │
-   └───────────────────────────────────────────┘
+lead                 线索
+opportunity          商机
+account              客户
+contract/payment     回款
+invoice              发票
+quotation            报价单
+product              产品
+pool/lead            线索池
+pool/account         公海
 ```
 
 ---
 
-## 项目结构
+# 🧠 交互原则
+
+## 1️⃣ 零追问
+
+用户：
+> 看看线索
+
+系统：
+- 销售 → 我的线索
+- 经理 → 团队异常
+- 财务 → 忽略（非相关）
+
+---
+
+## 2️⃣ 结果优先
+
+输出顺序：
+
+1. 结论
+2. 风险
+3. 数据
+4. 建议
+
+---
+
+## 3️⃣ 人类可读输出
+
+❌ JSON：
+```json
+{"total":13,"list":[...]}
+```
+
+✅ 输出：
+```
+本月有 13 条线索，其中 3 条超期：
+
+┌──────────────┬──────────┬────────┐
+│ 客户         │ 时间      │ 状态   │
+├──────────────┼──────────┼────────┤
+│ XXX 公司     │ 05-06    │ 新     │
+│ YYY 集团     │ 05-02    │ 超期   │
+└──────────────┴──────────┴────────┘
+```
+
+---
+
+# 🔐 身份系统
+
+```bash
+cordys crm whoami
+```
+
+```json
+{
+  "userId": "10086",
+  "role": "sales-manager",
+  "org": "sales-1"
+}
+```
+
+---
+
+## 👤 身份文件
+
+`skills/User.md`
+
+```md
+用户ID：10086
+姓名：张三
+角色：销售经理
+部门：销售一部
+```
+
+---
+
+# 📁 项目结构（完整）
 
 ```text
-CordysCRM-skills/
 ├── README.md                     # 说明文档
 └── skills/
-    ├── SKILL.md                  # 核心指令（动态角色系统）
-    ├── .env                      # 你的 API 凭证（不提交）
-    ├── registry.json             # 注册信息
+    ├── SKILL.md                  # ℹ️ 入口编排
+    │
+    ├── core/
+    │   ├── role-engine.md        # 🧠 角色感知引擎
+    │   ├── cli-spec.md           # ⚙️ CLI 语义规范
+    │   ├── output-engine.md      # 🧾 输出解释层
+    │   └── risk-engine.md        # ⚠️ 风险识别引擎
+    │
+    ├── profiles/
+    │   ├── sales.md              # 👤 销售角色配置
+    │   ├── sales-manager.md      # 👔 经理角色配置
+    │   └── finance.md            # 💰 财务角色配置
+    │
     ├── scripts/
     │   ├── cordys.sh             # Shell CLI（推荐）
     │   └── cordys.py             # Python CLI（备用）
-    ├── profiles/
-    │   ├── role-salesperson.md   # 销售角色配置
-    │   ├── role-sales-manager.md # 经理角色配置
-    │   └── role-finance.md       # 财务角色配置
+    │
+    ├── .env                      # 🔐 API 凭证（不提交）
+    ├── User.md                   # 🧠 运行时用户身份（不提交）
     └── references/
-        └── crm-api.md            # API 参考文档
+        └── crm-api.md            # 📚 API 参考文档
 ```
 
 ---
 
-## 快速开始
+# 🚀 快速开始
 
 ```bash
 # 1. 安装（二选一）
@@ -192,43 +231,11 @@ bash cordys.sh crm whoami   # 查看你的角色信息
 bash cordys.sh crm page lead  # 试试看线索
 ```
 
----
 
-## 一次初始化，永远不用再教
-
-大部分 CRM 助手有个共同的问题：**每次对话 AI 都不记得你是谁**。  
-我们的解决方式很简单——在 Skill 目录下写一个 `User.md`：
-
-```markdown
-# 当前用户信息
-
-| 字段 | 值 |
-|------|-----|
-| 用户ID | 10086 |
-| 姓名 | 张三 |
-| 岗位 | 销售一部经理 |
-| 邮箱 | zhangsan@company.com |
-| 匹配角色 | sales-manager |
-```
-
-有了它，AI 每次醒来都自带身份记忆。  
-
-需要换账号？说一句"刷新身份"即可。
 
 ---
 
-## 环境要求
-
-| 依赖 | 说明 |
-|------|------|
-| **OpenClaw** | Skill 的运行底座 |
-| **Bash / Python 3** | Shell CLI 或 Python CLI 二选一 |
-| **curl** | Shell CLI 依赖 |
-| **API Key + Secret** | Cordys CRM 接口凭证 |
-
----
-
-## 安全边界
+# 安全边界
 
 - `.env` 包含敏感凭证，不要提交版本控制
 - `raw` 命令会向指定域名发送你的 API 凭证，仅限信任域名

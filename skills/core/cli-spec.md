@@ -1,0 +1,148 @@
+# ⚙️ CLI 语义规范
+
+本文件定义了 `cordys` CLI 的全部命令、参数规则和意图映射。
+所有 AI 生成的命令必须遵循本规范。
+
+---
+
+## 1. 命令族总览
+
+```text
+cordys crm page    <模块> [关键词|JSON]     分页查询
+cordys crm get     <模块> <ID>              获取详情
+cordys crm search  <模块> [关键词|JSON]     全局搜索
+cordys crm follow  plan|record <模块> <JSON>  跟进计划/记录
+cordys crm contact <模块> <ID>              联系人列表
+cordys crm product [关键词|JSON]            产品列表
+cordys crm org                             组织架构
+cordys crm members <JSON>                   部门成员
+cordys crm whoami                           当前用户信息
+cordys crm verify                           验证 API 密钥
+cordys raw          <METHOD> <PATH> [body]  原始 API 调用
+```
+
+---
+
+## 2. 分页默认结构
+
+所有 page/search 命令使用统一的 JSON body 模板：
+
+```json
+{
+  "current": 1,
+  "pageSize": 30,
+  "sort": {},
+  "combineSearch": {
+    "searchMode": "AND",
+    "conditions": []
+  },
+  "keyword": "",
+  "viewId": "ALL",
+  "filters": []
+}
+```
+
+### 自动补全规则
+| 条件 | 动作 |
+|------|------|
+| 只给关键词 | 放入 `keyword`，其余字段填默认值 |
+| 给部分 JSON | 补全缺失字段，保留已有字段 |
+| 给完整 JSON | 原样传递，不修改 |
+| 没给任何参数 | 全部默认值 |
+
+---
+
+## 3. 意图 → 命令映射
+
+| 用户说 | 映射命令 | 备注 |
+|--------|---------|------|
+| 列表、分页查看、看看、有哪些 | `crm page <module>` | 自动追加角色过滤 |
+| 搜索、筛选、找一下 | `crm search <module> <JSON>` | 关键词→keyword，条件→conditions |
+| 详情、查看、打开这个 | `crm get <module> <ID>` | 若有名称无 ID，先搜索 |
+| 跟进、跟进计划/记录 | `crm follow <plan\|record> <module> <JSON>` | 需 sourceId |
+| 全部、拉全量、查完所有页 | 执行 page，遍历所有页 | 每页后询问是否继续 |
+| 原始、自定义 | `craw <METHOD> <PATH>` | 仅限信任域名 |
+
+---
+
+## 4. 模块推断
+
+| 用户说 | 模块 | 常用命令 |
+|--------|------|---------|
+| 线索、潜客 | `lead` | page, get, search, follow |
+| 客户、公司、厂商 | `account` | page, get, search, follow, contact |
+| 商机、机会 | `opportunity` | page, get, search, follow |
+| 合同 | `contract` | page, get, search |
+| 回款、回款计划 | `contract/payment-plan` | page |
+| 回款记录 | `contract/payment-record` | page |
+| 发票 | `invoice` | page |
+| 报价单 | `opportunity/quotation` | page |
+| 工商抬头 | `contract/business-title` | page |
+| 产品 | 使用 `product` 命令 | product |
+| 组织、部门 | `org` | org |
+| 成员、人员 | `members` | members |
+| 联系人 | `contact` | contact |
+| 线索池 | `pool/lead` | page（需 poolId） |
+| 公海 | `pool/account` | page（需 poolId） |
+
+---
+
+## 5. 动态时间过滤
+
+在 `combineSearch.conditions` 中使用：
+
+```json
+{"value": "MONTH", "operator": "DYNAMICS", "name": "createTime", "type": "TIME_RANGE_PICKER"}
+```
+
+| 常量 | 含义 | | 常量 | 含义 |
+|------|------|-|------|------|
+| TODAY | 今天 | | YESTERDAY | 昨天 |
+| WEEK | 本周 | | LAST_WEEK | 上周 |
+| MONTH | 本月 | | LAST_MONTH | 上个月 |
+| QUARTER | 本季度 | | LAST_QUARTER | 上季度 |
+| YEAR | 本年度 | | LAST_YEAR | 上年度 |
+| LAST_SEVEN | 过去7天 | | LAST_THIRTY | 过去30天 |
+| ["CUSTOM,30,BEFORE_DAY"] | 前30天 | | [ts1, ts2] + BETWEEN | 时间戳区间 |
+
+---
+
+## 6. 过滤器语法
+
+```json
+{"field": "Stage", "operator": "equals", "value": "Closed Won"}
+{"field": "createTime", "operator": "gte", "value": "2026-01-01"}
+{"field": "ownerId", "operator": "equals", "value": "{userId}"}
+```
+
+### 常用操作符
+| 操作符 | 用途 |
+|--------|------|
+| `equals` | 精确匹配 |
+| `not equals` | 排除 |
+| `contains` | 模糊匹配 |
+| `gte` / `lte` | 时间/数字范围 |
+| `DYNAMICS` + `TIME_RANGE_PICKER` | 动态时间 |
+
+---
+
+## 7. 排序规则
+
+```json
+{"followTime": "desc"}
+{"createTime": "asc"}
+```
+
+常用排序字段：`followTime`、`createTime`、`amount`、`stage`
+
+---
+
+## 8. 异常处理
+
+| 响应 | 处理方式 |
+|------|---------|
+| HTTP 401/403 | 提示密钥可能失效，建议刷新身份 |
+| code ≠ 100200 | 读取 message 字段并说明原因 |
+| 数据空列表 | 确认是否真的无数据，还是过滤条件太严 |
+| CLI 报错 | 检查环境变量和 .env |
+| 接口超时 | 提示稍后重试或减小 pageSize（≤200） |
