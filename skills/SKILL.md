@@ -47,10 +47,7 @@ security:
 # 匹配逻辑（优先级从高到低）
 fields = response.data
 
-if fields.id == "admin" or "admin" in str(fields.roles or ""):
-    → role: admin
-
-elif any(kw in str(fields.position or "") for kw in ["经理","总监","主管","负责人","leader","部长","总经理"]):
+if any(kw in str(fields.position or "") for kw in ["经理","总监","主管","负责人","leader","部长","总经理"]):
     → role: sales-manager
 
 elif any(kw in str(fields.position or "") for kw in ["财务","会计","出纳","财务经理"]):
@@ -60,8 +57,8 @@ elif any(kw in str(fields.position or "") for kw in ["销售","商务","BD","专
     → role: salesperson
 
 else:
-    # 兜底：根据常用功能推断
-    → role: admin  # 未识别角色默认按 admin 处理，功能无限制
+    # 兜底：无法识别岗位时默认销售经理（权限覆盖广）
+    → role: sales-manager
 ```
 
 > 如果 `position` 为空但能从用户行为推断（如频繁查回款和发票 → 自动认定为财务），可在交互中灵活调整。
@@ -99,7 +96,7 @@ else:
 
 | 场景 | 你的主动行为 |
 |------|------------|
-| 用户说"看一下线索" | 自动补上该用户角色的过滤条件（销售→只看自己，经理→看团队，管理员→全部） |
+| 用户说"看一下线索" | 自动补上该用户角色的过滤条件（销售→只看自己，经理/兜底→看部门） |
 | 用户说"最近怎么样" | 按角色展示「今日看板」——关注领域内的关键指标汇总 |
 | 用户只说了模块名 | 自动做一次默认查询并展示结果，而不是反问"你想查什么" |
 | 用户说"有没有什么要注意的" | 按角色异常预警列表，自动扫描并报告异常项 |
@@ -146,13 +143,7 @@ else:
 | 主动提醒 | 回款逾期、未开票、回款计划到期 |
 | 输出侧重 | 金额汇总 + 明细列表 + 逾期/待处理优先 |
 
-### 管理员
-| 维度 | 行为 |
-|------|------|
-| 关注 | 全部模块、字段配置、用户管理、数据质量 |
-| 默认过滤 | 无限制，全量数据 |
-| 主动提醒 | 数据量波动、字段配置变更 |
-| 输出侧重 | 完整信息展示，模块间灵活切换 |
+
 
 ---
 
@@ -175,12 +166,12 @@ else:
 | 跟进计划 | `cordys.sh crm follow plan <module> <body>` | 销售看自己，经理看团队 |
 | 跟进记录 | `cordys.sh crm follow record <module> <body>` | 同上 |
 | 产品查询 | `cordys.sh crm product [keyword]` | 全角色通用 |
-| 组织架构 | `cordys.sh crm org` | 经理/管理员常用 |
-| 部门成员 | `cordys.sh crm members <JSON>` | 经理/管理员常用 |
+| 组织架构 | `cordys.sh crm org` | 经理常用 |
+| 部门成员 | `cordys.sh crm members <JSON>` | 经理常用 |
 | 联系人 | `cordys.sh crm contact <module> <id>` | 销售/经理常用 |
 | 用户信息 | `cordys.sh crm whoami` | 初始化用 |
 | 验证密钥 | `cordys.sh crm verify` | 初始化用 |
-| 原始接口 | `cordys.sh raw <METHOD> <PATH> [body]` | 管理员/高级用户 |
+| 原始接口 | `cordys.sh raw <METHOD> <PATH> [body]` | 高级用户 |
 
 ### 4.3 分页默认值
 
@@ -313,7 +304,7 @@ if role == "sales-manager":
 if role == "finance" and not conditions:
     conditions.append({"operator": "DYNAMICS", "name": "createTime", "value": "MONTH", "type": "TIME_RANGE_PICKER"})
 
-# 管理员 → 无过滤
+# 经理/兜底 → 按部门过滤
 ```
 
 **例外规则：** 如果用户明确说"看全部数据"或"看别人的"，不要追加过滤。
@@ -369,9 +360,7 @@ if role == "finance" and not conditions:
 - 未开票合同较多
 - 未来有多笔回款集中到期
 
-**管理员预警：**
-- 数据量异常波动
-- 字段配置有变化（通过 `raw GET /settings/fields` 发现）
+
 
 ### 6.3 全局输出规则
 - ❌ 直接贴 JSON（除非用户要求）
@@ -420,7 +409,6 @@ skills/
 │   ├── role-salesperson.md     # 销售角色配置
 │   ├── role-sales-manager.md   # 销售经理角色配置
 │   ├── role-finance.md         # 财务角色配置
-│   └── role-admin.md           # 管理员角色配置
 ├── references/
 │   └── crm-api.md              # API 参考文档
 └── registry.json               # 技能注册信息
