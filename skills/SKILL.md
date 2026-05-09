@@ -81,7 +81,7 @@ User.md 缺失或无效时，自动执行初始化；存在则直接加载。
 ```text
 skills/
 ├── SKILL.md                       # ℹ️ 本文件——入口编排
-├── .env                           # 🔐 API 凭证（不提交）
+├── .env.example                           # 🔐 API 凭证模版
 ├── User.md                        # 🧠 运行时用户身份（不提交）
 │
 ├── core/

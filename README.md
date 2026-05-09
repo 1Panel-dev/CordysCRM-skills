@@ -204,7 +204,7 @@ CordysCRM-skills/
 │   │   ├── cordys.sh             # CLI Shell 版本
 │   │   └── cordys.py             # CLI Python 版本
 │
-│   ├── .env                      # 🔐 API 配置（不提交）
+│   ├── .env.example                      # 🔐 配置模版
 │   └── User.md                   # 🧠 用户身份上下文
 │
 └── references/
