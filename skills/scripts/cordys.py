@@ -233,6 +233,16 @@ def crm_product(keyword: str = "") -> str:
     return api("POST", f"{CORDYS_CRM_DOMAIN}/field/source/product", data=body)
 
 
+def crm_whoami() -> str:
+    """获取当前登录用户信息"""
+    return api("GET", f"{CORDYS_CRM_DOMAIN}/personal/center/info")
+
+
+def crm_verify() -> str:
+    """验证 API 密钥是否有效，返回用户信息"""
+    return crm_whoami()
+
+
 def crm_org() -> str:
     """获取组织架构"""
     return api("GET", f"{CORDYS_CRM_DOMAIN}/department/tree")
@@ -280,11 +290,13 @@ CRM 操作:
   crm get <模块> <ID>               获取单条记录详情
   crm search <模块> [关键词|JSON]    全局搜索记录
   crm page <模块> [关键词|JSON]      列表分页记录 /<module>/page （例：account/lead/opportunity）
+  crm whoami                       获取当前登录用户信息
+  crm verify                       验证 API 密钥是否有效
   crm org                          获取组织架构树
   crm members <部门IDs>             获取部门成员列表
   crm follow <plan|record> <模块> [关键词|JSON]  查询跟进计划或跟进记录
-  crm product [关键词|JSON]      查询产品列表
-  crm contact <模块> <ID>             获取联系人列表
+  crm product [关键词|JSON]          查询产品列表
+  crm contact <模块> <ID>           获取联系人列表
 
 支持的 CRM 一级模块:
  [lead（线索）, opportunity（商机）, account（客户）,contact（联系人）,contract（合同）]
@@ -363,6 +375,12 @@ def handle_crm_command(args: list) -> None:
     elif sub_cmd == "product":
         keyword = rest_args[0] if rest_args else ""
         print(crm_product(keyword))
+
+    elif sub_cmd == "whoami":
+        print(crm_whoami())
+
+    elif sub_cmd == "verify":
+        print(crm_verify())
 
     elif sub_cmd == "members":
         if not rest_args:
