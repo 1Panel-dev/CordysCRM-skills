@@ -52,9 +52,9 @@ elif any(kw in str(fields.position or "") for kw in
          ["销售","商务","BD","专员","顾问","业务员","运营"]):
     role = "sales"
 
-# 兜底：无法识别时默认经理模式（权限覆盖广）
+# 兜底：无法识别时默认个人模式（防止权限扩散）
 else:
-    role = "sales-manager"
+    role = "sales"
 ```
 
 ### 从行为推断（软规则）
