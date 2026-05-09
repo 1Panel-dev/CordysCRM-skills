@@ -7,19 +7,24 @@
 
 ## 1. 命令族总览
 
+所有命令使用 `cordys.sh`（Shell CLI，推荐）执行，`cordys.py` 备用。
+
 ```text
-cordys crm page    <模块> [关键词|JSON]     分页查询
-cordys crm get     <模块> <ID>              获取详情
-cordys crm search  <模块> [关键词|JSON]     全局搜索
-cordys crm follow  plan|record <模块> <JSON>  跟进计划/记录
-cordys crm contact <模块> <ID>              联系人列表
-cordys crm product [关键词|JSON]            产品列表
-cordys crm org                             组织架构
-cordys crm members <JSON>                   部门成员
-cordys crm whoami                           当前用户信息
-cordys crm verify                           验证 API 密钥
-cordys raw          <METHOD> <PATH> [body]  原始 API 调用
+cordys.sh crm page    <模块> [关键词|JSON]     分页查询
+cordys.sh crm get     <模块> <ID>              获取详情
+cordys.sh crm search  <模块> [关键词|JSON]     全局搜索
+cordys.sh crm follow  plan|record <模块> <JSON>  跟进计划/记录
+cordys.sh crm contact <模块> <ID>              联系人列表
+cordys.sh crm product [关键词|JSON]            产品列表
+cordys.sh crm org                             组织架构
+cordys.sh crm members <JSON>                   部门成员
+cordys.sh crm whoami                           当前用户信息
+cordys.sh crm verify                           验证 API 密钥
+cordys.sh raw          <METHOD> <PATH> [body]  原始 API 调用
 ```
+
+> `cordys.sh` 前置路径为 `scripts/cordys.sh`，无需切换目录。
+> Python 版本：将 `cordys.sh` 替换为 `cordys.py` 即可。
 
 ---
 
@@ -126,7 +131,28 @@ cordys raw          <METHOD> <PATH> [body]  原始 API 调用
 
 ---
 
-## 7. 排序规则
+## 7. 动态参数替换（从 User.md 读取）
+
+查询命令中的 `{userId}` 和 `{departmentId}` 是运行时占位符，执行命令时应替换为 User.md 中的实际值：
+
+| 占位符 | 来源字段 | 示例值 |
+|--------|---------|-------|
+| `{userId}` | User.md 用户ID | `admin` |
+| `{departmentId}` | User.md 部门ID | `dept_xxx` |
+
+示例（前置替换）：
+```json
+// 过滤条件中的占位符
+{"filters":[{"field":"ownerId","operator":"equals","value":"{userId}"}]}
+// 实际执行时被替换为
+{"filters":[{"field":"ownerId","operator":"equals","value":"admin"}]}
+```
+
+> 如果 User.md 中没有对应的 ID（如部门ID为空），则不追加该过滤条件。
+
+---
+
+## 8. 排序规则
 
 ```json
 {"followTime": "desc"}
@@ -137,7 +163,7 @@ cordys raw          <METHOD> <PATH> [body]  原始 API 调用
 
 ---
 
-## 8. 异常处理
+## 9. 异常处理
 
 | 响应 | 处理方式 |
 |------|---------|

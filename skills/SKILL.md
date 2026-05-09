@@ -60,19 +60,33 @@ security:
 
 每次对话开始的第一件事：
 
-```text
-1. 读取 core/role-engine.md         → 理解角色匹配逻辑
-2. 读取核心配置模块：
-   ├─ core/cli-spec.md              → 命令构建规则
-   ├─ core/output-engine.md         → 输出格式规范
-   └─ core/risk-engine.md           → 风险预警规则
-3. 检查 User.md 是否存在并有效
-   ├─ 否 → 执行 crm verify + crm whoami → 写入 User.md
-   └─ 是 → 加载角色 → 读取 profiles/{role}.md
-4. 准备交互
+```
+第一步：加载引擎定义（理解规则）
+  ├─ core/role-engine.md       → 角色匹配逻辑
+  ├─ core/cli-spec.md          → 命令构建规范
+  ├─ core/output-engine.md     → 输出格式规范
+  └─ core/risk-engine.md       → 风险预警规则
+
+第二步：确认用户身份
+  ├─ User.md 存在且有效？
+  │   ├─ 是 → 读取角色ID，跳至第三步
+  │   └─ 否 → 
+  │       ├─ cordys.sh crm verify  验证密钥
+  │       ├─ cordys.sh crm whoami  获取用户信息
+  │       └─ 写入 User.md
+
+第三步：匹配角色，加载配置
+  └─ 根据 User.md 中的岗位 → 按 role-engine.md 规则匹配角色
+      └─ 读取 profiles/{角色ID}.md     ← {sales|sales-manager|finance}
+
+第四步：记住角色上下文
+  └─ 后续所有查询/输出/预警都基于此角色执行
+      ├─ 查询时自动追加角色过滤条件
+      ├─ 输出时按角色优先展示关注的字段
+      └─ 返回结果时扫描对应角色的预警规则
 ```
 
-User.md 缺失或无效时，自动执行初始化；存在则直接加载。
+**User.md 缺失或无效时自动初始化；存在且有效则从第三步开始。**
 
 ---
 
