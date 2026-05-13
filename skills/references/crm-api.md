@@ -45,7 +45,14 @@ Cordys CRM 的分页和搜索均遵循以下 JSON 模板：
 - `sort`：排序对象，例如 `{"followTime":"desc"}`。
 - `combineSearch.conditions`：组合筛选条件，支持多个 `field/operator/value`。
 - `keyword`：全局关键词，模糊匹配名称/说明/电话等。
-- `viewId`：视图 ID（例如 `ALL`、`MY`），通常根据用户意图调用视图 API 获取对应ID。
+- `viewId`：视图 ID，指定数据范围。
+  - **内置系统视图**（**不需要**调用 view/list API，直接使用）：
+    - `ALL` — 全部数据（默认）
+    - `SELF` — 我的数据（等价于 `ownerId = {userId}`）
+    - `CUSTOMER_COLLABORATION` — 协作客户（仅 `account` 模块）
+  - **自定义视图**：用户创建的筛选方案，通过 `/{module}/view/list` 获取。
+    - 该 API **仅返回自定义视图**，不含 ALL/SELF 等内置视图。
+  - 流程：先判断是否内置视图关键字 → 是则直接使用 → 否则调用 view/list 获取自定义视图列表匹配。
 - `filters`：与 `conditions` 类似，但用于更加精细的字段级过滤，CLI 通常会同步构造。
 
 CLI 会在你不提供某些字段时自动填默认值；如果你直接给出 JSON，OpenClaw 保持结构并补全缺省字段。

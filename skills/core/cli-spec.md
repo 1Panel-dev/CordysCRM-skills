@@ -47,13 +47,21 @@ cordys.sh raw          <METHOD> <PATH> [body]  原始 API 调用
 }
 ```
 
+### viewId 说明
+
+`viewId` 字段用于指定数据范围，支持两类视图：
+- **内置系统视图**（本节下方自动匹配，无需调用 API）
+- **自定义视图**（用户创建的筛选方案，通过 `crm view <module>` 查询）
+
+详见本章第10节「内置视图与自定义视图」。
+
 ### 自动补全规则
 | 条件 | 动作 |
 |------|------|
 | 只给关键词 | 放入 `keyword`，其余字段填默认值 |
-| 给部分 JSON | 补全缺失字段，保留已有字段 |
+| 给部分 JSON | 补全缺失字段，保留已有字段；若未给 `viewId` 则根据语义推断（见第10节） |
 | 给完整 JSON | 原样传递，不修改 |
-| 没给任何参数 | 全部默认值 |
+| 没给任何参数 | 全部默认值；`viewId` 按角色过滤规则推断（见第10节） |
 
 ---
 
@@ -172,3 +180,55 @@ cordys.sh raw          <METHOD> <PATH> [body]  原始 API 调用
 | 数据空列表 | 确认是否真的无数据，还是过滤条件太严 |
 | CLI 报错 | 检查环境变量和 .env |
 | 接口超时 | 提示稍后重试或减小 pageSize（≤200） |
+
+---
+
+## 10. 内置视图与自定义视图
+
+系统区分两类视图，**千万不能混淆**：
+
+### 10.1 内置系统视图（直接使用，不在 view/list 中）
+
+内置视图是系统预设的筛选方案，**不需要也不能**通过 `/{module}/view/list` 获取。直接写入 `viewId` 字段即可：
+
+| viewId | 含义 | 适用模块 |
+|--------|------|---------|
+| `ALL` | 全部数据（默认） | 所有模块 |
+| `SELF` | 我的数据 | `lead`, `account`, `opportunity`, `contract` |
+| `CUSTOMER_COLLABORATION` | 协作客户 | `account` 仅 |
+
+### 10.2 自定义视图（通过 view/list API 获取）
+
+用户可在系统内创建自定义筛选方案，称为自定义视图。这些视图**不包含**内置视图（ALL、SELF 等）。
+
+```bash
+cordys.sh crm view <module>   # 仅返回用户创建的自定义视图，不含内置视图
+```
+
+### 10.3 viewId 匹配流程
+
+当用户提到某个视图/视角时，按以下优先级匹配：
+
+```
+1. 是否匹配内置系统视图？
+   ├─ "全部" / "所有" / "全量" → viewId: "ALL"
+   ├─ "我的{模块}" / "我负责的" → viewId: "SELF"
+   ├─ "协作客户" / "协作" → viewId: "CUSTOMER_COLLABORATION" (仅 account)
+   └─ 命中 → 直接使用，无需调用 view/list API
+
+2. 未命中内置视图 → 调用 `crm view <module>` 获取自定义视图列表
+   └─ 从返回的列表中按名称模糊匹配，取对应 ID
+```
+
+### 10.4 典型语义映射
+
+| 用户说 | viewId | 等价 filters（仅供理解） |
+|--------|--------|------------------------|
+| "全部线索" / "所有线索" | `ALL` | 不过滤 |
+| "我的线索" / "我负责的线索" | `SELF` | `ownerId = {userId}` |
+| "全部客户" | `ALL` | 不过滤 |
+| "我的客户" | `SELF` | `ownerId = {userId}` |
+| "协作客户" | `CUSTOMER_COLLABORATION` | 协作关系过滤 |
+| "我的商机" | `SELF` | `ownerId = {userId}` |
+
+> **注意**：`viewId: "SELF"` 的效果等价于 `{"filters":[{"field":"ownerId","operator":"equals","value":"{userId}"}]}`，但更简洁高效。优先使用 viewId 而非自己构造 filters。

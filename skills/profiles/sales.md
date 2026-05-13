@@ -13,9 +13,10 @@
 | 场景 | 推荐命令 |
 |------|---------|
 | 查看今天的跟进计划 | `crm follow plan lead '{"myPlan":true,"status":"UNFINISHED","sourceId":"..."}'` |
-| 查看我的线索列表 | `crm page lead '{"filters":[{"field":"ownerId","operator":"equals","value":"{userId}"}]}'` |
-| 查看我的待办商机 | `crm page opportunity '{"filters":[{"field":"ownerId","operator":"equals","value":"{userId}"},{"field":"stage","operator":"not equals","value":"Closed Lost"}]}'` |
-| 查看我的客户 | `crm page account '{"filters":[{"field":"ownerId","operator":"equals","value":"{userId}"}]}'` |
+| 查看我的线索列表 | `crm page lead '{"viewId":"SELF"}'` （也可用 `{"filters":[{"field":"ownerId","operator":"equals","value":"{userId}"}]}`，但 SELF 更简洁高效） |
+| 查看我的待办商机 | `crm page opportunity '{"viewId":"SELF","filters":[{"field":"stage","operator":"not equals","value":"Closed Lost"}]}'` |
+| 查看我的客户 | `crm page account '{"viewId":"SELF"}'` |
+| 查看协作客户 | `crm page account '{"viewId":"CUSTOMER_COLLABORATION"}'` |
 | 查看今日新增线索 | `crm search lead '{"combineSearch":{"conditions":[{"operator":"DYNAMICS","name":"createTime","value":"TODAY","type":"TIME_RANGE_PICKER"}]}}'` |
 
 ## 交互模式
