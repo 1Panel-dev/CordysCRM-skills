@@ -114,7 +114,7 @@ def api_request(method: str, url: str, content_type: str, **kwargs) -> str:
     headers = {
         "X-Access-Key": CORDYS_ACCESS_KEY,
         "X-Secret-Key": CORDYS_SECRET_KEY,
-        "Content-Type": content_type
+        "Content-Type": f"{content_type}; charset=utf-8"
     }
 
     # 合并用户提供的 headers（如果有）

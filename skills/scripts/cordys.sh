@@ -58,7 +58,7 @@ validate_url() {
 
 page_payload() {
   local keyword="${1:-}"
-  python3 - "$keyword" <<PY
+  python3 - "$keyword" <<'PY'
 import json, sys
 keyword = sys.argv[1] if len(sys.argv) > 1 else ""
 payload = {
@@ -70,6 +70,7 @@ payload = {
   "viewId": "ALL",
   "filters": []
 }
+sys.stdout.reconfigure(encoding='utf-8')
 print(json.dumps(payload, ensure_ascii=False))
 PY
 }
@@ -85,7 +86,7 @@ api_request() {
   curl -s -X "$method" "$url" \
     -H "X-Access-Key: ${CORDYS_ACCESS_KEY}" \
     -H "X-Secret-Key: ${CORDYS_SECRET_KEY}" \
-    -H "Content-Type: $content_type" \
+    -H "Content-Type: $content_type; charset=utf-8" \
     "$@"  # 传递剩余的所有参数
 }
 
@@ -126,13 +127,13 @@ crm_page() {
     body=$(page_payload "${first:-}")
   fi
   local path="${module}/page"
-  api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$body"
+  api POST "${CORDYS_CRM_DOMAIN}/${path}" --data-binary "$body"
 }
 
 crm_search() {
   local module="$1" json="${2:-}"
   local path="global/search/${module}"
-  api POST "${CORDYS_CRM_DOMAIN}/${path}" -d "$json"
+  api POST "${CORDYS_CRM_DOMAIN}/${path}" --data-binary "$json"
 }
 
 crm_follow_page() {
@@ -148,7 +149,7 @@ crm_follow_page() {
     body=$(page_payload "${payload}")
   fi
 
-  api POST "${crm_base}/${module}/follow/${kind}/page" -d "$body"
+  api POST "${crm_base}/${module}/follow/${kind}/page" --data-binary "$body"
 }
 
 # 查询产品
@@ -160,7 +161,7 @@ crm_product() {
   else
     body=$(page_payload "${keyword}")
   fi
-  api POST "${CORDYS_CRM_DOMAIN}/field/source/product" -d "$body"
+  api POST "${CORDYS_CRM_DOMAIN}/field/source/product" --data-binary "$body"
 }
 
 # 获取当前用户信息
@@ -185,7 +186,7 @@ crm_org() {
 
 # 根据部门ID获取成员
 crm_members() {
-  api POST "${crm_base}/user/list" -d "$1"
+  api POST "${crm_base}/user/list" --data-binary "$1"
 }
 
 # ── 原始 API 调用 ─────────────────────────────────────────────────────
