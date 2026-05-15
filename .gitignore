@@ -1,5 +1,7 @@
+.env
 *.env
 User.md
 .token_cache
 .idea/
+.DS_Store
 

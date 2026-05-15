@@ -1,7 +1,17 @@
 # CORDYS CRM API 参考
 
-此文档聚焦 Cordys CRM CLI 背后的原始 API，帮助 OpenClaw 理解请求结构、标准参数、模块定义、错误处理和最佳实践。
-无论是让 OpenClaw 助手自动构建 `cordys crm` 命令，还是自己发起 `cordys raw` 请求，都能从这里快速查到细节。
+> CLI 命令构建细节请见 `../core/cli-spec.md`。本文件专注于原始 API 端点和请求/响应结构。
+>
+> **目录**
+>
+> 1. [模块概览](#1-模块概览)
+> 2. [通用请求结构](#2-通用请求结构)
+> 3. [常用 HTTP 端点](#3-常用-http-端点)
+> 4. [请求示例](#4-请求示例)
+> 5. [响应解析](#5-响应解析)
+> 6. [错误处理建议](#6-错误处理建议)
+> 7. [最佳实践](#7-最佳实践)
+> 8. [附录：字段/filters 例子](#8-附录字段filters-例子)
 
 ---
 
@@ -22,40 +32,17 @@
 ---
 
 ## 2. 通用请求结构
-Cordys CRM 的分页和搜索均遵循以下 JSON 模板：
 
-```json
-{
-  "current": 1,
-  "pageSize": 30,
-  "sort": {},
-  "combineSearch": {
-    "searchMode": "AND",
-    "conditions": []
-  },
-  "keyword": "",
-  "viewId": "ALL",
-  "filters": []
-}
-```
+> 完整的 JSON Body 模板及字段说明见 `../core/cli-spec.md#2-分页默认结构`。本节仅补充 API 层面的注意事项。
 
-**字段含义：**
-- `current`：页码（从 1 开始），用于 `page` 命令。
-- `pageSize`：每页条数，默认 30。
-- `sort`：排序对象，例如 `{"followTime":"desc"}`。
-- `combineSearch.conditions`：组合筛选条件，支持多个 `field/operator/value`。
-- `keyword`：全局关键词，模糊匹配名称/说明/电话等。
-- `viewId`：视图 ID，指定数据范围。
-  - **内置系统视图**（**不需要**调用 view/list API，直接使用）：
-    - `ALL` — 全部数据（默认）
-    - `SELF` — 我的数据（等价于 `ownerId = {userId}`）
-    - `CUSTOMER_COLLABORATION` — 协作客户（仅 `account` 模块）
-  - **自定义视图**：用户创建的筛选方案，通过 `/{module}/view/list` 获取。
-    - 该 API **仅返回自定义视图**，不含 ALL/SELF 等内置视图。
-  - 流程：先判断是否内置视图关键字 → 是则直接使用 → 否则调用 view/list 获取自定义视图列表匹配。
-- `filters`：与 `conditions` 类似，但用于更加精细的字段级过滤，CLI 通常会同步构造。
-
-CLI 会在你不提供某些字段时自动填默认值；如果你直接给出 JSON，OpenClaw 保持结构并补全缺省字段。
+关键字段简述：
+- `current`：页码（从 1 开始）
+- `pageSize`：每页条数，默认 30，建议 ≤200
+- `sort`：排序对象，例如 `{"followTime":"desc"}`
+- `combineSearch.conditions`：组合筛选条件
+- `keyword`：全局关键词，模糊匹配名称/说明/电话等
+- `viewId`：ALL（全部）/ SELF（我的）/ CUSTOMER_COLLABORATION（协作客户，仅 account）
+- `filters`：精细字段级过滤
 
 ---
 
@@ -138,31 +125,9 @@ cordys.sh crm search account '{
   "filters":[]
 }'
 ```
-在combineSearch.conditions参数结构中，operator为DYNAMICS时，value为下列常量参数
+在combineSearch.conditions参数结构中，operator为DYNAMICS时，value为时间常量。
 
-| 常量 | 描述 |
-| --- | --- |
-| `TODAY` | 今天 |
-| `YESTERDAY` | 昨天 |
-| `TOMORROW` | 明天 |
-| `WEEK` | 本周 | 
-| `LAST_WEEK` | 上周 |
-| `NEXT_WEEK` | 下周 |
-| `MONTH` | 本月 |
-| `LAST_MONTH` | 上个月 |
-| `NEXT_MONTH` | 下个月 |
-| `LAST_SEVEN` | 过去一周 |
-| `SEVEN` | 未来一周 |
-| `THIRTY` | 未来三十天内 |
-| `LAST_THIRTY` | 过去三十天内 |
-| `SIXTY` | 未来60天内 |
-| `LAST_SIXTY` | 过去六十天内 |
-| `QUARTER` | 本季度 |
-| `LAST_QUARTER` | 上季度 |
-| `NEXT_QUARTER` | 下季度 |
-| `YEAR` | 本年度 |
-| `LAST_YEAR` | 上年度 |
-| `NEXT_YEAR` | 下年度 |
+> 完整时间常量表见 `../core/cli-spec.md#5-动态时间过滤`。
 
 如果查询n天前，value的值可以写成["CUSTOM,"+n+",BEFORE_DAY"]。
 如果要查询两个时间段中间的数据，value可以写[较早的毫秒级时间戳，较晚的毫秒级时间戳]，同时operator为BETWEEN。
