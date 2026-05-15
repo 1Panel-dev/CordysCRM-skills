@@ -158,6 +158,16 @@ cordys.sh raw          <METHOD> <PATH> [body]  原始 API 调用
 
 > 如果 User.md 中没有对应的 ID（如部门ID为空），则不追加该过滤条件。
 
+> **注意**：在涉及部门范围的查询中，`{departmentId}` 会被替换为展开后的部门ID数组（见第11节「部门组织架构展开」）。不是所有占位符都是单一字符串替换，`{departmentId}` 在 `conditions` 结构中可以替换为数组。
+
+### 7.1 部门层级占位符规则
+
+`{departmentId}` 默认代表当前用户的直属部门ID。当用户提到其他部门时（如"销售一部"）:
+
+- 先调用 `crm org` 获取完整组织架构树
+- 通过部门名称在树中查找对应部门的 ID
+- **必须展开该部门的所有子部门**，将 `"value":"{departmentId}"` 替换为 `"value":["dept_a","dept_b",...]`（见第11节「部门组织架构展开」）
+
 ---
 
 ## 8. 排序规则
@@ -232,3 +242,162 @@ cordys.sh crm view <module>   # 仅返回用户创建的自定义视图，不含
 | "我的商机" | `SELF` | `ownerId = {userId}` |
 
 > **注意**：`viewId: "SELF"` 的效果等价于 `{"filters":[{"field":"ownerId","operator":"equals","value":"{userId}"}]}`，但更简洁高效。优先使用 viewId 而非自己构造 filters。
+
+---
+
+## 11. 部门组织架构展开（含子部门）
+
+当用户按**部门范围**查询数据时（如"销售一部的本月开放商机"），**必须自动包含该部门下的所有子部门**，而非仅查询指定部门本身。
+
+### 11.1 操作流程
+
+```
+1. 识别目标部门名称（如"销售一部"），在 User.departmentId 或通过 org 树查找 ID
+2. 调用 `cordys.sh crm org` 获取完整组织架构树
+3. 在树中定位该部门节点，递归遍历其所有子节点
+4. 收集该部门及所有子孙部门的 ID 列表
+5. 构造 departmentId 数组过滤器，替换原来的单值 departmentId 过滤
+```
+
+### 11.2 占位符
+
+新增运行时占位符 `{departmentId}`，由 AI 在运行前通过 org 展开计算后填充：
+
+| 占位符 | 来源 | 示例值 |
+|--------|------|-------|
+| `{departmentId}` | 通过 `crm org` 展开得到的部门ID数组 | `["dept_a","dept_b","dept_c"]` |
+
+### 11.3 部门范围过滤器标准模式
+
+涉及组织范围的查询，统一使用 `combineSearch.conditions` 中的 `departmentId` + `TREE_SELECT` 模式，**不再使用单值 `departmentId` 过滤**：
+
+```json
+{
+  "combineSearch": {
+    "searchMode": "AND",
+    "conditions": [
+      {
+        "value": "{departmentId}",
+        "operator": "IN",
+        "name": "departmentId",
+        "multipleValue": false,
+        "type": "TREE_SELECT"
+      }
+    ]
+  }
+}
+```
+
+执行示例（替换后）：
+```json
+{
+  "combineSearch": {
+    "searchMode": "AND",
+    "conditions": [
+      {
+        "value": ["dept_a", "dept_b", "dept_c"],
+        "operator": "IN",
+        "name": "departmentId",
+        "multipleValue": false,
+        "type": "TREE_SELECT"
+      }
+    ]
+  }
+}
+```
+
+### 11.4 行为规则
+
+| 场景 | 行为 |
+|------|------|
+| 用户说"我部门"、"我们部门"、不指定部门 | 使用 User.md 中的 `{departmentId}`，**也必须展开其所有子部门** → 替换为 `{departmentId}` |
+| 用户指定具体部门名（"销售一部"） | 通过 `crm org` 树按名称查找该部门ID，然后展开其所有子部门 |
+| 用户说"全公司"、"全部" | 不使用部门过滤，viewId 用 `"ALL"` |
+| 用户说"销售一部和销售三部" | 分别查找两个部门，各自展开子部门，合并去重后作为 `{departmentId}` |
+| 部门没有子部门 | `{departmentId}` 就是该部门自己的ID数组 `["dept_x"]` |
+
+### 11.5 实际查询示例
+
+用户："销售一部的本月开放商机"
+
+```bash
+# 步骤1：获取组织架构树
+tree=$(cordys.sh crm org)
+
+# 步骤2：解析销售一部及其所有子部门ID（AI 内部逻辑）
+# 假设结果：["dept_sales1", "dept_team_a", "dept_team_b"]
+
+# 步骤3：构造查询（使用 combineSearch.conditions + TREE_SELECT 模式）
+cordys.sh crm page opportunity '{
+  "current": 1,
+  "pageSize": 30,
+  "sort": {},
+  "combineSearch": {
+    "searchMode": "AND",
+    "conditions": [
+      {
+        "value": ["dept_sales1", "dept_team_a", "dept_team_b"],
+        "operator": "IN",
+        "name": "departmentId",
+        "multipleValue": false,
+        "type": "TREE_SELECT"
+      },
+      {
+        "value": "MONTH",
+        "operator": "DYNAMICS",
+        "name": "stageUpdateTime",
+        "type": "TIME_RANGE_PICKER"
+      },
+      {
+        "value": ["Open"],
+        "operator": "IN",
+        "name": "stage",
+        "multipleValue": false,
+        "type": "SELECT"
+      }
+    ]
+  },
+  "keyword": "",
+  "viewId": "ALL",
+  "filters": []
+}'
+```
+
+> **注意**：部门过滤条件位于 `combineSearch.conditions` 中，`name: "departmentId"`、`type: "TREE_SELECT"`、`operator: "IN"`（大写）。不要把部门过滤写在 `filters` 数组里。
+
+### 11.6 结合 members 获取部门成员列表
+
+如需获取展开后的部门所有成员（用于按人聚合统计）：
+
+```bash
+cordys.sh crm members '{
+  "current": 1,
+  "pageSize": 200,
+  "departmentId": ["dept_sales1", "dept_team_a", "dept_team_b"]
+}'
+```
+
+> **注意**：`members` 命令的 body 中 `departmentId` 是两个词拼写，指向同一字段；API 中统一使用 `departmentId`（单数，驼峰命名）。
+
+### 11.7 Python 中展开子树的参考逻辑
+
+```python
+def collect_descendant_ids(tree_node):
+    """递归收集所有子部门ID（含自身）"""
+    ids = [tree_node["id"]]
+    for child in tree_node.get("children", []):
+        ids.extend(collect_descendant_ids(child))
+    return ids
+```
+
+```python
+def find_department(tree, name_keyword):
+    """在组织架构树中按名称模糊查找部门节点"""
+    if name_keyword in tree.get("name", ""):
+        return collect_descendant_ids(tree)
+    for child in tree.get("children", []):
+        result = find_department(child, name_keyword)
+        if result:
+            return result
+    return None
+```

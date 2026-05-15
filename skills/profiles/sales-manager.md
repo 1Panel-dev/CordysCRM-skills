@@ -12,12 +12,14 @@
 ## 默认查询偏好
 | 场景 | 推荐命令 |
 |------|---------|
-| 团队线索总览 | `crm page lead '{"filters":[{"field":"departmentId","operator":"equals","value":"{departmentId}"}]}'` |
-| 团队商机漏斗 | `crm page opportunity '{"filters":[{"field":"departmentId","operator":"equals","value":"{departmentId}"}]}'` |
+| 团队线索总览 | `crm page lead '{"combineSearch":{"searchMode":"AND","conditions":[{"value":"{departmentId}","operator":"IN","name":"departmentId","multipleValue":false,"type":"TREE_SELECT"}]}}'` |
+| 团队商机漏斗 | `crm page opportunity '{"combineSearch":{"searchMode":"AND","conditions":[{"value":"{departmentId}","operator":"IN","name":"departmentId","multipleValue":false,"type":"TREE_SELECT"}]}}'` |
 | 部门组织架构 | `crm org` |
-| 部门成员列表 | `crm members '{"departmentIds":["{departmentId}"]}'` |
+| 部门成员列表 | `crm members '{"departmentId":"{departmentId}"}'` |
 | 团队成员跟进情况 | `crm follow plan lead '{"status":"ALL","myPlan":false}'` + 遍历成员 |
 | 本月签约合同 | `crm search contract '{"combineSearch":{"conditions":[{"operator":"DYNAMICS","name":"signTime","value":"MONTH","type":"TIME_RANGE_PICKER"}]}}'` |
+
+> **注意**：`{departmentId}` 是占位符，实际运行时 AI 会调用 `crm org` 获取组织架构树，递归展开所有子部门，替换为部门ID数组，详见 cli-spec.md 第11节「部门组织架构展开」。
 
 ## 交互模式
 - **默认输出**：团队层面统计优先，附个人排名，允许下钻到个人
