@@ -6,7 +6,8 @@ environment:
     - CORDYS_ACCESS_KEY
     - CORDYS_SECRET_KEY
     - CORDYS_CRM_DOMAIN
-  optional: []
+  optional:
+    - ROLE_MAP
 security:
   requiresSecrets: true
   sensitiveEnvironment: true
