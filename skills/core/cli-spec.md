@@ -70,7 +70,8 @@ cordys.sh raw          <METHOD> <PATH> [body]  原始 API 调用
 | 用户说 | 映射命令 | 备注 |
 |--------|---------|------|
 | 列表、分页查看、看看、有哪些 | `crm page <module>` | 自动追加角色过滤 |
-| 搜索、筛选、找一下 | `crm search <module> <JSON>` | 关键词→keyword，条件→conditions |
+| 搜索、筛选、找一下、找 xxx | `crm search <module> <JSON>` | 关键词→keyword，条件→conditions |
+| **模糊搜索（未指定模块）** | **同时搜索 lead, pool/lead, account, opportunity, pool/account, contact** | **见 §12 全局模糊搜索** |
 | 详情、查看、打开这个 | `crm get <module> <ID>` | 若有名称无 ID，先搜索 |
 | 跟进、跟进计划/记录 | `crm follow <plan\|record> <module> <JSON>` | 需 sourceId |
 | 全部、拉全量、查完所有页 | 执行 page，遍历所有页 | 每页后询问是否继续 |
@@ -400,4 +401,145 @@ def find_department(tree, name_keyword):
         if result:
             return result
     return None
+```
+
+---
+
+## 12. 全局模糊搜索（多模块并行）
+
+### 12.1 适用场景
+
+当用户**未明确指定模块**时（如
+
+"查一下 xxx" / "搜索 xxx" / "找找 xxx" / "有没有 xxx" / 不含模块关键词的模糊查询)，应执行**多模块并行搜索**，在多个相关模块中同时查找匹配的数据，汇总为跨模块概览。
+
+### 12.2 搜索模块列表
+
+默认全局模糊搜索覆盖以下 6 个模块（按常用优先级排列）：
+
+| 中文名 | 模块名 | 搜索方式 | 优先级 |
+|--------|--------|---------|-------|
+| 线索 | `lead` | `crm search lead '{"keyword":"xxx"}'` | 🔴 高 |
+| 线索池 | `pool/lead` | `crm search pool/lead '{"keyword":"xxx"}'` | 🔴 高 |
+| 客户 | `account` | `crm search account '{"keyword":"xxx"}'` | 🔴 高 |
+| 商机 | `opportunity` | `crm search opportunity '{"keyword":"xxx"}'` | 🟡 中 |
+| 公海 | `pool/account` | `crm search pool/account '{"keyword":"xxx"}'` | 🟡 中 |
+| 联系人 | `contact` | `crm search contact '{"keyword":"xxx"}'` | 🟢 低 |
+
+> **执行顺序**：为提升响应速度，应**并行**发起所有搜索请求（不等待上一个完成）。若用户角色为销售（SELF 视图），搜索时自动在 keywords 中追加 `viewId: "SELF"` 或通过 filters 限定范围。
+
+### 12.3 搜索参数
+
+每个模块使用统一的基础模板：
+
+```json
+{
+  "current": 1,
+  "pageSize": 10,
+  "sort": {},
+  "combineSearch": { "searchMode": "AND", "conditions": [] },
+  "keyword": "<用户搜索词>",
+  "viewId": "ALL",
+  "filters": []
+}
+```
+
+**关键参数说明：**
+- `pageSize: 10` — 全局搜索每模块只取前 10 条，避免过多数据拖慢响应
+- `keyword` — 用户输入的原生搜索词（公司名、人名、手机号等）
+- `viewId` — 未指定时默认 `ALL`；若用户说"我的"、"我负责的"等，改为对应角色的 `SELF`
+
+### 12.4 响应处理流程
+
+```
+启动搜索
+  │
+  ├─→ 并行发起 6 个模块的 search 请求
+  │
+  ├─→ 等待所有请求完成（或超时 15s）
+  │    ├─ 成功 → 解析列表数据
+  │    └─ 失败 → 记录该模块为"查询失败"，继续处理其他模块
+  │
+  ├─→ 合并结果，按模块汇总
+  │
+  └─→ 输出跨模块概览（格式见 output-engine.md §6 多模块搜索输出格式）
+```
+
+> **超时处理**：单个模块请求超过 15 秒时放弃该模块，不影响其他模块继续搜索。最终输出中标注"XXX 模块查询超时"。
+
+### 12.5 模块明确性判定规则
+
+当用户只说关键词但未显式指定模块时，按以下规则判定是否需要全模块搜索：
+
+| 用户输入 | 判定 | 动作 |
+|---------|------|------|
+| "查一下 xxx 公司的线索" | ✅ 明确指定模块 | 只搜 `lead` |
+| "查一下 xxx 公司" / "搜索 xxx" | ❌ 未指定模块 | **执行 §12 全局模糊搜索** |
+| "有没有 xxx 相关的联系人" | ✅ 明确指定模块 | 只搜 `contact` |
+| "找找 xxx" / "查查 xxx" | ❌ 未指定模块 | **执行 §12 全局模糊搜索** |
+| "线索池里有没有 xxx" | ✅ 明确指定模块 | 只搜 `pool/lead` |
+| "帮我查一下 xxx 这个人" | ❌ 未指定模块 | **执行 §12 全局模糊搜索** |
+| "看看 xxx 项目的商机" | ✅ 明确指定模块 | 只搜 `opportunity` |
+| "查手机号 138xxxx" / "搜邮箱" | ❌ 未指定模块 | **执行 §12 全局模糊搜索** |
+
+**核心判定原则：**
+- 用户输入中包含「线索/客户/商机/联系人/线索池/公海」等模块关键词 → 明确指定模块
+- 仅包含公司名、人名、联系方式、编号等查询内容 → 未指定模块 → 执行全局模糊搜索
+- 用户说"找找 xxx"但 xxx 后带明确模块词 → 明确指定模块（例："找找 xxx 公司的联系人" → 只搜 contact）
+
+### 12.6 角色感知的搜索范围
+
+| 角色 | 搜索范围偏好 | viewId 规则 |
+|------|-------------|-------------|
+| 销售 | 全部 6 个模块 | 默认 `ALL`；若含"我的"语义 → `SELF` |
+| 销售经理 | 全部 6 个模块 | 默认 `ALL`；部门范围自动扩展 |
+| 财务 | 仅 account, contract 相关 | 仅搜索客户 + 合同相关模块 |
+
+> 角色配置在 profiles/{role}.md 中定义，修改角色的 globalSearchModules 即可。
+
+### 12.7 实际执行示例
+
+用户："查一下 华星科技"
+
+```bash
+# 并行发起（所有命令同时执行，无先后依赖）：
+cordys.sh crm search lead '{"current":1,"pageSize":10,"keyword":"华星科技","viewId":"ALL"}'
+cordys.sh crm search pool/lead '{"current":1,"pageSize":10,"keyword":"华星科技","viewId":"ALL"}'
+cordys.sh crm search account '{"current":1,"pageSize":10,"keyword":"华星科技","viewId":"ALL"}'
+cordys.sh crm search opportunity '{"current":1,"pageSize":10,"keyword":"华星科技","viewId":"ALL"}'
+cordys.sh crm search pool/account '{"current":1,"pageSize":10,"keyword":"华星科技","viewId":"ALL"}'
+cordys.sh crm search contact '{"current":1,"pageSize":10,"keyword":"华星科技","viewId":"ALL"}'
+```
+
+### 12.8 搜索结果样例预估
+
+```
+🔍 全局搜索："华星科技"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 线索（8 条）
+│ 名称 │ 公司 │ 电话 │ 负责人 │ 创建时间 │
+│ ...  │ ...  │ ...  │ ...   │ ...     │
+
+📌 线索池（8 条）
+│ 名称 │ 公司 │ 电话 │ 负责人 │ 创建时间 │
+│ ...  │ ...  │ ...  │ ...   │ ...     │
+
+📌 客户（2 条）
+│ 名称 │ 行业 │ 省份 │ 负责人 │ 创建时间 │
+│ ...  │ ...  │ ...  │ ...   │ ...     │
+
+📌 商机（2 条）
+│ 名称 │ 金额 │ 阶段 │ 负责人 │ 创建时间 │
+│ ...  │ ...  │ ...  │ ...   │ ...     │
+
+📌 公海（0 条）
+（无匹配结果）
+
+📌 联系人（10 条）
+│ 姓名 │ 公司 │ 手机 │ 邮箱 │
+│ ...  │ ...  │ ...  │ ...  │
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 汇总：共找到 30 条匹配记录
 ```
