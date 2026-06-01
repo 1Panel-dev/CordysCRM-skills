@@ -213,6 +213,8 @@ cordys.sh crm raw POST /account/follow/plan/page '{"sourceId":"1751888184018919"
 ```
 更多字段可以在 CLI 输出的 `moduleFields` 里查看或用 `cordys raw GET /settings/fields?module={module}` 查询。
 
+> **字段类型与操作符映射**：构造 `combineSearch.conditions` 时，每个 condition 的 `type` 字段必须正确填写目标字段的字段类型，`operator` 必须为该字段类型支持的操作符。详细映射表见 `core/cli-spec.md §5.4 字段类型 → 支持的操作符映射`。
+
 ---
 
 后续扩展，在 `references/` 下添加更多模块的字段列表（例如 `contacts.md`、`tasks.md`）或写出常用 JSON 模板。
