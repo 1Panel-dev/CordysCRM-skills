@@ -99,7 +99,7 @@ cordys.sh crm search account '{
   "combineSearch":{
     "searchMode":"AND",
     "conditions":[
-      {"field":"industry","operator":"equals","value":"科技"}
+      {"name":"industry","operator":"EQUALS","value":"科技","type":"INPUT"}
     ]
   },
   "filters":[

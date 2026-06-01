@@ -51,10 +51,10 @@ security:
 第二步：确认用户身份
   ├─ User.md 存在且有效？
  │ ├─ 是 → 读取角色ID，跳至第三步
- │ └─ 否 → 
- │ ├─ cordys.sh crm verify 验证密钥
- │ ├─ cordys.sh crm whoami 获取用户信息
- │ └─ 写入 User.md
+ │ └─ 否 →
+ │    ├─ cordys.sh crm verify 验证密钥
+ │    ├─ cordys.sh crm whoami 获取用户信息
+ │    └─ 写入 User.md
 
 第三步：匹配角色，加载配置
   └─ 根据 User.md 中的岗位 → 按 role-engine.md 规则匹配角色
@@ -95,7 +95,7 @@ skills/
 │ └── cordys.py  # Python CLI（备用）
 │
 └── references/
- └── crm-api.md  # API 文档
+    └── crm-api.md  # API 文档
 ```
 
 > 角色核心引擎见 `core/role-engine.md`；命令规范见 `core/cli-spec.md`；输出规范见 `core/output-engine.md`；风险预警见 `core/risk-engine.md`。
