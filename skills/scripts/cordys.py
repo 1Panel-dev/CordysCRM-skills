@@ -106,6 +106,26 @@ def page_payload(keyword: str = "") -> Dict[str, Any]:
     }
 
 
+def merge_payload(user_json: str = "") -> Dict[str, Any]:
+    """合并用户 JSON 到默认 payload，确保 current 和 pageSize 始终存在"""
+    default = page_payload()
+    if not user_json or not user_json.strip():
+        return default
+    try:
+        user = json.loads(user_json)
+    except json.JSONDecodeError:
+        # 不是合法 JSON，当作 keyword 处理
+        default["keyword"] = user_json
+        return default
+    merged = {**default, **user}
+    # 确保 current 和 pageSize 有值（即使用户传了无效值）
+    if not isinstance(merged.get("current"), int) or merged["current"] < 1:
+        merged["current"] = 1
+    if not isinstance(merged.get("pageSize"), int) or merged["pageSize"] < 1:
+        merged["pageSize"] = 30
+    return merged
+
+
 # ── API 封装（Header Key 鉴权）────────────────────────────────────────
 def api_request(method: str, url: str, content_type: str, **kwargs) -> str:
     """执行 API 请求"""
@@ -173,7 +193,7 @@ def api_form(method: str, url: str, **kwargs) -> str:
 
 
 # ── CRM 辅助函数 ──────────────────────────────────────────────────────
-def crm_list(module: str, opts: str = "") -> str:
+def crm_view(module: str, opts: str = "") -> str:
     """列出视图记录"""
     params = opts if opts else None
     return api("GET", f"{CORDYS_CRM_DOMAIN}/{module}/view/list", params=params)
@@ -191,7 +211,6 @@ def crm_contact(module: str, id: str) -> str:
 
 def crm_page(module: str, payload_or_keyword: str = "") -> str:
     """列表分页记录"""
-    # 判断是否为 JSON
     if payload_or_keyword.startswith("{"):
         body = payload_or_keyword
     else:
@@ -203,8 +222,10 @@ def crm_page(module: str, payload_or_keyword: str = "") -> str:
 
 def crm_search(module: str, json_data: str = "") -> str:
     """全局搜索记录"""
+    merged = merge_payload(json_data)
+    body = json.dumps(merged, ensure_ascii=False)
     path = f"global/search/{module}"
-    return api("POST", f"{CORDYS_CRM_DOMAIN}/{path}", data=json_data)
+    return api("POST", f"{CORDYS_CRM_DOMAIN}/{path}", data=body)
 
 
 def crm_follow_page(kind: str, module: str, payload: str = "") -> str:
@@ -214,13 +235,89 @@ def crm_follow_page(kind: str, module: str, payload: str = "") -> str:
     if not module:
         die(f"follow {kind} 需要指定模块（lead/account 等）")
 
-    # 判断是否为 JSON
     if payload.startswith("{"):
         body = payload
     else:
         body = json.dumps(page_payload(payload), ensure_ascii=False)
 
     return api("POST", f"{CORDYS_CRM_DOMAIN}/{module}/follow/{kind}/page", data=body)
+
+
+# ── 审批相关 ──────────────────────────────────────────────────────────
+def crm_approval_todo(kind: str, payload: str = "") -> str:
+    """审批代办列表"""
+    merged = merge_payload(payload)
+    body = json.dumps(merged, ensure_ascii=False)
+    kind_map = {
+        "pending":   f"{CORDYS_CRM_DOMAIN}/approval-todo/pending/page",
+        "processed": f"{CORDYS_CRM_DOMAIN}/approval-todo/processed/page",
+        "initiated": f"{CORDYS_CRM_DOMAIN}/approval-todo/initiated/page",
+        "cc":        f"{CORDYS_CRM_DOMAIN}/approval-todo/cc/page",
+    }
+    if kind == "count":
+        return api("GET", f"{CORDYS_CRM_DOMAIN}/approval-todo/pending/count")
+    if kind not in kind_map:
+        die(f"未知的审批代办类型: {kind}。支持: pending, processed, initiated, cc, count")
+    return api("POST", kind_map[kind], data=body)
+
+
+def crm_approval_action(action: str, payload: str = "") -> str:
+    """审批操作（同意/驳回/退回/加签/撤回/批量）"""
+    if not payload or not payload.strip().startswith("{"):
+        die(f"{action} 需要 JSON body")
+    action_map = {
+        "approve":       f"{CORDYS_CRM_DOMAIN}/approval-action/approve",
+        "reject":        f"{CORDYS_CRM_DOMAIN}/approval-action/reject",
+        "back":          f"{CORDYS_CRM_DOMAIN}/approval-action/back",
+        "sign":          f"{CORDYS_CRM_DOMAIN}/approval-action/sign",
+        "revoke":        f"{CORDYS_CRM_DOMAIN}/approval-action/revoke",
+        "batch-approve": f"{CORDYS_CRM_DOMAIN}/approval-action/batch-approve",
+        "batch-reject":  f"{CORDYS_CRM_DOMAIN}/approval-action/batch-reject",
+    }
+    if action not in action_map:
+        die(f"未知的审批操作: {action}。支持: approve, reject, back, sign, revoke, batch-approve, batch-reject")
+    return api("POST", action_map[action], data=payload)
+
+
+def crm_approval_resource(action: str, arg: str = "") -> str:
+    """审批资源（提审/撤销/详情）"""
+    if action == "push":
+        return api("POST", f"{CORDYS_CRM_DOMAIN}/approval-resource/push", data=arg)
+    elif action == "revoke":
+        return api("POST", f"{CORDYS_CRM_DOMAIN}/approval-resource/revoke", data=arg)
+    elif action == "simple-detail":
+        return api("GET", f"{CORDYS_CRM_DOMAIN}/approval-resource/simple-detail/{arg}")
+    elif action == "detail":
+        return api("GET", f"{CORDYS_CRM_DOMAIN}/approval-resource/detail/{arg}")
+    else:
+        die(f"未知的审批资源操作: {action}。支持: push, revoke, simple-detail, detail")
+
+
+def crm_approval_flow(action: str, arg: str = "") -> str:
+    """审批流管理"""
+    base = CORDYS_CRM_DOMAIN
+    if action == "list":
+        return api("POST", f"{base}/approval-flow/page", data=arg)
+    elif action == "get":
+        return api("GET", f"{base}/approval-flow/get/{arg}")
+    elif action == "add":
+        return api("POST", f"{base}/approval-flow/add", data=arg)
+    elif action == "update":
+        return api("POST", f"{base}/approval-flow/update", data=arg)
+    elif action == "delete":
+        return api("GET", f"{base}/approval-flow/delete/{arg}")
+    elif action == "enable":
+        return api("GET", f"{base}/approval-flow/enable/{arg}?enable=true")
+    elif action == "disable":
+        return api("GET", f"{base}/approval-flow/enable/{arg}?enable=false")
+    elif action == "by-form":
+        return api("GET", f"{base}/approval-flow/get-by-form-type/{arg}")
+    elif action == "setting":
+        return api("GET", f"{base}/approval-flow/status-permission/setting/{arg}")
+    elif action == "webhook-test":
+        return api("POST", f"{base}/approval-flow/webhook/test", data=arg)
+    else:
+        die(f"未知的审批流操作: {action}")
 
 
 def crm_product(keyword: str = "") -> str:
@@ -309,7 +406,7 @@ CRM 操作:
   cordys crm page contract/payment-plan '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
   cordys crm search account '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
   cordys crm org
-  cordys crm members '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
+  cordys crm members '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentId":["deptId1","deptId2"],"filters":[]}'
   cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
   cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
   cordys crm product "测试"
@@ -325,6 +422,21 @@ CRM 操作:
 原始 API:
   raw <方法> <路径> [curl参数...]
   cordys raw GET /settings/fields?module=account
+
+审批操作:
+  cordys crm approval todo pending ['{"current":1,"pageSize":30}']
+  cordys crm approval todo pending '{"resourceType":"CONTRACT"}'
+  cordys crm approval todo count
+  cordys crm approval action approve '{"resourceId":"xxx","remark":"同意"}'
+  cordys crm approval action reject '{"resourceId":"xxx","remark":"驳回原因"}'
+  cordys crm approval resource push '{"resourceId":"xxx"}'
+  cordys crm approval resource detail RESOURCE_ID
+  cordys crm approval flow list '{"current":1,"pageSize":30}'
+
+审批 todo 类型: pending, processed, initiated, cc, count
+审批 action 操作: approve, reject, back, sign, revoke, batch-approve, batch-reject
+审批 resource 操作: push, revoke, simple-detail, detail
+审批 flow 操作: list, get, add, update, delete, enable, disable, by-form, setting, webhook-test
 
 环境变量要求:
   CORDYS_ACCESS_KEY
@@ -348,7 +460,7 @@ def handle_crm_command(args: list) -> None:
             die("view 需要指定模块")
         module = rest_args[0]
         opts = rest_args[1] if len(rest_args) > 1 else ""
-        print(crm_list(module, opts))
+        print(crm_view(module, opts))
 
     elif sub_cmd == "get":
         if len(rest_args) < 2:
@@ -403,6 +515,30 @@ def handle_crm_command(args: list) -> None:
         module = rest_args[1]
         payload = rest_args[2] if len(rest_args) > 2 else ""
         print(crm_follow_page(kind, module, payload))
+
+    elif sub_cmd == "approval":
+        if not rest_args:
+            die("approval 需要子命令")
+        sub2 = rest_args[0]
+        rest = rest_args[1:]
+        if sub2 == "todo":
+            kind = rest[0] if rest else ""
+            payload = rest[1] if len(rest) > 1 else ""
+            print(crm_approval_todo(kind, payload))
+        elif sub2 == "action":
+            action = rest[0] if rest else ""
+            payload = rest[1] if len(rest) > 1 else ""
+            print(crm_approval_action(action, payload))
+        elif sub2 == "resource":
+            action = rest[0] if rest else ""
+            arg = rest[1] if len(rest) > 1 else ""
+            print(crm_approval_resource(action, arg))
+        elif sub2 == "flow":
+            action = rest[0] if rest else ""
+            arg = rest[1] if len(rest) > 1 else ""
+            print(crm_approval_flow(action, arg))
+        else:
+            die(f"未知的 approval 子命令: {sub2}。支持: todo, action, resource, flow")
 
     else:
         die(f"未知的 crm 子命令: {sub_cmd}")

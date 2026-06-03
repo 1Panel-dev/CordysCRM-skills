@@ -3,7 +3,7 @@
 # 使用 X-Access-Key / X-Secret-Key 进行鉴权
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 ENV_FILE="${SKILL_DIR}/.env"
 
@@ -129,7 +129,7 @@ api_form() {
 # ── CRM 辅助函数 ──────────────────────────────────────────────────────
 crm_base="${CORDYS_CRM_DOMAIN}"
 
-crm_list() {
+crm_view() {
   local module="$1" opts="${2:-}"
   api GET "${crm_base}/${module}/view/list" $opts
 }
@@ -370,7 +370,7 @@ case "$cmd" in
   crm)
     sub="${1:-}"; shift || die "crm 需要子命令"
     case "$sub" in
-      view)    crm_list "$@" ;;
+      view)    crm_view "$@" ;;
       get)     crm_get "$@" ;;
       search)  crm_search "$@" ;;
       page)    crm_page "$@" ;;
