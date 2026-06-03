@@ -1,4 +1,4 @@
-.env
+skills/.env
 *.env
 User.md
 .token_cache

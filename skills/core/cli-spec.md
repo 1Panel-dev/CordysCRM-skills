@@ -23,6 +23,7 @@
 > 9. [内置视图与自定义视图](#9-内置视图与自定义视图)
 > 10. [部门组织架构展开](#10-部门组织架构展开)
 > 11. [全局模糊搜索（多模块并行）](#11-全局模糊搜索多模块并行)
+> 12. [审批操作](#12-审批操作)
 
 ---
 
@@ -43,6 +44,23 @@ cordys.sh crm whoami                           当前用户信息
 cordys.sh crm verify                           验证 API 密钥
 cordys.sh raw          <METHOD> <PATH> [body]  原始 API 调用
 ```
+
+> **审批命令（新增）**：
+
+```text
+cordys.sh crm approval todo     <类型> [JSON]        审批代办列表
+cordys.sh crm approval action   <操作> <JSON>        审批操作
+cordys.sh crm approval resource <操作> [参数]         审批资源
+cordys.sh crm approval flow     <操作> [参数]         审批流管理
+```
+
+todo 类型：`pending`（待审）、`processed`（已处理）、`initiated`（我发起的）、`cc`（抄送我）、`count`（统计）
+
+action 操作：`approve`（同意）、`reject`（驳回）、`back`（退回）、`sign`（加签）、`revoke`（撤回）、`batch-approve`（批量同意）、`batch-reject`（批量驳回）
+
+resource 操作：`push`（提审）、`revoke`（撤销）、`simple-detail`（列表详情）、`detail`（记录详情）
+
+flow 操作：`list`（审批流列表）、`get`（详情）、`add`（新建）、`update`（更新）、`delete`（删除）、`enable`（启用）、`disable`（禁用）、`by-form`（按表单类型）、`setting`（状态权限）、`webhook-test`（测试webhook）
 
 > `cordys.sh` 前置路径为 `scripts/cordys.sh`，无需切换目录。
 > Python 版本：将 `cordys.sh` 替换为 `cordys.py` 即可。
@@ -797,3 +815,128 @@ cordys.sh crm search contact '{"current":1,"pageSize":10,"keyword":"华星科技
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📊 汇总：共找到 30 条匹配记录
 ```
+
+---
+
+## 12. 审批操作
+
+### 12.1 审批代办（Approval Todo）
+
+| 子命令 | 用途 | POST 路径 |
+|--------|------|----------|
+| `todo pending` | 待我审批的列表 | `/approval-todo/pending/page` |
+| `todo processed` | 我已处理的审批列表 | `/approval-todo/processed/page` |
+| `todo initiated` | 我发起的审批列表 | `/approval-todo/initiated/page` |
+| `todo cc` | 抄送我的审批列表 | `/approval-todo/cc/page` |
+| `todo count` | 待我审批统计（GET） | `/approval-todo/pending/count` |
+
+**approval todo 的 JSON body 和 CRM page 参数结构一致**（current、pageSize、sort、keyword、combineSearch、viewId、filters），但多一个字段：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `resourceType` | string | 资源类型过滤，可选值：`ALL`（全部）/ `QUOTATION`（报价单）/ `CONTRACT`（合同）/ `ORDER`（订单）/ `INVOICE`（发票） |
+
+示例：只看合同的待审审批
+
+```bash
+cordys.sh crm approval todo pending '{"current":1,"pageSize":30,"resourceType":"CONTRACT"}'
+```
+
+示例：本月的待审审批
+
+```bash
+cordys.sh crm approval todo pending '{"combineSearch":{"conditions":[{"value":"MONTH","operator":"DYNAMICS","name":"createTime","type":"TIME_RANGE_PICKER"}]}}'
+```
+
+---
+
+### 12.2 审批操作（Approval Action）
+
+所有操作都需要 JSON body，必须包含 `resourceId`。
+
+| 子命令 | 用途 | POST 路径 |
+|--------|------|----------|
+| `action approve` | 同意 | `/approval-action/approve` |
+| `action reject` | 驳回 | `/approval-action/reject` |
+| `action back` | 退回（指定退回节点） | `/approval-action/back` |
+| `action sign` | 加签（添加审批人） | `/approval-action/sign` |
+| `action revoke` | 撤回（发起人撤回） | `/approval-action/revoke` |
+| `action batch-approve` | 批量同意 | `/approval-action/batch-approve` |
+| `action batch-reject` | 批量驳回 | `/approval-action/batch-reject` |
+
+**请求体结构：**
+
+```json
+// 同意/驳回（单个）
+{"resourceId":"审批资源ID", "remark":"审批意见"}
+
+// 退回
+{"resourceId":"审批资源ID", "backNodeId":"目标节点ID", "remark":"退回原因"}
+
+// 加签
+{"resourceId":"审批资源ID", "signUserIds":["user1","user2"], "remark":"加签说明"}
+
+// 批量
+{"resourceIds":["id1","id2"], "remark":"批量意见"}
+```
+
+---
+
+### 12.3 审批资源（Approval Resource）
+
+| 子命令 | 用途 | 请求方式 |
+|--------|------|---------|
+| `resource push` | 提审（提交审批） | POST `/approval-resource/push` |
+| `resource revoke` | 撤销审批 | POST `/approval-resource/revoke` |
+| `resource simple-detail <id>` | 列表详情 | GET `/approval-resource/simple-detail/{id}` |
+| `resource detail <id>` | 记录详情（含审批流进度） | GET `/approval-resource/detail/{id}` |
+
+```bash
+# 提审
+cordys.sh crm approval resource push '{"resourceId":"xxx"}'
+
+# 撤销
+cordys.sh crm approval resource revoke '{"resourceId":"xxx"}'
+
+# 查看审批详情
+cordys.sh crm approval resource detail RESOURCE_ID
+```
+
+---
+
+### 12.4 审批流设置（Approval Flow）
+
+| 子命令 | 用途 | 请求方式 |
+|--------|------|---------|
+| `flow list` | 审批流列表 | POST `/approval-flow/page` |
+| `flow get <id>` | 审批流详情 | GET `/approval-flow/get/{id}` |
+| `flow add` | 新建审批流 | POST `/approval-flow/add` |
+| `flow update` | 更新审批流 | POST `/approval-flow/update` |
+| `flow delete <id>` | 删除审批流 | GET `/approval-flow/delete/{id}` |
+| `flow enable <id>` | 启用审批流 | GET `/approval-flow/enable/{id}?enable=true` |
+| `flow disable <id>` | 禁用审批流 | GET `/approval-flow/enable/{id}?enable=false` |
+| `flow by-form <formType>` | 按表单类型获取审批流 | GET `/approval-flow/get-by-form-type/{formType}` |
+| `flow setting <formType>` | 状态权限配置 | GET `/approval-flow/status-permission/setting/{formType}` |
+| `flow webhook-test` | webhook 测试连接 | POST `/approval-flow/webhook/test` |
+
+---
+
+### 12.5 审批意图映射
+
+| 用户说 | 映射命令 |
+|--------|---------|
+| 我的待审批、看看谁需要我批 | `approval todo pending`（默认全部资源类型） |
+| 我处理过的审批、审批历史 | `approval todo processed` |
+| 我提交的、我发起的 | `approval todo initiated` |
+| 抄送我的 | `approval todo cc` |
+| 有多少待审批、审批统计 | `approval todo count` |
+| 同意/通过这个审批 | `approval action approve` + `resourceId` |
+| 驳回/拒绝 | `approval action reject` + `resourceId` + `remark` |
+| 退回/打回 | `approval action back` + `resourceId` + `backNodeId` |
+| 加签/加个人审批 | `approval action sign` + `resourceId` + `signUserIds` |
+| 撤回申请 | `approval action revoke` + `resourceId` |
+| 批量同意 | `approval action batch-approve` + `resourceIds` |
+| 提交审批/提审 | `approval resource push` + `resourceId` |
+| 撤销审批 | `approval resource revoke` + `resourceId` |
+| 这个审批到什么进度了 | `approval resource detail <resourceId>` |
+| 查看审批流设置/有哪些审批流 | `approval flow list` |

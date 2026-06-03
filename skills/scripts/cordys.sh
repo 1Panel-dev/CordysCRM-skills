@@ -29,30 +29,26 @@ check_keys() {
 # 验证URL是否指向可信的Cordys CRM域名
 validate_url() {
   local url="$1"
-  
-  # 提取域名部分
+
   local domain
   if [[ "$url" =~ ^https?://([^/]+) ]]; then
     domain="${BASH_REMATCH[1]}"
   else
-    return 0  # 不是完整URL，可能是相对路径
+    return 0
   fi
-  
-  # 从配置的CORDYS_CRM_DOMAIN中提取可信域名
+
   local trusted_domain
   if [[ "$CORDYS_CRM_DOMAIN" =~ ^https?://([^/]+) ]]; then
     trusted_domain="${BASH_REMATCH[1]}"
   else
     trusted_domain="$CORDYS_CRM_DOMAIN"
   fi
-  
-  # 检查域名是否匹配（支持子域名）
+
   if [[ "$domain" != "$trusted_domain" ]] && [[ "$domain" != *".$trusted_domain" ]]; then
     warn "目标域名 '$domain' 与配置的Cordys CRM域名 '$trusted_domain' 不匹配"
     warn "这可能会泄露您的API凭证！"
     return 1
   fi
-  
   return 0
 }
 
@@ -75,27 +71,59 @@ print(json.dumps(payload, ensure_ascii=False))
 PY
 }
 
+# 合并用户 JSON 到默认 payload，确保 current 和 pageSize 始终存在
+merge_payload() {
+  local user_json="${1:-}"
+  python3 - "$user_json" <<'PY'
+import json, sys
+
+raw = sys.argv[1] if len(sys.argv) > 1 else ""
+try:
+  user = json.loads(raw) if raw and raw.strip() else {}
+except json.JSONDecodeError:
+  # 不是合法 JSON，当作 keyword 处理
+  user = {"keyword": raw}
+
+default = {
+  "current": 1,
+  "pageSize": 30,
+  "sort": {},
+  "combineSearch": {"searchMode": "AND", "conditions": []},
+  "keyword": "",
+  "viewId": "ALL",
+  "filters": []
+}
+
+merged = {**default, **user}
+# 确保 current 和 pageSize 有值（即使用户传了无效值）
+if not isinstance(merged.get("current"), int) or merged["current"] < 1:
+  merged["current"] = 1
+if not isinstance(merged.get("pageSize"), int) or merged["pageSize"] < 1:
+  merged["pageSize"] = 30
+
+sys.stdout.reconfigure(encoding='utf-8')
+print(json.dumps(merged, ensure_ascii=False))
+PY
+}
+
 # ── API 封装（Header Key 鉴权）────────────────────────────────────────
 api_request() {
   local method="$1" url="$2" content_type="$3"
   shift 3
-
   check_keys
-
-  # 通过 `"$@"` 保证额外的参数能够传递给 curl
   curl -s -X "$method" "$url" \
     -H "X-Access-Key: ${CORDYS_ACCESS_KEY}" \
     -H "X-Secret-Key: ${CORDYS_SECRET_KEY}" \
     -H "Content-Type: $content_type; charset=utf-8" \
-    "$@"  # 传递剩余的所有参数
+    "$@"
 }
 
 api() {
-  api_request "$1" "$2" "application/json" "${@:3}"  # 传递 method, url 和其余的参数
+  api_request "$1" "$2" "application/json" "${@:3}"
 }
 
 api_form() {
-  api_request "$1" "$2" "application/x-www-form-urlencoded" "${@:3}"  # 同样地，传递其余的参数
+  api_request "$1" "$2" "application/x-www-form-urlencoded" "${@:3}"
 }
 
 # ── CRM 辅助函数 ──────────────────────────────────────────────────────
@@ -122,7 +150,7 @@ crm_page() {
   local first="${1:-}"
   local body
   if [[ "$first" == \{* ]]; then
-    body="$first"
+    body=$(merge_payload "$first")
   else
     body=$(page_payload "${first:-}")
   fi
@@ -132,27 +160,95 @@ crm_page() {
 
 crm_search() {
   local module="$1" json="${2:-}"
+  local body
+  if [[ "$json" == \{* ]]; then
+    body=$(merge_payload "$json")
+  else
+    body=$(page_payload "${json}")
+  fi
   local path="global/search/${module}"
-  api POST "${CORDYS_CRM_DOMAIN}/${path}" --data-binary "$json"
+  api POST "${CORDYS_CRM_DOMAIN}/${path}" --data-binary "$body"
 }
 
 crm_follow_page() {
   local kind="$1" module="$2" payload="${3:-}"
-
   [[ "${kind}" == "plan" || "${kind}" == "record" ]] || die "follow 子命令只支持 plan/record"
   [[ -n "${module}" ]] || die "follow ${kind} 需要指定模块（lead/account 等）"
-
   local body
   if [[ "${payload}" == \{* ]]; then
     body="${payload}"
   else
     body=$(page_payload "${payload}")
   fi
-
   api POST "${crm_base}/${module}/follow/${kind}/page" --data-binary "$body"
 }
 
-# 查询产品
+# ── 审批相关 ──────────────────────────────────────────────────────────
+
+crm_approval_todo() {
+  local kind="$1" payload="${2:-}"
+  local body
+  if [[ "${payload}" == \{* ]]; then
+    body=$(merge_payload "${payload}")
+  else
+    body=$(page_payload "${payload}")
+  fi
+  case "${kind}" in
+    pending)   api POST "${crm_base}/approval-todo/pending/page" --data-binary "$body" ;;
+    processed) api POST "${crm_base}/approval-todo/processed/page" --data-binary "$body" ;;
+    initiated) api POST "${crm_base}/approval-todo/initiated/page" --data-binary "$body" ;;
+    cc)        api POST "${crm_base}/approval-todo/cc/page" --data-binary "$body" ;;
+    count)     api GET "${crm_base}/approval-todo/pending/count" ;;
+    *) die "未知的审批代办类型: ${kind}。支持: pending, processed, initiated, cc, count" ;;
+  esac
+}
+
+crm_approval_action() {
+  local action="$1" payload="${2:-}"
+  [[ -n "${payload}" && "${payload}" == \{* ]] || die "${action} 需要 JSON body"
+  case "${action}" in
+    approve)       api POST "${crm_base}/approval-action/approve" --data-binary "$payload" ;;
+    reject)        api POST "${crm_base}/approval-action/reject" --data-binary "$payload" ;;
+    back)          api POST "${crm_base}/approval-action/back" --data-binary "$payload" ;;
+    sign)          api POST "${crm_base}/approval-action/sign" --data-binary "$payload" ;;
+    revoke)        api POST "${crm_base}/approval-action/revoke" --data-binary "$payload" ;;
+    batch-approve) api POST "${crm_base}/approval-action/batch-approve" --data-binary "$payload" ;;
+    batch-reject)  api POST "${crm_base}/approval-action/batch-reject" --data-binary "$payload" ;;
+    *) die "未知的审批操作: ${action}。支持: approve, reject, back, sign, revoke, batch-approve, batch-reject" ;;
+  esac
+}
+
+crm_approval_resource() {
+  local action="$1"
+  shift
+  case "${action}" in
+    push)          api POST "${crm_base}/approval-resource/push" --data-binary "$1" ;;
+    revoke)        api POST "${crm_base}/approval-resource/revoke" --data-binary "$1" ;;
+    simple-detail) api GET "${crm_base}/approval-resource/simple-detail/$1" ;;
+    detail)        api GET "${crm_base}/approval-resource/detail/$1" ;;
+    *) die "未知的审批资源操作: ${action}。支持: push, revoke, simple-detail, detail" ;;
+  esac
+}
+
+crm_approval_flow() {
+  local action="$1"
+  shift
+  case "${action}" in
+    list)         api POST "${crm_base}/approval-flow/page" --data-binary "$1" ;;
+    get)          api GET "${crm_base}/approval-flow/get/$1" ;;
+    add)          api POST "${crm_base}/approval-flow/add" --data-binary "$1" ;;
+    update)       api POST "${crm_base}/approval-flow/update" --data-binary "$1" ;;
+    delete)       api GET "${crm_base}/approval-flow/delete/$1" ;;
+    enable)       api GET "${crm_base}/approval-flow/enable/$1?enable=true" ;;
+    disable)      api GET "${crm_base}/approval-flow/enable/$1?enable=false" ;;
+    by-form)      api GET "${crm_base}/approval-flow/get-by-form-type/$1" ;;
+    setting)      api GET "${crm_base}/approval-flow/status-permission/setting/$1" ;;
+    webhook-test) api POST "${crm_base}/approval-flow/webhook/test" --data-binary "$1" ;;
+    *) die "未知的审批流操作: ${action}" ;;
+  esac
+}
+
+# ── 产品 ──────────────────────────────────────────────────────────────
 crm_product() {
   local keyword="${1:-}"
   local body
@@ -164,12 +260,11 @@ crm_product() {
   api POST "${CORDYS_CRM_DOMAIN}/field/source/product" --data-binary "$body"
 }
 
-# 获取当前用户信息
+# ── 用户与组织 ─────────────────────────────────────────────────────────
 crm_whoami() {
   api GET "${crm_base}/personal/center/info"
 }
 
-# 验证 API 密钥状态
 crm_verify() {
   local result
   result=$(crm_whoami 2>&1) || {
@@ -179,12 +274,10 @@ crm_verify() {
   echo "$result"
 }
 
-# 获取组织架构
 crm_org() {
   api GET "${crm_base}/department/tree"
 }
 
-# 根据部门ID获取成员
 crm_members() {
   api POST "${crm_base}/user/list" --data-binary "$1"
 }
@@ -195,19 +288,15 @@ raw_api() {
   shift 2
 
   if [[ "$path" == http* ]]; then
-    # 验证URL域名
     if ! validate_url "$path"; then
       echo "❌ 拒绝请求：目标域名与配置的Cordys CRM域名不匹配" >&2
       echo "   配置的域名: $CORDYS_CRM_DOMAIN" >&2
-      echo "   如需强制发送，请设置环境变量 CORDYS_ALLOW_UNTRUSTED=1" >&2
-      
       if [[ "${CORDYS_ALLOW_UNTRUSTED:-0}" != "1" ]]; then
         exit 1
       else
         warn "已启用不受信任域名模式，继续发送请求..."
       fi
     fi
-    
     api "$method" "$path" "$@"
   else
     api "$method" "${CORDYS_CRM_DOMAIN}${path}" "$@"
@@ -222,52 +311,55 @@ cordys — CORDYS CRM CLI 工具（X-Access-Key 模式）
 使用方法:
   cordys <命令> [参数...]
 
-CRM 操作:
-  crm view <模块> [参数]             列出视图记录（例：account/lead/opportunity）
-  crm get <模块> <ID>               获取单条记录详情
-  crm search <模块> [关键词|JSON]    全局搜索记录
-  crm page <模块> [关键词|JSON]      列表分页记录 /<module>/page （例：account/lead/opportunity）
-  crm whoami                       获取当前登录用户信息
-  crm verify                       验证 API 密钥是否有效
-  crm org                          获取组织架构树
-  crm members <部门IDs>             获取部门成员列表
-  crm follow <plan|record> <模块> [关键词|JSON]  查询跟进计划或跟进记录
-  crm product [关键词|JSON]          查询产品列表
-  crm contact <模块> <ID>           获取联系人列表
+CRM 数据操作:
+  crm view <模块> [参数]                   列出视图记录
+  crm get <模块> <ID>                     获取单条记录详情
+  crm search <模块> [关键词|JSON]          全局搜索记录
+  crm page <模块> [关键词|JSON]            列表分页记录
+  crm follow <plan|record> <模块> [JSON]   查询跟进计划/记录
+  crm product [关键词|JSON]               查询产品列表
+  crm contact <模块> <ID>                 获取联系人列表
 
-支持的 CRM 一级模块:
- [lead（线索）, opportunity（商机）, account（客户）,contact（联系人）,contract（合同）]
+用户与组织:
+  crm whoami                              获取当前用户信息
+  crm verify                              验证 API 密钥
+  crm org                                 获取组织架构树
+  crm members <JSON>                      获取部门成员列表
 
-列表查询示例:
-  cordys crm view lead
-  cordys crm page lead
-  cordys crm page lead "测试"
-  cordys crm page lead '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
-  cordys crm page contract/payment-plan '{"current":1,"pageSize":30,"sort":{},"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","viewId":"ALL","filters":[]}'
-  cordys crm search account '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"xyz","viewId":"ALL","filters":[]}'
-  cordys crm org
-  cordys crm members '{"current":1,"pageSize":30,"combineSearch":{"searchMode":"AND","conditions":[]},"keyword":"","departmentIds":["deptId1","deptId2"],"filters":[]}'
-  cordys crm follow plan lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"","status":"ALL","myPlan":false}'
-  cordys crm follow record account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"keyword":"","myPlan":false}'
-  cordys crm product "测试"
-  cordys crm contact account '927627065163785'
+审批操作:
+  crm approval todo <类型> [JSON]          审批代办列表
+  crm approval action <操作> <JSON>        审批操作（同意/驳回/退回/加签/撤回）
+  crm approval resource <操作> [参数]       审批资源（提审/撤销/详情）
+  crm approval flow <操作> [参数]          审批流管理
 
-支持的 CRM 二级模块 :
-  [contract/payment-plan(回款计划), invoice（发票）,contract/business-title(工商抬头）,contract/payment-record(回款记录), opportunity/quotation(报价单)]
+模块列表:
+  lead（线索）, opportunity（商机）, account（客户）,
+  contact（联系人）, contract（合同）,
+  contract/payment-plan（回款计划）, invoice（发票）,
+  contract/business-title（工商抬头）, contract/payment-record（回款记录）,
+  opportunity/quotation（报价单）
 
-列表查询示例：
-  cordys crm page contract/payment-plan
-  cordys crm page contract/business-title
+审批 todo 类型: pending（待审）, processed（已处理）, initiated（我发起的）, cc（抄送我）, count（统计）
+审批 action 操作: approve（同意）, reject（驳回）, back（退回）, sign（加签）, revoke（撤回）, batch-approve（批量同意）, batch-reject（批量驳回）
+审批 resource 操作: push（提审）, revoke（撤销）, simple-detail（列表详情）, detail（记录详情）
+审批 flow 操作: list（列表）, get（详情）, add（新建）, update（更新）, delete（删除）, enable（启用）, disable（禁用）, by-form（按表单类型）, setting（状态权限）, webhook-test（测试webhook）
+
+示例:
+  cordys crm approval todo pending '{"current":1,"pageSize":30}'
+  cordys crm approval todo pending '{"resourceType":"CONTRACT"}'
+  cordys crm approval todo pending '{"combineSearch":{"conditions":[{"value":"2026-05-01","operator":"GT","name":"createTime","type":"DATE_TIME"}]}}'
+  cordys crm approval todo count
+  cordys crm approval action approve '{"resourceId":"xxx","remark":"同意"}'
+  cordys crm approval action reject '{"resourceId":"xxx","remark":"驳回原因"}'
+  cordys crm approval resource push '{"resourceId":"xxx"}'
+  cordys crm approval flow list '{"current":1,"pageSize":30}'
 
 原始 API:
   raw <方法> <路径> [curl参数...]
-  cordys raw GET /settings/fields?module=account
+  cordys raw GET /approval-todo/pending/count
 
-环境变量要求:
-  CORDYS_ACCESS_KEY
-  CORDYS_SECRET_KEY
-  CORDYS_CRM_DOMAIN
-
+环境变量:
+  CORDYS_ACCESS_KEY  CORDYS_SECRET_KEY  CORDYS_CRM_DOMAIN
 EOF
 }
 
@@ -285,7 +377,7 @@ case "$cmd" in
       whoami)  crm_whoami ;;
       verify)  crm_verify ;;
       org)     crm_org ;;
-      product)  crm_product "$@" ;;
+      product) crm_product "$@" ;;
       members) crm_members "$@" ;;
       contact) crm_contact "$@" ;;
       follow)
@@ -295,7 +387,17 @@ case "$cmd" in
           *) die "follow 只支持 plan 或 record" ;;
         esac
         ;;
-      *)       die "未知的 crm 子命令: $sub" ;;
+      approval)
+        sub2="${1:-}"; shift || die "approval 需要子命令"
+        case "${sub2}" in
+          todo)     crm_approval_todo "$@" ;;
+          action)   crm_approval_action "$@" ;;
+          resource) crm_approval_resource "$@" ;;
+          flow)     crm_approval_flow "$@" ;;
+          *) die "未知的 approval 子命令: ${sub2}。支持: todo, action, resource, flow" ;;
+        esac
+        ;;
+      *) die "未知的 crm 子命令: $sub" ;;
     esac
     ;;
   raw)

@@ -30,14 +30,19 @@ security:
   │   ├─ 是 → 精确搜索单模块（crm search/page/get <module>）
   │   └─ 否 → 全局模糊搜索（并行6模块: lead, pool/lead, account, opportunity, pool/account, contact）
   │
-  ├─ 角色适配 → 销售（只看自己）/ 经理（看部门）/ 财务（回款发票）
+  ├─ 审批意图？
+  │   ├─ 查询类 → approval todo（pending/processed/initiated/cc/count）
+  │   ├─ 操作类 → approval action（approve/reject/back/sign/revoke）
+  │   └─ 管理类 → approval resource/flow（push/detail/list）
+  │
+  ├─ 角色适配 → 销售（只看自己）/ 经理（看部门）/ 财务（回款发票/审批）
   │
   ├─ Cordys CRM API → 返回 JSON
   │     ├─ 数据量大？ → 标准表格展示（≤10条）+ 统计摘要
   │     ├─ 数据量极大？ → 临时存文件 + 上下文只保留摘要
   │     └─ 正常 → 直接格式化输出
   │
-  ├─ 风险扫描 → 按角色预警规则检查
+  ├─ 风险扫描 → 按角色预警规则检查（含审批预警）
   │
   └─ 输出 → 结论 + 表格 + 预警 + 建议
 ```
