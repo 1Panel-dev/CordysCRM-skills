@@ -32,7 +32,14 @@ security:
   │
   ├─ 角色适配 → 销售（只看自己）/ 经理（看部门）/ 财务（回款发票）
   │
-  └─ Cordys CRM API → 返回 JSON → 转成易读表格+结论
+  ├─ Cordys CRM API → 返回 JSON
+  │     ├─ 数据量大？ → 标准表格展示（≤10条）+ 统计摘要
+  │     ├─ 数据量极大？ → 临时存文件 + 上下文只保留摘要
+  │     └─ 正常 → 直接格式化输出
+  │
+  ├─ 风险扫描 → 按角色预警规则检查
+  │
+  └─ 输出 → 结论 + 表格 + 预警 + 建议
 ```
 
 ---
@@ -50,11 +57,11 @@ security:
 
 第二步：确认用户身份
   ├─ User.md 存在且有效？
- │ ├─ 是 → 读取角色ID，跳至第三步
- │ └─ 否 →
- │    ├─ cordys.sh crm verify 验证密钥
- │    ├─ cordys.sh crm whoami 获取用户信息
- │    └─ 写入 User.md
+  │   ├─ 是 → 读取角色ID，跳至第三步
+  │   └─ 否 →
+  │       ├─ cordys.sh crm verify 验证密钥
+  │       ├─ cordys.sh crm whoami 获取用户信息
+  │       └─ 写入 User.md
 
 第三步：匹配角色，加载配置
   └─ 根据 User.md 中的岗位 → 按 role-engine.md 规则匹配角色
@@ -75,27 +82,58 @@ security:
 
 ```text
 skills/
-├── SKILL.md  # 本文件——入口编排
-├── .env.example  # API 凭证模版
-├── User.md  # 运行时用户身份（不提交）
+├── SKILL.md              # 本文件——入口编排
+├── .env.example          # API 凭证模版
+├── User.md               # 运行时用户身份（不提交）
 │
 ├── core/
-│ ├── role-engine.md  # 角色感知引擎
-│ ├── cli-spec.md  # CLI 语义规范
-│ ├── output-engine.md  # 输出解释层
-│ └── risk-engine.md  # 风险识别引擎
+│   ├── role-engine.md    # 角色感知引擎
+│   ├── cli-spec.md       # CLI 语义规范
+│   ├── output-engine.md  # 输出解释层
+│   └── risk-engine.md    # 风险识别引擎
 │
 ├── profiles/
-│ ├── sales.md  # 销售角色配置
-│ ├── sales-manager.md  # 经理角色配置
-│ └── finance.md  # 财务角色配置
+│   ├── sales.md          # 销售角色配置
+│   ├── sales-manager.md  # 经理角色配置
+│   └── finance.md        # 财务角色配置
 │
 ├── scripts/
-│ ├── cordys.sh  # Shell CLI（推荐）
-│ └── cordys.py  # Python CLI（备用）
+│   ├── cordys.sh         # Shell CLI（推荐）
+│   └── cordys.py         # Python CLI（备用）
 │
 └── references/
-    └── crm-api.md  # API 文档
+    └── crm-api.md        # API 文档
 ```
 
-> 角色核心引擎见 `core/role-engine.md`；命令规范见 `core/cli-spec.md`；输出规范见 `core/output-engine.md`；风险预警见 `core/risk-engine.md`。
+---
+
+## 多步查询时的上下文管理
+
+当单次交互需要执行多个 Cordys 命令（如全局搜索 6 模块并行、或逐步下钻），需要注意上下文 token 膨胀。
+
+### 规则
+
+| 场景 | 做法 |
+|------|------|
+| 单次查询、JSON 正常 | 直接格式化输出，不需要额外操作 |
+| 全局模糊搜索（6模块并行） | 每个模块的 JSON 读完之后立即提取关键信息（命中数、前几条），大 JSON 本身**不在思考中保留**，直接格式化输出 |
+| 逐步下钻（查询A→基于结果查询B） | A 的结果格式化后，只保留格式化后的摘要信息供 B 使用，A 的原始 JSON 可以丢弃 |
+| 分页遍历拉全量 | 每页 JSON 解析后只保留全局统计（总条数、合计金额等），不保留每页明细 JSON |
+| 一次查询返回特别多字段（30+条记录） | 只格式化展示前10条 + 统计摘要，完整数据如果后续需要可以重新查询 |
+
+### 关键原则
+
+> **不要留着原始 JSON 不放。** 格式化输出本身就是最好的摘要。除非后续步骤需要引用特定字段做交叉查询，否则格式化成表格后原始 JSON 就没用了。
+
+---
+
+## 输出原则
+
+```
+关键结论（如果有清晰发现）
+└─ 核心数据（表格 ≤5 列，≤10 条，角色关注字段优先）
+   └─ 异常提醒（risk-engine 扫描结果）
+      └─ 建议动作（具体到"做什么、谁做、优先级"）
+```
+
+> 完整输出规范见 `core/output-engine.md`
