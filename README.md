@@ -138,17 +138,18 @@ CordysCRM-skills/
     ├── .env                      # API 凭证（不提交）
     ├── User.md                   # 运行时用户身份（不提交）
     ├── core/
-    │   ├── role-engine.md        # 角色感知引擎
-    │   ├── cli-spec.md           # CLI 语义规范
-    │   ├── output-engine.md      # 输出解释层
-    │   └── risk-engine.md        # 风险识别引擎
+    │   ├── role-engine.md        # 角色感知引擎（启动必加载）
+    │   ├── cli-spec.md           # CLI 语义规范（按需加载）
+    │   ├── cli-reference.md      # CLI 参考手册（重型映射表，按需加载）
+    │   ├── output-engine.md      # 输出解释层（按需加载）
+    │   └── risk-engine.md        # 风险识别引擎（按需加载）
     ├── profiles/
     │   ├── sales.md              # 销售角色配置
     │   ├── sales-manager.md      # 经理角色配置
     │   └── finance.md            # 财务角色配置
     ├── scripts/
-    │   ├── cordys.sh             # Shell CLI
-    │   └── cordys.py             # Python CLI（备用）
+    │   ├── cordys.sh             # Shell CLI（推荐）
+    │   └── cordys.py             # Python CLI（已弃用，仅兼容备选）
     └── references/
         └── crm-api.md            # API 文档
 ```
