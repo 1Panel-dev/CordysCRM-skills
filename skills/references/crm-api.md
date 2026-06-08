@@ -25,7 +25,7 @@
 | `lead-pool` | 线索池，用于共享线索。                    |
 | `account-pool` | 公海，用于共享客户。                     |
 
-你在自然语言中提到的模块名，扭转成命令时就能直接定位到本文档中所列的模块。
+你在自然语言中提到的模块名，转换成命令时就能直接定位到本文档中所列的模块。
 
 `contract` 模块还有几个常用的二级资源：`contract/payment-plan`（回款计划）、`invoice`、`contract/business-title`（工商抬头）、`contract/payment-record` 以及 `opportunity/quotation`，CLI 仍然沿用 `page`/json 的方式访问它们。
 

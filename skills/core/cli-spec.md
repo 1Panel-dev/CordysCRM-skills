@@ -191,7 +191,7 @@ Cordys CRM 提供两种过滤方式，**请优先使用 `combineSearch.condition
 | `NOT_EQUALS` | 不等于 | 同上 |
 | `CONTAINS` | 包含（模糊匹配） | INPUT, TEXTAREA, PHONE, LINK, SERIAL_NUMBER, ATTACHMENT, INPUT_MULTIPLE |
 | `NOT_CONTAINS` | 不包含 | 同上 |
-| `GT` | 大于（Great Than） | INPUT_NUMBER, DATE_TIME |
+| `GT` | 大于（Greater Than） | INPUT_NUMBER, DATE_TIME |
 | `LT` | 小于（Less Than） | INPUT_NUMBER, DATE_TIME |
 | `GE` | 大于等于 | INPUT_NUMBER |
 | `LE` | 小于等于 | INPUT_NUMBER |
