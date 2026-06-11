@@ -40,7 +40,7 @@
 # 格式：岗位关键词|岗位关键词...=角色ID，多组用逗号或换行分隔
 # 角色ID 必须对应 profiles/ 目录下已存在的 .md 文件（不含扩展名）
 
-ROLE_MAP=总监|副总裁|VP=sales-manager,区域经理|城市经理=territory-manager,商务|顾问=sales,财务|会计|出纳=finance
+ROLE_MAP=总经理|副总裁|VP=executive,总监|经理=sales-manager,区域经理|城市经理=territory-manager,商务|合同管理=contract-admin,销售|顾问=sales,财务|会计|出纳=finance
 ```
 
 AI 在启动时读取 `ROLE_MAP`，解析为映射表：
@@ -82,19 +82,29 @@ fields = response.data
 if fields.id == "admin" or "admin" in str(fields.roles or ""):
     role = "sales-manager"  # 管理员默认按经理视角
 
-# 优先级 2：管理岗
+# 优先级 2：高管岗（全公司视角，不限制部门）
 elif any(kw in str(fields.position or "") for kw in 
-         ["经理","总监","主管","负责人","leader","部长","总经理","主任"]):
+         ["总经理","副总裁","VP","CEO","COO","CFO","总裁","合伙人","董事长"]):
+    role = "executive"
+
+# 优先级 3：管理岗（部门视角）
+elif any(kw in str(fields.position or "") for kw in 
+         ["经理","总监","主管","负责人","leader","部长","主任"]):
     role = "sales-manager"
 
-# 优先级 3：财务岗
+# 优先级 4：财务岗
 elif any(kw in str(fields.position or "") for kw in 
          ["财务","会计","出纳","财务经理","财务总监"]):
     role = "finance"
 
-# 优先级 4：销售岗
+# 优先级 5：商务/合同岗
 elif any(kw in str(fields.position or "") for kw in 
-         ["销售","商务","BD","专员","顾问","业务员","运营"]):
+         ["商务","合同管理","合同专员","法务","合规","商务经理","商务总监"]):
+    role = "contract-admin"
+
+# 优先级 6：销售岗
+elif any(kw in str(fields.position or "") for kw in 
+         ["销售","BD","专员","顾问","业务员","运营"]):
     role = "sales"
 
 # 兜底：无法识别时默认个人模式（防止权限扩散）
@@ -102,7 +112,7 @@ else:
     role = "sales"
 ```
 
-> **注意**：自定义映射优先于内置规则。如果 `ROLE_MAP` 中写了某个关键词，即使内置规则有不同映射，也以自定义为准。
+> **匹配规则说明**：高管控（总经理/VP）优先于管理岗（经理/总监），避免误匹配。商务岗从销售岗独立出来。
 
 ### 2.3 从行为推断（软规则——仅内置规则使用）
 

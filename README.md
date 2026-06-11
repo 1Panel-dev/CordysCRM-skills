@@ -1,198 +1,319 @@
 # Cordys CRM Skill
 
-## 会 **认人** 的 CRM AI 助手
-
-一个销售和一个销售经理问同一个问题"看看线索"，得到的应该是不一样的答案：
-- 销售想看的是「**我的**线索，哪些该跟进了」
-- 经理想看的是「**团队的**线索，谁拖后腿了」
-
-这不是偏好设置，而是**角色的本质差异**。
-
-Cordys CRM Skill 的解法很简单：**让 AI 在开口之前，先知道坐在屏幕前的是谁。**
-
-你只需要输入 API Key，剩下的由系统自动完成：
-1. 自动获取你的身份
-2. 根据岗位自动匹配角色（销售、经理、财务）
-3. 加载该角色的工作模式——查询范围、输出重点、预警规则
-4. 开始对话，**就像你已经用了很久一样**
-
-整个过程不超过 3 次 API 调用。
+<p align="center">
+  <br/>
+  <em><strong>可组合的 CRM 智能层</strong></em>
+  <br/>
+  <em>角色变形 &nbsp;·&nbsp; 管道原生 &nbsp;·&nbsp; 默认零信任</em>
+  <br/><br/>
+</p>
 
 ---
 
-## 不同角色，不同世界
+## 同一个 CRM，不同的人看到不同的世界
+
+同一个系统。同一份数据。同一个问题：*"看看线索"*
+
+销售听到的是**待办优先级**。经理看到的是**团队健康仪表盘**。财务得到的是**资金回笼全景**。
+
+Cordys CRM Skill 不是给 CRM 加一层界面，而是加一层**智能**——它理解*谁*在问、*卡在* L2C 链路的哪个环节。它说人话，跨模块推理，在你开口问之前就告诉你哪里不对劲。
+
+> **一行配置。** 填好 API 密钥，系统自动识别你的身份、匹配角色、激活对应的认知视角。不用搭仪表盘，不用存筛选器。
+
+---
+
+## 五个角色，五种视角
+
+不是偏好设置。是系统在"展示什么、先展示什么、以什么紧迫度展示"这三个维度上的本质切换。
+
+<table>
+<tr>
+<td width="20%" valign="top">
 
 ### 销售
 ```
-默认视角：我的客户/线索/商机
-查询范围：lead, opportunity, account
-输出侧重：操作建议——"联系谁 + 做什么 + 先后顺序"
-主动预警：超期线索、商机卡点、今日计划未完成
+关注： 我接下来该做什么？
+范围： 我的客户/线索/商机
+预警： 超期未跟、商机卡顿
+输出： 优先级行动清单
 ```
+</td>
+<td width="20%" valign="top">
 
-### 销售经理
+### 经理
 ```
-默认视角：全部门
-查询范围：lead, opportunity, account, org, members
-输出侧重：管理决策——排名 + 风险 + 建议
-主动预警：跟进率过低、成员低产出、目标落后
+关注： 谁需要我关注？
+范围： 全部门 + 子团队
+预警： 跟进率低、转化骤降
+输出： 团队看板 → 下钻到人
 ```
+</td>
+<td width="20%" valign="top">
+
+### 高管
+```
+关注： 公司能交多少？
+范围： 全公司
+预警： 目标缺口、部门偏离
+输出： 趋势 → 对比 → 预测
+```
+</td>
+<td width="20%" valign="top">
+
+### 商务
+```
+关注： 合同签对了没有？
+范围： 合同 + 审批流
+预警： 到期未续、审批卡顿
+输出： 合同状态 + 到期预警
+```
+</td>
+<td width="20%" valign="top">
 
 ### 财务
 ```
-默认视角：按本月时间范围
-查询范围：contract, contract/payment-plan, invoice
-输出侧重：金额精确——汇总 + 明细 + 逾期
-主动预警：回款逾期、未开票、计划集中到期
+关注： 钱在哪？
+范围： 合同 → 回款 → 发票
+预警： 逾期、未开票、链断裂
+输出： 应收全景 → 催收排序
 ```
----
-
-## 主动预警，而不是被动回答
-
-一个有用的业务助手，应该在用户发现问题之前就主动预警：
-
-```
-销售打开线索列表 →
-  AI：您有 3 条线索超过 48 小时未跟进，其中 YYY 集团已 5 天未联系
-
-经理查看团队数据 →
-  AI：张三名下跟进率仅 40%，低于团队均值 68%
-
-财务查看回款 →
-  AI：合同 XX 项目回款已逾期 15 天，金额 ¥15 万
-```
-
-这是**角色感知的风险引擎**在自动工作——它知道不同角色关注不同风险，然后在你查询相关数据时顺带提醒。
+</td>
+</tr>
+</table>
 
 ---
 
+## 架构
 
-## 怎么做到的
+不是一个巨型提示词。是七个目标明确的**引擎晶格**，按需加载，通过共享上下文总线协同工作。
 
 ```mermaid
-flowchart TD
+flowchart LR
+    U(["💬 自然语言输入"]) --> GATE{意图路由}
 
-A[自然语言输入] --> B[身份解析层]
+    GATE -->|"单模块查询"| QUERY["🔍 查询引擎<br/><small>cli-spec + cli-reference</small>"]
+    GATE -->|"跨模块追踪"| LINK["🔗 链路引擎<br/><small>正向追溯 / 反向溯源</small>"]
+    GATE -->|"管道 / 漏斗"| FUNNEL["📊 漏斗引擎<br/><small>多模块聚合统计</small>"]
+    GATE -->|"模糊意图"| FLOW["🗺️ 工作流引擎<br/><small>意图 → 工作流匹配</small>"]
+    GATE -->|"审批"| APPR["✅ 审批管道"]
 
-B --> C[角色感知引擎]
+    QUERY --> ROLE{"🧠 角色变形<br/>透镜"}
+    LINK --> ROLE
+    FUNNEL --> ROLE
+    FLOW --> ROLE
+    APPR --> ROLE
 
-C --> C1[销售]
-C --> C2[销售经理]
-C --> C3[财务]
-C --> C4[管理员]
+    ROLE -->|"销售"| SL["SELF 范围<br/>行动优先输出"]
+    ROLE -->|"经理"| SM["DEPT 范围<br/>排名优先输出"]
+    ROLE -->|"高管"| EX["ALL 范围<br/>趋势优先输出"]
+    ROLE -->|"商务"| CA["CONTRACT 范围<br/>合规优先输出"]
+    ROLE -->|"财务"| FN["CASH 范围<br/>资金流优先输出"]
 
-C1 --> D1[个人视角]
-C2 --> D2[团队视角]
-C3 --> D3[资金视角]
-C4 --> D4[系统视角]
+    SL --> RISK["⚠️ 风险引擎<br/><small>单模块 + 跨模块断链检测</small>"]
+    SM --> RISK
+    FN --> RISK
 
-D1 --> E[CLI 语义翻译层]
-D2 --> E
-D3 --> E
-D4 --> E
+    RISK --> FMT["🧾 输出引擎<br/><small>角色自适应格式化</small>"]
+    FMT --> OUT(["✨ 结构化响应"])
+```
 
-E --> F[CRM API]
+**核心原则**：`role-engine.md` 是唯一启动必加载的引擎（约 150 行）。其余全部按意图懒加载——保持上下文窗口精瘦。
 
-F --> G[JSON 标准化]
+---
 
-G --> H[智能解释层]
+## 七引擎晶格
 
-H --> I[结构化输出]
+| 引擎 | 激活信号 | 职责 |
+|------|---------|------|
+| **角色** | 会话启动 | 身份识别、角色匹配、人格绑定 |
+| **CLI 规范** | 任何查询 | 自然语言 → `cordys.sh crm` 语义翻译 |
+| **CLI 参考** | 复杂筛选条件 | 字段类型 → 操作符速查表 |
+| **输出** | 每次响应 | JSON → 人类可读、角色自适应格式化 |
+| **风险** | 数据展示后 | 单模块异常 + 跨模块链断裂检测 |
+| **链路** | "查这笔单子" / "360视图" | L2C 正向追溯 / 反向溯源 |
+| **漏斗** | "管道怎么样" / "转化率" | 多模块聚合、快照与趋势 |
+| **工作流** | "今天做什么" | 模糊意图 → 结构化工作流 |
+
+---
+
+## L2C 管道 —— 内建而非外挂
+
+线索 → 客户 → 商机 → 报价 → 合同 → 订单 → 回款计划 → 回款记录 → 发票
+
+```mermaid
+flowchart LR
+    L["🔹 线索<br/><small>lead</small>"] -->|转化| A["🔹 客户<br/><small>account</small>"]
+    A --> O["🔹 商机<br/><small>opportunity</small>"]
+    O --> Q["📄 报价<br/><small>opportunity/quotation</small>"]
+    O --> C["🔹 合同<br/><small>contract</small>"]
+    C --> OD["📦 订单<br/><small>order 🆕</small>"]
+    C --> PP["💰 回款计划<br/><small>contract/payment-plan</small>"]
+    PP --> PR["💰 回款记录<br/><small>contract/payment-record</small>"]
+    OD --> I["🧾 发票<br/><small>invoice</small>"]
+
+    L -.->|"⚠️ 超30天未转化"| ALERT1["🟡"]
+    O -.->|"⚠️ 赢单无合同"| ALERT2["🔴"]
+    C -.->|"⚠️ 签约无回款计划"| ALERT3["🔴"]
+    I -.->|"⚠️ 开票未回款"| ALERT4["🟡"]
+
+    style ALERT1 fill:#fbbf24,stroke:none
+    style ALERT2 fill:#ef4444,stroke:none
+    style ALERT3 fill:#ef4444,stroke:none
+    style ALERT4 fill:#fbbf24,stroke:none
+```
+
+每一个环节转换都是**可能的断裂点**。系统监控整条链路，在问题变成事故之前主动暴露——不只是单模块内，而是跨 L2C 全局。
+
+### 链断裂检测示例
+
+| 断裂场景 | 检测方式 | 严重度 |
+|---------|---------|--------|
+| 线索创建 > 30 天未转化 | 查线索无关联客户 | 🟡 警告 |
+| 商机赢单 > 15 天无合同 | 赢单商机 vs 合同模块交叉比对 | 🔴 严重 |
+| 合同签约无回款计划 | 合同 vs 回款计划交叉比对 | 🔴 严重 |
+| 已开发票 > 90 天未回款 | 发票 vs 回款记录交叉比对 | 🔴 严重 |
+| 客户 > 180 天无跟进 | 客户跟进记录时间交叉检查 | 🟡 警告 |
+
+---
+
+## 实际体验
+
+### 销售 —— 晨会速览
+
+```
+> 今天有什么要跟的？
+
+📋 今日跟进计划（3 项）
+| 客户 | 内容 | 优先级 |
+| YYY集团 | 确认需求 | 🚨 超期5天 |
+| 华星科技 | 发送报价 | ⚠️ 今日到期 |
+| ABC技术 | 初次联系 | 🟢 新线索 |
+
+📊 我的管线：线索12 / 商机4（¥52万） / 签约1（¥12万）
+💡 商机"XX项目"在需求确认阶段停留10天，建议推进
+```
+
+### 经理 —— 周会看板
+
+```
+> 团队这周怎么样？
+
+📊 团队 L2C 漏斗（本周）
+| 成员 | 新增线索 | 新增商机 | 签约 | 签约额 |
+| 张三 | 8 | 2 | 1 | ¥12万 |
+| 李四 | 5 | 1 | 0 ⚠️ | ¥0 |
+| 王五 | 12 | 4 | 2 | ¥35万 🏆 |
+
+🚨 李四本周签约为零，跟进率 40% < 团队均值 68%
+📋 2 条待审批超过 3 天未处理
+💡 建议 1v1 了解李四管线卡点
+```
+
+### 财务 —— 应收全景
+
+```
+> 欠款情况
+
+💰 应收账款全景
+汇总：总应收 ¥285万 | 已逾期 ¥45万 🚨 | 7天内到期 ¥62万 ⚠️
+
+🚨 逾期回款（3 笔）
+| 合同 | 客户 | 逾期 | 金额 |
+| CRM-001 | 华星 | 15天 | ¥15万 |
+| CRM-008 | 远航 | 32天 | ¥20万 |
+| CRM-012 | 星辰 | 8天 | ¥10万 |
+
+⚠️ 链断裂：2份签约合同未创建回款计划（¥55万）
 ```
 
 ---
 
+## 安全姿态
 
-四个核心模块各自独立、互不耦合：
-
-| 模块 | 职责 |
+| 原则 | 实现 |
 |------|------|
-| **角色感知引擎** | 检测用户身份、匹配角色、管理 Cordys.md 生命周期 |
-| **CLI 语义规范** | 所有命令的定义、参数规则、意图映射 |
-| **输出解释层** | JSON → 人类可读的转换规则、角色适配的输出格式 |
-| **风险识别引擎** | 各角色的预警条件、触发时机、提醒优先级 |
+| **默认零信任** | API 请求仅发往已配置的 `CORDYS_CRM_DOMAIN` |
+| **凭证隔离** | 密钥存 `.env`，永不进版本控制，永不出现于输出 |
+| **非信任域拦截** | 跨域请求默认拒绝，除非显式设 `CORDYS_ALLOW_UNTRUSTED=1` |
+| **输出脱敏** | Access Key / Secret Key 在所有可见输出中自动剥离 |
+| **最小权限兜底** | 角色匹配失败时降级为 `sales`（最受限视角） |
 
 ---
 
-## 能力边界
-
-这个系统的能力建立在清晰的边界之上：
-
-| 能力 | 说明 |
-|------|------|
-| 自动感知用户角色 | 无需手动配置身份 |
-| 角色适配的查询和输出 | 不同角色看到不同的重点 |
-| 主动预警和风险提醒 | 在你查询相关数据时自动扫描 |
-| 销售到财务全覆盖 | 三种角色默认视角 |
-| 零配置初始化 | API Key 即可开始工作 |
-
----
-
-## 项目结构
-
-```
-CordysCRM-skills/
-├── README.md                     # 说明文档
-└── skills/
-    ├── SKILL.md                  # 入口编排
-    ├── .env                      # API 凭证（不提交）
-    ├── Cordys.md                   # 运行时用户身份（不提交）
-    ├── core/
-    │   ├── role-engine.md        # 角色感知引擎（启动必加载）
-    │   ├── cli-spec.md           # CLI 语义规范（按需加载）
-    │   ├── cli-reference.md      # CLI 参考手册（重型映射表，按需加载）
-    │   ├── output-engine.md      # 输出解释层（按需加载）
-    │   └── risk-engine.md        # 风险识别引擎（按需加载）
-    ├── profiles/
-    │   ├── sales.md              # 销售角色配置
-    │   ├── sales-manager.md      # 经理角色配置
-    │   └── finance.md            # 财务角色配置
-    ├── scripts/
-    │   ├── cordys.sh             # Shell CLI（推荐）
-    │   └── cordys.py             # Python CLI（已弃用，仅兼容备选）
-    └── references/
-        └── crm-api.md            # API 文档
-```
-
----
-#  快速开始
+## 快速开始
 
 ```bash
-# 通过 Clawdhub 安装（推荐，自动处理依赖和更新）
+# Clawdhub 安装（推荐）
 clawdhub install cordys-crm
 
-# 直接使用安装脚本（适合有 Bash 环境的用户）
-curl -fsSL https://raw.githubusercontent.com/1Panel-dev/CordysCRM-skills/main/install.sh | bash
+# 手动安装
+git clone --branch main https://github.com/1Panel-dev/CordysCRM-skills \
+  ~/.openclaw/workspace/skills/CordysCRM-skills
+mv ~/.openclaw/workspace/skills/CordysCRM-skills/skills \
+  ~/.openclaw/workspace/skills/cordys-crm
+rm -rf ~/.openclaw/workspace/skills/CordysCRM-skills
 ```
-## 手动安装
 
 ```bash
-# 克隆 CordysCRM-skills 仓库到 OpenClaw 的 skills 目录 （如果已有同名目录请先备份或删除）版本号可根据需要调整
-git clone --branch main https://github.com/1Panel-dev/CordysCRM-skills ~/.openclaw/workspace/skills/CordysCRM-skills
-# 将克隆的目录重命名为 cordys-crm
-mv ~/.openclaw/workspace/skills/CordysCRM-skills/skills ~/.openclaw/workspace/skills/cordys-crm
-# 删除克隆的仓库目录
-rm -rf ~/.openclaw/workspace/skills/CordysCRM-skills
-
-```
-## 环境配置
-
-```bash 
-# 将克隆的目录重命名为 cordys-crm
+# 配置
 vi ~/.openclaw/workspace/skills/cordys-crm/.env
 
-# 编辑 .env 文件，配置 Cordys CRM 的 API 访问地址和认证信息
+# .env 内容
+CORDYS_ACCESS_KEY=***
+CORDYS_SECRET_KEY=***
+CORDYS_CRM_DOMAIN=https://你的域名
 
-# 示例：
-# CORDYS_BASE_URL=https://your-cordys-instance.com
-# CORDYS_API_KEY=your_api_key
-# CORDYS_API_SECRET=your_api_secret
-
+# 可选：自定义角色映射
+# ROLE_MAP=VP|总监=sales-manager,会计|出纳=finance
 ```
 
-# 安全边界
+就这三行。零上手成本。
 
-- `.env` 包含敏感凭证，不要提交版本控制
-- `raw` 命令会向指定域名发送你的 API 凭证，仅限信任域名
-- 系统默认拒绝非配置域名的请求（可设置 `CORDYS_ALLOW_UNTRUSTED=1` 强制放行）
-- 定期轮换 API Key
+---
+
+## 仓库结构
+
+```
+skills/
+├── SKILL.md                  # 入口编排
+├── registry.json             # 技能清单（v1.1.0）
+├── .env                      # API 凭证（不入库）
+├── Cordys.md                 # 运行时身份缓存（不入库）
+│
+├── core/                     # 引擎晶格
+│   ├── role-engine.md        # 🧠 身份 → 人格绑定
+│   ├── cli-spec.md           # ⚙️ 自然语言 → cordys.sh 语义翻译
+│   ├── cli-reference.md      # 📖 字段类型 → 操作符速查
+│   ├── output-engine.md      # 🧾 JSON → 人类可读格式化
+│   ├── risk-engine.md        # ⚠️ 异常检测（单模块 + 跨模块链断裂）
+│   ├── linkage-engine.md     # 🔗 L2C 正向追溯 / 反向溯源
+│   ├── funnel-engine.md      # 📊 管道聚合与预测
+│   └── workflow-engine.md    # 🗺️ 意图 → 工作流匹配
+│
+├── profiles/                 # 人格定义
+│   ├── sales.md              # 销售：行动优先，个人视角
+│   ├── sales-manager.md      # 经理：排名优先，下钻分析
+│   ├── executive.md          # 高管：趋势优先，公司全景
+│   ├── contract-admin.md     # 商务：合规优先，合同全生命周期
+│   └── finance.md            # 财务：资金流优先，链路完整
+│
+├── scripts/
+│   ├── cordys.sh             # Shell CLI（主力）
+│   └── cordys.py             # Python CLI（仅兼容备用）
+│
+└── references/
+    └── crm-api.md            # API 接口文档 + L2C 链路说明
+```
+
+---
+
+## 设计思路
+
+> **不是数据浏览器，是智能层。**
+
+- **角色变形**：不问你是谁，自己判断。在说出第一个字之前，输出已经适配了你的角色。
+- **管道原生**：L2C 不是"功能模块"，是系统的脊柱。每一次查询、每一次预警、每一条工作流，都锚定在这条链上。
+- **引擎晶格**：七个精小引擎，各司其职。用到才加载，用不到不浪费注意力。
+- **先于提问的预警**：风险检测是主动的。系统主动告诉你你没注意到的，而不是等你来问。
+- **无头设计**：一个轻量 CLI（`cordys.sh`）调用 REST API。无 UI 依赖，可嵌入任何环境。
+

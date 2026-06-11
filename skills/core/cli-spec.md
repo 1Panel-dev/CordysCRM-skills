@@ -22,6 +22,24 @@
 
 ---
 
+## 0. 引擎加载优先级（更新）
+
+```
+启动时必加载：
+  core/role-engine.md        角色匹配
+
+L2C 场景按需加载：
+  core/cli-spec.md           构造命令（每次必用）
+  core/output-engine.md      格式化输出（每次必用）
+  core/risk-engine.md        扫描风险（展示数据后）
+  core/cli-reference.md      字段类型映射（构造 conditions 时）
+  core/linkage-engine.md     跨模块关联追踪（追踪链路时）
+  core/funnel-engine.md      漏斗分析（看转化/管道时）
+  core/workflow-engine.md    工作流（用户说模糊指令时）
+```
+
+---
+
 ## 1. 命令族总览
 
 所有命令使用 `cordys.sh`（Shell CLI，推荐）执行，`cordys.py` 备用（已弃用）。
@@ -93,6 +111,9 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 | 跟进、跟进计划/记录 | `crm follow <plan\|record> <module> <JSON>` | 需 sourceId |
 | 全部、拉全量、查完所有页 | 执行 page，遍历所有页 | 每页后询问是否继续 |
 | 原始、自定义 | `cordys raw <METHOD> <PATH>` | 仅限信任域名 |
+| **L2C 链路追踪** | `crm get` 起点 → `crm page` 上下游模块 | **见 §13** |
+| **漏斗分析** | 多模块并行 `crm page` → 聚合 | **见 §14** |
+| **Customer 360** | 全局搜索 + 多模块 page | **见 §15** |
 
 ---
 
@@ -108,6 +129,7 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 | 回款记录 | `contract/payment-record` | page |
 | 发票 | `invoice` | page |
 | 报价单 | `opportunity/quotation` | page |
+| 订单 | `order` | page, statistic |
 | 工商抬头 | `contract/business-title` | page |
 | 产品 | 使用 `product` 命令 | product |
 | 组织、部门 | `org` | org |
@@ -362,3 +384,89 @@ cordys.sh crm approval resource detail RESOURCE_ID
 ```
 
 > 📖 **审批操作完整 JSON body 结构、审批流管理端点** → 见 `core/cli-reference.md` §4。
+
+---
+
+## 13. L2C 链路追踪
+
+> 完整规范见 `core/linkage-engine.md`。本节仅提供命令级摘要。
+
+### 13.1 正向追踪（顺藤摸瓜）
+
+```
+1. cordys.sh crm get <module> <id>       获取起点记录（提取关联字段）
+2. cordys.sh crm page <target_module>    用关联字段筛选下游数据
+3. 逐级向下追踪直到回款/发票
+```
+
+### 13.2 反向溯源（追根究底）
+
+```
+1. cordys.sh crm get <module> <id>       获取起点记录
+2. 提取关联的上游模块字段
+3. cordys.sh crm get <upstream_module>   获取上游记录
+4. 逐级向上溯源直到线索
+```
+
+### 13.3 Customer 360
+
+```
+1. 全局搜索公司名（6 模块并行）
+2. 锁定 account ID
+3. 以 account ID（或公司名）搜索：opportunity, contact, contract
+4. 以合同 ID 搜索：payment-plan, invoice
+5. 合并输出 360 视图
+```
+
+> 完整规范见 `core/linkage-engine.md`。
+
+---
+
+## 14. L2C 漏斗分析
+
+> 完整规范见 `core/funnel-engine.md`。本节仅提供命令级摘要。
+
+### 14.1 漏斗快照
+
+```bash
+# 并行查询各阶段本月数据
+cordys.sh crm page lead       '{"pageSize":1,"combineSearch":{"conditions":[{"value":"MONTH","operator":"DYNAMICS","name":"createTime","type":"TIME_RANGE_PICKER"}]}}' &
+cordys.sh crm page account    '{"pageSize":1,"combineSearch":{"conditions":[{"value":"MONTH","operator":"DYNAMICS","name":"createTime","type":"TIME_RANGE_PICKER"}]}}' &
+cordys.sh crm page opportunity '{"pageSize":1,"combineSearch":{"conditions":[{"value":"MONTH","operator":"DYNAMICS","name":"createTime","type":"TIME_RANGE_PICKER"}]}}' &
+cordys.sh crm page contract   '{"pageSize":1,"combineSearch":{"conditions":[{"value":"MONTH","operator":"DYNAMICS","name":"signTime","type":"TIME_RANGE_PICKER"}]}}' &
+wait
+```
+
+> 从各模块响应的 `data.total` 获取计数。
+
+### 14.2 金额汇总
+
+合同/商机金额汇总 → 遍历分页数据，AI 端求和。超过 100 条提示缩小范围。
+
+### 14.3 管道预测
+
+```bash
+# 未来 7 天到期回款
+cordys.sh crm page contract/payment-plan '{"combineSearch":{"conditions":[
+  {"value": [now_ts, now_ts+604800000], "operator": "BETWEEN", "name": "planPayTime", "type": "DATE_TIME"}
+]}}'
+```
+
+---
+
+## 15. L2C 工作流
+
+> 完整规范见 `core/workflow-engine.md`。
+
+当用户使用模糊指令（"今天做什么"、"这周怎么样"、"团队情况"）时，AI 自动匹配并执行对应工作流。
+
+| 触发词 | 工作流 |
+|--------|--------|
+| 今天/今日 + 做什么/有什么/看看 | 销售晨会速览 / 财务回款日报 |
+| 这周/本周 + 怎么样/情况 | 销售周回顾 / 经理周会 |
+| 本月/这个月 + 复盘/情况 | 月度复盘 |
+| 团队/部门 + 情况/概览 | 经理团队晨会 |
+| 批一下/待审批 | 审批巡检 |
+| 回款/欠款/催款 | 财务应收账款 |
+| 看看 XX 公司 | 客户深耕 |
+| 查查 XX 合同/这笔单子 | 全链路追踪 |

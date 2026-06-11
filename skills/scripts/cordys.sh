@@ -283,6 +283,84 @@ crm_members() {
   api POST "${crm_base}/user/list" --data-binary "$1"
 }
 
+# ── 统计 API ──────────────────────────────────────────────────────────
+crm_stat() {
+  local module="$1" payload="${2:-}"
+  local body
+  if [[ "${payload}" == \{* ]]; then
+    body=$(merge_payload "$payload")
+  else
+    body=$(page_payload "${payload}")
+  fi
+  case "${module}" in
+    contract)                  api POST "${crm_base}/contract/statistic" --data-binary "$body" ;;
+    contract/payment-record)   api POST "${crm_base}/contract/payment-record/statistic" --data-binary "$body" ;;
+    opportunity)               api POST "${crm_base}/opportunity/statistic" --data-binary "$body" ;;
+    order)                     api POST "${crm_base}/order/statistic" --data-binary "$body" ;;
+    *) die "不支持的统计模块: ${module}。支持: contract, contract/payment-record, opportunity, order" ;;
+  esac
+}
+
+crm_stat_home() {
+  local kind="$1" payload="${2:-}"
+  local body
+  if [[ "${payload}" == \{* ]]; then
+    body="${payload}"
+  else
+    body='{"searchType":"SELF","timeField":"CREATE_TIME","userField":"OWNER","priorPeriodEnable":true}'
+  fi
+  case "${kind}" in
+    lead)                   api POST "${crm_base}/home/statistic/lead" --data-binary "$body" ;;
+    opportunity)            api POST "${crm_base}/home/statistic/opportunity" --data-binary "$body" ;;
+    opportunity/success)    api POST "${crm_base}/home/statistic/opportunity/success" --data-binary "$body" ;;
+    opportunity/underway)   api POST "${crm_base}/home/statistic/opportunity/underway" --data-binary "$body" ;;
+    dept-tree)              api GET "${crm_base}/home/statistic/department/tree" ;;
+    *) die "不支持的首頁统计类型: ${kind}。支持: lead, opportunity, opportunity/success, opportunity/underway, dept-tree" ;;
+  esac
+}
+
+# ── 全局搜索计数 ─────────────────────────────────────────────────────
+crm_glocount() {
+  local keyword="$1"
+  [[ -n "${keyword}" ]] || die "glocount 需要关键词"
+  api GET "${crm_base}/global/search/module/count?keyword=${keyword}"
+}
+
+# ── 客户子资源 ──────────────────────────────────────────────────────
+crm_acct_sub() {
+  local sub="$1" acct_id="$2" payload="${3:-}"
+  [[ -n "${sub}" && -n "${acct_id}" ]] || die "acct-sub 需要子资源和客户ID"
+  local body
+  if [[ "${payload}" == \{* ]]; then
+    body=$(merge_payload "$payload")
+  else
+    body=$(page_payload "${payload}")
+  fi
+  case "${sub}" in
+    contract)           api POST "${crm_base}/account/contract/page" --data-binary "$body" ;;
+    contract-stat)      api GET "${crm_base}/account/contract/statistic/${acct_id}" ;;
+    opportunity)        api POST "${crm_base}/account/opportunity/page" --data-binary "$body" ;;
+    order)              api POST "${crm_base}/account/order/page" --data-binary "$body" ;;
+    payment-plan)       api POST "${crm_base}/account/contract/payment-plan/page" --data-binary "$body" ;;
+    payment-plan-stat)  api GET "${crm_base}/account/contract/payment-plan/statistic/${acct_id}" ;;
+    payment-record)     api POST "${crm_base}/account/contract/payment-record/page" --data-binary "$body" ;;
+    payment-record-stat) api GET "${crm_base}/account/contract/payment-record/statistic/${acct_id}" ;;
+    invoice)            api POST "${crm_base}/account/invoice/page" --data-binary "$body" ;;
+    invoice-stat)       api GET "${crm_base}/account/invoice/statistic/${acct_id}" ;;
+    *) die "不支持的客户子资源: ${sub}。支持: contract/opportunity/order/payment-plan/payment-record/invoice 及对应的 -stat" ;;
+  esac
+}
+
+# ── 合同子资源统计 ──────────────────────────────────────────────────
+crm_contract_sub() {
+  local sub="$1" contract_id="$2"
+  [[ -n "${sub}" && -n "${contract_id}" ]] || die "contract-sub 需要子资源和合同ID"
+  case "${sub}" in
+    invoice-stat) api GET "${crm_base}/contract/invoice/statistic/${contract_id}" ;;
+    *) die "不支持的合同子资源: ${sub}。支持: invoice-stat" ;;
+  esac
+}
+
 # ── 原始 API 调用 ─────────────────────────────────────────────────────
 raw_api() {
   local method="$1" path="$2"
@@ -321,6 +399,13 @@ CRM 数据操作:
   crm product [关键词|JSON]               查询产品列表
   crm contact <模块> <ID>                 获取联系人列表
 
+统计与管道:
+  crm stat <模块> [JSON]                  模块金额统计（contract/opportunity/order/payment-record）
+  crm stat-home <类型> [JSON]             首页统计（lead/opportunity/success/underway/dept-tree）
+  crm glocount <关键词>                   全局搜索各模块命中计数
+  crm acct-sub <子资源> <客户ID> [JSON]    客户子资源（contract/opportunity/order/payment-plan等）
+  crm contract-sub <子资源> <合同ID>       合同子资源统计（invoice-stat）
+
 用户与组织:
   crm whoami                              获取当前用户信息
   crm verify                              验证 API 密钥
@@ -338,7 +423,7 @@ CRM 数据操作:
   contact（联系人）, contract（合同）,
   contract/payment-plan（回款计划）, invoice（发票）,
   contract/business-title（工商抬头）, contract/payment-record（回款记录）,
-  opportunity/quotation（报价单）
+  opportunity/quotation（报价单）, order（订单）
 
 审批 todo 类型: pending（待审）, processed（已处理）, initiated（我发起的）, cc（抄送我）, count（统计）
 审批 action 操作: approve（同意）, reject（驳回）, back（退回）, sign（加签）, revoke（撤回）, batch-approve（批量同意）, batch-reject（批量驳回）
@@ -381,6 +466,11 @@ case "$cmd" in
       product) crm_product "$@" ;;
       members) crm_members "$@" ;;
       contact) crm_contact "$@" ;;
+      stat) crm_stat "$@" ;;
+      stat-home) crm_stat_home "$@" ;;
+      glocount) crm_glocount "$@" ;;
+      acct-sub) crm_acct_sub "$@" ;;
+      contract-sub) crm_contract_sub "$@" ;;
       follow)
         kind="${1:-}"; shift || die "follow 需要 plan 或 record"
         case "${kind}" in

@@ -5,6 +5,30 @@
 
 ---
 
+## 0. 新增：统计 API
+
+以下为 Cordys CRM 统计 API 速查表：
+
+| 端点 | 方法 | 用途 | 响应关键字段 |
+|------|------|------|------------|
+| `/home/statistic/lead` | POST | 线索统计 | `{thisYearClue, thisMonthClue, thisWeekClue, todayClue}` 各含 `count` + 上期 |
+| `/home/statistic/opportunity` | POST | 商机统计 | 同上 + `amount` |
+| `/home/statistic/opportunity/success` | POST | 赢单统计 | 同上 |
+| `/home/statistic/opportunity/underway` | POST | 进行中商机 | 同上 |
+| `/contract/statistic` | POST | 合同金额统计 | `{amount, averageAmount}` |
+| `/contract/payment-record/statistic` | POST | 回款金额统计 | `{amount, averageAmount}` |
+| `/opportunity/statistic` | POST | 商机金额统计 | `{amount, averageAmount}` |
+| `/order/statistic` | POST | 订单金额统计 | `{amount, averageAmount}` |
+| `/global/search/module/count?keyword=X` | GET | 全局搜索命中数 | 各模块命中条数 |
+| `/account/contract/statistic/{id}` | GET | 客户合同总额 | `{totalAmount}` |
+| `/account/contract/payment-record/statistic/{id}` | GET | 客户回款概览 | `{totalAmount, receivedAmount, pendingAmount}` |
+| `/account/invoice/statistic/{id}` | GET | 客户开票概览 | `{contractAmount, uninvoicedAmount, invoicedAmount}` |
+| `/contract/invoice/statistic/{contractId}` | GET | 合同发票统计 | 同上 |
+
+> ⚠️ 使用 `cordys.sh raw` 调用。首次使用确认 API Key 认证兼容性。
+
+---
+
 ## 1. 操作符总表
 
 以下是所有可用操作符（enum 枚举值，**全大写**）：

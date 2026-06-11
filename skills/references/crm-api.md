@@ -326,3 +326,121 @@ cordys.sh raw GET /approval-todo/pending/count
 ---
 
 后续扩展，在 `references/` 下添加更多模块的字段列表（例如 `contacts.md`、`tasks.md`）或写出常用 JSON 模板。
+
+---
+
+## 10. L2C 链路 API 说明
+
+### 10.1 统计 API（推荐优先使用）
+
+> 使用 `cordys.sh crm stat`、`crm stat-home`、`crm acct-sub` 命令调用。
+
+#### 首页统计
+
+| 端点 | 用途 | 请求体 |
+|------|------|--------|
+| `POST /home/statistic/lead` | 线索统计 | `HomeStatisticBaseSearchRequest` |
+| `POST /home/statistic/opportunity` | 商机统计 | 同上 |
+| `POST /home/statistic/opportunity/success` | 赢单统计 | 同上 |
+| `POST /home/statistic/opportunity/underway` | 进行中商机统计 | 同上 |
+| `GET /home/statistic/department/tree` | 用户部门权限树 | — |
+
+`HomeStatisticBaseSearchRequest`：
+```json
+{
+  "searchType": "SELF",          // ALL | SELF | DEPARTMENT
+  "deptIds": ["dept_id"],        // DEPARTMENT 时必填
+  "timeField": "CREATE_TIME",    // CREATE_TIME | EXPECTED_END_TIME | ACTUAL_END_TIME
+  "userField": "OWNER",          // CREATE_USER | OWNER
+  "priorPeriodEnable": true      // 返回上期数据做环比
+}
+```
+
+响应（`HomeClueStatistic`）：
+```json
+{
+  "todayClue":     { "value": 3,  "priorPeriodCompareRate": 0.5 },
+  "thisWeekClue":  { "value": 12, "priorPeriodCompareRate": 0.2 },
+  "thisMonthClue": { "value": 45, "priorPeriodCompareRate": 0.18 },
+  "thisYearClue":  { "value": 120, "priorPeriodCompareRate": 0.26 }
+}
+```
+
+响应（`HomeOpportunityStatistic`，含金额字段）：
+```json
+{
+  "todayOpportunity":              { "value": 1, "priorPeriodCompareRate": 0 },
+  "thisWeekOpportunity":           { "value": 5, "priorPeriodCompareRate": 0.25 },
+  "thisMonthOpportunity":          { "value": 18, "priorPeriodCompareRate": 0.12 },
+  "thisYearOpportunity":           { "value": 60, "priorPeriodCompareRate": 0.3 },
+  "todayOpportunityAmount":        { "value": 50000, "priorPeriodCompareRate": -1.0 },
+  "thisWeekOpportunityAmount":     { "value": 320000, "priorPeriodCompareRate": 0.4 },
+  "thisMonthOpportunityAmount":    { "value": 1200000, "priorPeriodCompareRate": 0.15 },
+  "thisYearOpportunityAmount":     { "value": 5000000, "priorPeriodCompareRate": 0.35 }
+}
+```
+
+> **字段含义**：`value` 为数值（线索是条数，商机金额单位是分），`priorPeriodCompareRate` 是较上期变化率（0.2=+20%，-0.1=-10%）。
+
+#### 模块级统计
+
+| 端点 | 请求体 | 响应 |
+|------|--------|------|
+| `POST /contract/statistic` | `BaseCondition` | `{amount, averageAmount}` |
+| `POST /contract/payment-record/statistic` | `ContractPaymentRecordStatisticRequest` | `{amount, averageAmount}` |
+| `POST /opportunity/statistic` | `OpportunitySearchStatisticRequest` | `{amount, averageAmount}` |
+| `POST /order/statistic` | `BaseCondition` | `{amount, averageAmount}` |
+
+#### 客户子资源统计
+
+| 端点 | 响应 |
+|------|------|
+| `GET /account/contract/statistic/{accountId}` | `{totalAmount}` |
+| `GET /account/contract/payment-plan/statistic/{accountId}` | `{totalPlanAmount}` |
+| `GET /account/contract/payment-record/statistic/{accountId}` | `{totalAmount, receivedAmount, pendingAmount}` |
+| `GET /account/invoice/statistic/{accountId}` | `{contractAmount, uninvoicedAmount, invoicedAmount}` |
+| `GET /contract/invoice/statistic/{contractId}` | 同上 |
+
+### 10.2 客户子资源 API（Customer 360 核心）
+
+| 端点 | 方法 | 用途 |
+|------|------|------|
+| `POST /account/contract/page` | POST | 客户名下合同列表 |
+| `POST /account/opportunity/page` | POST | 客户名下商机列表 |
+| `POST /account/order/page` | POST | 客户名下订单列表 |
+| `POST /account/contract/payment-plan/page` | POST | 客户回款计划列表 |
+| `POST /account/contract/payment-record/page` | POST | 客户回款记录列表 |
+| `POST /account/invoice/page` | POST | 客户发票列表 |
+
+### 10.3 全局搜索增强
+
+| 端点 | 用途 |
+|------|------|
+| `GET /global/search/module/count?keyword=X` | 全局搜索各模块命中计数 |
+| `POST /advanced/search/account` | 高级搜索-客户 |
+| `POST /advanced/search/lead` | 高级搜索-线索 |
+| `POST /advanced/search/opportunity` | 高级搜索-商机 |
+
+### 10.4 订单模块
+
+Cordys CRM 存在订单（Order）模块，L2C 链路扩展为：
+
+```
+合同 → 订单 → 发票
+```
+
+| 端点 | 用途 |
+|------|------|
+| `POST /order/page` | 订单列表 |
+| `POST /order/statistic` | 订单统计 |
+| `POST /account/order/page` | 客户订单列表 |
+
+### 10.5 仪表板
+
+| 端点 | 用途 |
+|------|------|
+| `POST /dashboard/page` | 仪表板列表 |
+| `GET /dashboard/detail/{id}` | 仪表板详情（含 resourceUrl） |
+| `POST /dashboard/add` | 创建仪表板 |
+
+> 💡 仪表板可以在 Cordys CRM 前端创建 L2C 漏斗报表，然后通过 API 获取。
