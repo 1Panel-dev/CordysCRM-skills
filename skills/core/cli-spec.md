@@ -191,14 +191,14 @@ cordys.sh crm get account <id>
 
 ---
 
-## 6. 动态参数替换（从 User.md 读取）
+## 6. 动态参数替换（从 Cordys.md 读取）
 
 | 占位符 | 来源字段 | 示例值 |
 |--------|---------|-------|
-| `{userId}` | User.md 用户ID | `admin` |
-| `{departmentId}` | User.md 部门ID（展开后为数组） | `["dept_a","dept_b"]` |
+| `{userId}` | Cordys.md 用户ID | `admin` |
+| `{departmentId}` | Cordys.md 部门ID（展开后为数组） | `["dept_a","dept_b"]` |
 
-> 如果 User.md 中没有对应的 ID，则不追加该过滤条件。
+> 如果 Cordys.md 中没有对应的 ID，则不追加该过滤条件。
 
 ---
 
@@ -295,7 +295,7 @@ cordys.sh crm get account <id>
 
 | 场景 | 行为 |
 |------|------|
-| "我部门"、不指定部门 | 使用 User.md 的 `{departmentId}`，展开子部门 |
+| "我部门"、不指定部门 | 使用 Cordys.md 的 `{departmentId}`，展开子部门 |
 | 指定具体部门名 | 通过 org 树查找该部门ID，展开子部门 |
 | "全公司"、"全部" | 不使用部门过滤，viewId 用 `ALL` |
 | 部门没有子部门 | `{departmentId}` = 该部门自己的ID数组 `["dept_x"]` |
