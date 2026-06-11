@@ -114,6 +114,7 @@ api_request() {
   curl -s -X "$method" "$url" \
     -H "X-Access-Key: ${CORDYS_ACCESS_KEY}" \
     -H "X-Secret-Key: ${CORDYS_SECRET_KEY}" \
+    -H "X-Request-Source: SKILL" \
     -H "Content-Type: $content_type; charset=utf-8" \
     "$@"
 }

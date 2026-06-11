@@ -134,6 +134,7 @@ def api_request(method: str, url: str, content_type: str, **kwargs) -> str:
     headers = {
         "X-Access-Key": CORDYS_ACCESS_KEY,
         "X-Secret-Key": CORDYS_SECRET_KEY,
+        "X-Request-Source": "SKILL",
         "Content-Type": f"{content_type}; charset=utf-8"
     }
 
