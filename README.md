@@ -2,9 +2,9 @@
 
 <p align="center">
   <br/>
-  <em><strong>可组合的 CRM 智能层</strong></em>
+  <em><strong>你的专属 AI 助手，告别在传统页面上点来点去</strong></em>
   <br/>
-  <em>角色变形 &nbsp;·&nbsp; 管道原生 &nbsp;·&nbsp; 默认零信任</em>
+  <em>角色感知 &nbsp;·&nbsp; 管道原生 &nbsp;·&nbsp; 默认零信任</em>
   <br/><br/>
 </p>
 
@@ -89,32 +89,34 @@ Cordys CRM Skill 不是给 CRM 加一层界面，而是加一层**智能**——
 
 ```mermaid
 flowchart LR
-    U(["💬 自然语言输入"]) --> GATE{意图路由}
+    U(["💬 输入"]) --> GATE{"意图路由"}
 
-    GATE -->|"单模块查询"| QUERY["🔍 查询引擎<br/><small>cli-spec + cli-reference</small>"]
-    GATE -->|"跨模块追踪"| LINK["🔗 链路引擎<br/><small>正向追溯 / 反向溯源</small>"]
-    GATE -->|"管道 / 漏斗"| FUNNEL["📊 漏斗引擎<br/><small>多模块聚合统计</small>"]
-    GATE -->|"模糊意图"| FLOW["🗺️ 工作流引擎<br/><small>意图 → 工作流匹配</small>"]
+    GATE -->|"查询"| QUERY["🔍 查询引擎"]
+    GATE -->|"追踪"| LINK["🔗 链路引擎"]
+    GATE -->|"漏斗"| FUNNEL["📊 漏斗引擎"]
+    GATE -->|"意图"| FLOW["🗺️ 工作流引擎"]
     GATE -->|"审批"| APPR["✅ 审批管道"]
 
-    QUERY --> ROLE{"🧠 角色变形<br/>透镜"}
-    LINK --> ROLE
-    FUNNEL --> ROLE
-    FLOW --> ROLE
-    APPR --> ROLE
+    QUERY --> ROLE{"🧠 角色透镜"}
+    LINK --- ROLE
+    FUNNEL --- ROLE
+    FLOW --- ROLE
+    APPR --- ROLE
 
-    ROLE -->|"销售"| SL["SELF 范围<br/>行动优先输出"]
-    ROLE -->|"经理"| SM["DEPT 范围<br/>排名优先输出"]
-    ROLE -->|"高管"| EX["ALL 范围<br/>趋势优先输出"]
-    ROLE -->|"商务"| CA["CONTRACT 范围<br/>合规优先输出"]
-    ROLE -->|"财务"| FN["CASH 范围<br/>资金流优先输出"]
+    ROLE --> SL["👤 销售"]
+    ROLE --> SM["👥 经理"]
+    ROLE --> EX["🏢 高管"]
+    ROLE --> CA["📋 商务"]
+    ROLE --> FN["💰 财务"]
 
-    SL --> RISK["⚠️ 风险引擎<br/><small>单模块 + 跨模块断链检测</small>"]
-    SM --> RISK
-    FN --> RISK
+    SL --- RISK["⚠️ 风险引擎"]
+    SM --- RISK
+    EX --- RISK
+    CA --- RISK
+    FN --- RISK
 
-    RISK --> FMT["🧾 输出引擎<br/><small>角色自适应格式化</small>"]
-    FMT --> OUT(["✨ 结构化响应"])
+    RISK --> FMT["🧾 输出引擎"]
+    FMT --> OUT(["✨ 响应"])
 ```
 
 **核心原则**：`role-engine.md` 是唯一启动必加载的引擎（约 150 行）。其余全部按意图懒加载——保持上下文窗口精瘦。
@@ -142,24 +144,24 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    L["🔹 线索<br/><small>lead</small>"] -->|转化| A["🔹 客户<br/><small>account</small>"]
-    A --> O["🔹 商机<br/><small>opportunity</small>"]
-    O --> Q["📄 报价<br/><small>opportunity/quotation</small>"]
-    O --> C["🔹 合同<br/><small>contract</small>"]
-    C --> OD["📦 订单<br/><small>order 🆕</small>"]
-    C --> PP["💰 回款计划<br/><small>contract/payment-plan</small>"]
-    PP --> PR["💰 回款记录<br/><small>contract/payment-record</small>"]
-    OD --> I["🧾 发票<br/><small>invoice</small>"]
+    L["🔹 线索"] -->|"转化"| A["🔹 客户"]
+    A --> O["🔹 商机"]
+    O --> Q["📄 报价"]
+    O --> C["🔹 合同"]
+    C --> OD["📦 订单"]
+    C --> PP["💰 回款计划"]
+    PP --> PR["💰 回款记录"]
+    OD --> I["🧾 发票"]
 
-    L -.->|"⚠️ 超30天未转化"| ALERT1["🟡"]
-    O -.->|"⚠️ 赢单无合同"| ALERT2["🔴"]
-    C -.->|"⚠️ 签约无回款计划"| ALERT3["🔴"]
-    I -.->|"⚠️ 开票未回款"| ALERT4["🟡"]
+    L -.- AL1["🟡 超30天"]
+    O -.- AL2["🔴 无合同"]
+    C -.- AL3["🔴 无计划"]
+    I -.- AL4["🟡 未回款"]
 
-    style ALERT1 fill:#fbbf24,stroke:none
-    style ALERT2 fill:#ef4444,stroke:none
-    style ALERT3 fill:#ef4444,stroke:none
-    style ALERT4 fill:#fbbf24,stroke:none
+    style AL1 fill:#fbbf24,stroke:none
+    style AL2 fill:#ef4444,stroke:none
+    style AL3 fill:#ef4444,stroke:none
+    style AL4 fill:#fbbf24,stroke:none
 ```
 
 每一个环节转换都是**可能的断裂点**。系统监控整条链路，在问题变成事故之前主动暴露——不只是单模块内，而是跨 L2C 全局。
