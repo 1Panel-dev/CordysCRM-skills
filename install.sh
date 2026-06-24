@@ -1,43 +1,69 @@
 #!/bin/bash
 
-# 设置仓库地址和目标安装路径
+# Cordys CRM Skill 安装脚本
+# 支持两种安装模式：OpenClaw 和 WorkBuddy
+
+set -euo pipefail
+
 REPO_URL="https://github.com/1Panel-dev/CordysCRM-skills"
-INSTALL_DIR="$HOME/.openclaw/workspace/skills/cordys-crm"
+OPENCLAW_INSTALL_DIR="$HOME/.openclaw/workspace/skills/cordys-crm"
 TEMP_DIR="$HOME/.openclaw/workspace/skills"
 
 # 获取最新的 Git 标签
-LATEST_TAG=$(curl -s https://api.github.com/repos/1Panel-dev/CordysCRM-skills/releases/latest | jq -r .tag_name)
+LATEST_TAG=$(curl -s https://api.github.com/repos/1Panel-dev/CordysCRM-skills/releases/latest | jq -r .tag_name 2>/dev/null || echo "")
 
-# 检查是否成功获取到最新的标签
-if [ "$LATEST_TAG" == "null" ] || [ -z "$LATEST_TAG" ]; then
-  echo "无法获取最新的版本标签，可能是仓库没有发布版本。请检查 GitHub 仓库的发布设置。"
-  exit 1
+if [ "${LATEST_TAG:-}" == "null" ] || [ -z "${LATEST_TAG:-}" ]; then
+  echo "无法获取最新的版本标签，将使用 main 分支。"
+  LATEST_TAG="main"
 fi
 
 echo "最新版本：$LATEST_TAG"
 
-# 如果目标目录已存在，直接删除并覆盖
-if [ -d "$INSTALL_DIR" ]; then
-  echo "目标目录已存在，正在删除并覆盖现有目录..."
-  rm -rf "$INSTALL_DIR"
+# ── OpenClaw 安装 ─────────────────────────────────────────────────
+install_openclaw() {
+  echo ">> 安装到 OpenClaw..."
+
+  if [ -d "$OPENCLAW_INSTALL_DIR" ]; then
+    echo "目标目录已存在，正在删除并覆盖..."
+    rm -rf "$OPENCLAW_INSTALL_DIR"
+  fi
+
+  echo "正在克隆仓库..."
+  git clone --branch "$LATEST_TAG" "$REPO_URL" "$TEMP_DIR"
+
+  if [ ! -d "$TEMP_DIR/skills/cordys-crm" ]; then
+    echo "错误：克隆的仓库中没有找到 skills/cordys-crm 目录。"
+    exit 1
+  fi
+
+  cp -R "$TEMP_DIR/skills/cordys-crm" "$OPENCLAW_INSTALL_DIR"
+  rm -rf "$TEMP_DIR"
+
+  echo ""
+  echo "✅ OpenClaw 安装完成！"
+  echo "   配置：vi $OPENCLAW_INSTALL_DIR/.env"
+  echo "   .env 内容："
+  echo "     CORDYS_ACCESS_KEY=你的AccessKey"
+  echo "     CORDYS_SECRET_KEY=你的SecretKey"
+  echo "     CORDYS_CRM_DOMAIN=https://你的域名"
+  echo ""
+}
+
+# ── WorkBuddy 安装 ─────────────────────────────────────────────────
+install_workbuddy() {
+  echo ">> 安装到 WorkBuddy..."
+  echo "   WorkBuddy 专家通过 .zip 包上架安装。"
+  echo "   请将整个 CordysCRM-skills 目录打包为 .zip 提交到专家市场。"
+  echo ""
+  echo "   打包命令："
+  echo "     zip -r cordys-crm.zip CordysCRM-skills/"
+  echo ""
+  echo "   安装后请在 WorkBuddy 中配置 API 凭据。"
+}
+
+# ── 主逻辑 ─────────────────────────────────────────────────────────
+if [ "${1:-}" == "--workbuddy" ]; then
+  install_workbuddy
+else
+  install_openclaw
 fi
-
-# 克隆指定版本的 CordysCRM-skills 仓库到临时目录
-echo "正在克隆 CordysCRM-skills 仓库到临时目录..."
-git clone --branch "$LATEST_TAG" "$REPO_URL" "$TEMP_DIR"
-
-# 检查是否克隆成功
-if [ ! -d "$TEMP_DIR/skills" ]; then
-  echo "错误：克隆的仓库中没有找到 skills 目录。"
-  exit 1
-fi
-
-# 复制 skills 目录并重命名到目标目录
-echo "正在将 skills 目录复制到目标目录并重命名..."
-cp -R "$TEMP_DIR/skills" "$INSTALL_DIR"
-
-# 清理临时目录
-echo "清理临时克隆的仓库..."
-rm -rf "$TEMP_DIR"
-
-echo "安装完成！"

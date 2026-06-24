@@ -1,9 +1,6 @@
 # 运行时生成的文件 - 不提交
-skills/cordys-crm/.env
+.env
 Cordys.md
-.token_cache
-.idea/
-.DS_Store
+refs/
 __pycache__/
 *.pyc
-refs/

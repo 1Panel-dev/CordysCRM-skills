@@ -1,6 +1,8 @@
 ---
 name: cordys-crm
-description: Cordys CRM CLI 指令映射技能，支持将自然语言高效转换为标准 `cordys crm` 命令，具备意图识别、模块匹配、参数补全及分页与全量查询处理能力，输出简洁稳定、无歧义。
+description: |
+  Cordys CRM L2C 全链路技能。支持跨模块关联追踪、漏斗分析、Customer 360、智能工作流引导，以及完整的 CLI 指令映射。
+  触发词：线索、客户、商机、合同、回款、发票、审批、漏斗、管道、CRM
 environment:
   required:
     - CORDYS_ACCESS_KEY

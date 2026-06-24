@@ -1,0 +1,86 @@
+{
+  "name": "cordys-crm",
+  "version": "1.2.0",
+  "description": "Cordys CRM L2C full-pipeline AI assistant — role-aware, pipeline-native, cross-module linkage tracking, funnel analysis, and workflow automation",
+  "author": {
+    "name": "fit2-zhao",
+    "email": "yong.zhao@fit2cloud.com"
+  },
+  "agents": ["./agents/cordys-crm.md"],
+  "skills": ["./skills/cordys-crm"],
+  "expertType": "agent",
+  "agentName": "cordys-crm",
+  "displayName": {
+    "en": "Cordys CRM Assistant",
+    "zh": "Cordys CRM 助手"
+  },
+  "profession": {
+    "en": "Cordys CRM L2C Pipeline Expert",
+    "zh": "Cordys CRM L2C 管道专家"
+  },
+  "displayDescription": {
+    "en": "Role-aware CRM assistant for the full Lead-to-Cash pipeline. Auto-detects user role and provides adaptive queries, risk alerts, funnel analysis, and workflow guidance.",
+    "zh": "角色感知型CRM助手，覆盖线索到现金全链路。自动识别角色，提供查询、风险预警与漏斗分析。"
+  },
+  "avatar": "avatars/expert.png",
+  "categoryId": "07-SalesCommerce",
+  "defaultInitPrompt": {
+    "zh": "帮我看看今天有什么要跟的",
+    "en": "What should I follow up on today?"
+  },
+  "plugin": "cordys-crm",
+  "tags": [
+    { "en": "CRM Pipeline", "zh": "CRM管道" },
+    { "en": "L2C Tracking", "zh": "L2C追踪" },
+    { "en": "Sales Intelligence", "zh": "销售智能" }
+  ],
+  "quickPrompts": [
+    { "en": "What should I follow up on today?", "zh": "帮我看看今天有什么要跟的" },
+    { "en": "How's my team doing this week?", "zh": "这周团队情况怎么样" },
+    { "en": "Check the overdue payments", "zh": "看看有哪些逾期回款" }
+  ],
+  "dependencies": {
+    "mcpServers": {
+      "cordys-crm-api": {
+        "type": "http",
+        "url": "https://cordys-crm.fit2cloud.cn",
+        "headers": {
+          "X-Access-Key": "${CORDYS_ACCESS_KEY}",
+          "X-Secret-Key": "${CORDYS_SECRET_KEY}"
+        },
+        "x-workbuddy": {
+          "displayName": { "zh": "Cordys CRM API", "en": "Cordys CRM API" },
+          "description": { "zh": "连接 Cordys CRM 系统，获取线索、客户、商机、合同、回款、发票等全链路数据。", "en": "Connect to Cordys CRM to access leads, accounts, opportunities, contracts, payments, and invoices across the full L2C pipeline." },
+          "icon": "./avatars/crm-icon.png",
+          "auth": {
+            "type": "token",
+            "tokenSchema": {
+              "title": { "zh": "配置 Cordys CRM 访问凭据", "en": "Configure Cordys CRM Credentials" },
+              "description": { "zh": "请输入 Cordys CRM 的 API 访问密钥。可在 CRM 系统「个人设置 → API 密钥」中获取。", "en": "Enter your Cordys CRM API credentials. Find them in CRM Settings → API Keys." },
+              "docUrl": "https://cordys-crm.fit2cloud.cn",
+              "docLabel": { "zh": "如何获取 API 密钥?", "en": "How to get API keys?" },
+              "fields": [
+                {
+                  "key": "CORDYS_ACCESS_KEY",
+                  "label": { "zh": "Access Key", "en": "Access Key" },
+                  "placeholder": { "zh": "请输入 X-Access-Key", "en": "Enter X-Access-Key" },
+                  "type": "password",
+                  "required": true,
+                  "description": { "zh": "CRM API 访问密钥（Access Key）", "en": "CRM API Access Key" }
+                },
+                {
+                  "key": "CORDYS_SECRET_KEY",
+                  "label": { "zh": "Secret Key", "en": "Secret Key" },
+                  "placeholder": { "zh": "请输入 X-Secret-Key", "en": "Enter X-Secret-Key" },
+                  "type": "password",
+                  "required": true,
+                  "description": { "zh": "CRM API 密钥（Secret Key）", "en": "CRM API Secret Key" }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
