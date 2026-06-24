@@ -38,49 +38,5 @@
     { "en": "What should I follow up on today?", "zh": "帮我看看今天有什么要跟的" },
     { "en": "How's my team doing this week?", "zh": "这周团队情况怎么样" },
     { "en": "Check the overdue payments", "zh": "看看有哪些逾期回款" }
-  ],
-  "dependencies": {
-    "mcpServers": {
-      "cordys-crm-api": {
-        "type": "http",
-        "url": "https://cordys-crm.fit2cloud.cn",
-        "headers": {
-          "X-Access-Key": "${CORDYS_ACCESS_KEY}",
-          "X-Secret-Key": "${CORDYS_SECRET_KEY}"
-        },
-        "x-workbuddy": {
-          "displayName": { "zh": "Cordys CRM API", "en": "Cordys CRM API" },
-          "description": { "zh": "连接 Cordys CRM 系统，获取线索、客户、商机、合同、回款、发票等全链路数据。", "en": "Connect to Cordys CRM to access leads, accounts, opportunities, contracts, payments, and invoices across the full L2C pipeline." },
-          "icon": "./avatars/crm-icon.png",
-          "auth": {
-            "type": "token",
-            "tokenSchema": {
-              "title": { "zh": "配置 Cordys CRM 访问凭据", "en": "Configure Cordys CRM Credentials" },
-              "description": { "zh": "请输入 Cordys CRM 的 API 访问密钥。可在 CRM 系统「个人设置 → API 密钥」中获取。", "en": "Enter your Cordys CRM API credentials. Find them in CRM Settings → API Keys." },
-              "docUrl": "https://cordys-crm.fit2cloud.cn",
-              "docLabel": { "zh": "如何获取 API 密钥?", "en": "How to get API keys?" },
-              "fields": [
-                {
-                  "key": "CORDYS_ACCESS_KEY",
-                  "label": { "zh": "Access Key", "en": "Access Key" },
-                  "placeholder": { "zh": "请输入 X-Access-Key", "en": "Enter X-Access-Key" },
-                  "type": "password",
-                  "required": true,
-                  "description": { "zh": "CRM API 访问密钥（Access Key）", "en": "CRM API Access Key" }
-                },
-                {
-                  "key": "CORDYS_SECRET_KEY",
-                  "label": { "zh": "Secret Key", "en": "Secret Key" },
-                  "placeholder": { "zh": "请输入 X-Secret-Key", "en": "Enter X-Secret-Key" },
-                  "type": "password",
-                  "required": true,
-                  "description": { "zh": "CRM API 密钥（Secret Key）", "en": "CRM API Secret Key" }
-                }
-              ]
-            }
-          }
-        }
-      }
-    }
-  }
+  ]
 }
