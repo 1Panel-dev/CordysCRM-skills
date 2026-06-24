@@ -1,7 +1,7 @@
 {
   "name": "cordys-crm",
   "description": "Cordys CRM L2C全链路技能，支持跨模块关联追踪、漏斗分析、Customer 360、智能工作流引导，以及完整的 CLI 指令映射",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "fit2-zhao",
   "license": "MIT",
   "environment": {
