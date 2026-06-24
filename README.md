@@ -248,12 +248,18 @@ flowchart LR
 # Clawdhub 安装（推荐）
 clawdhub install cordys-crm
 
-# 手动安装
+# 手动安装（OpenClaw）
 git clone --branch main https://github.com/1Panel-dev/CordysCRM-skills \
   ~/.openclaw/workspace/skills/CordysCRM-skills
-mv ~/.openclaw/workspace/skills/CordysCRM-skills/skills \
+mv ~/.openclaw/workspace/skills/CordysCRM-skills/skills/cordys-crm \
   ~/.openclaw/workspace/skills/cordys-crm
 rm -rf ~/.openclaw/workspace/skills/CordysCRM-skills
+```
+
+```bash
+# WorkBuddy 安装
+# 将整个 CordysCRM-skills 目录打包为 .zip，提交到 WorkBuddy 专家市场
+zip -r cordys-crm.zip CordysCRM-skills/
 ```
 
 ```bash
@@ -276,35 +282,45 @@ CORDYS_CRM_DOMAIN=https://你的域名
 ## 仓库结构
 
 ```
-skills/
-├── SKILL.md                  # 入口编排
-├── registry.json             # 技能清单（v1.1.0）
-├── .env                      # API 凭证（不入库）
-├── Cordys.md                 # 运行时身份缓存（不入库）
+├── .workbuddy-plugin/
+│   └── plugin.json           # ★ WorkBuddy 专家配置
+├── agents/
+│   └── cordys-crm.md         # ★ Agent 定义文件
+├── avatars/
+│   ├── expert.png            # 专家头像
+├── install.sh                # 安装脚本
+├── README.md                 # 说明文档
 │
-├── core/                     # 引擎晶格
-│   ├── role-engine.md        # 🧠 身份 → 人格绑定
-│   ├── cli-spec.md           # ⚙️ 自然语言 → cordys.sh 语义翻译
-│   ├── cli-reference.md      # 📖 字段类型 → 操作符速查
-│   ├── output-engine.md      # 🧾 JSON → 人类可读格式化
-│   ├── risk-engine.md        # ⚠️ 异常检测（单模块 + 跨模块链断裂）
-│   ├── linkage-engine.md     # 🔗 L2C 正向追溯 / 反向溯源
-│   ├── funnel-engine.md      # 📊 管道聚合与预测
-│   └── workflow-engine.md    # 🗺️ 意图 → 工作流匹配
-│
-├── profiles/                 # 人格定义
-│   ├── sales.md              # 销售：行动优先，个人视角
-│   ├── sales-manager.md      # 经理：排名优先，下钻分析
-│   ├── executive.md          # 高管：趋势优先，公司全景
-│   ├── contract-admin.md     # 商务：合规优先，合同全生命周期
-│   └── finance.md            # 财务：资金流优先，链路完整
-│
-├── scripts/
-│   ├── cordys.sh             # Shell CLI（主力）
-│   └── cordys.py             # Python CLI（仅兼容备用）
-│
-└── references/
-    └── crm-api.md            # API 接口文档 + L2C 链路说明
+└── skills/
+    └── cordys-crm/           # 技能子模块
+        ├── SKILL.md          # 入口编排
+        ├── registry.json     # 技能清单
+        ├── .env              # API 凭证（不入库）
+        ├── Cordys.md         # 运行时身份缓存（不入库）
+        │
+        ├── core/             # 引擎晶格
+        │   ├── role-engine.md        # 🧠 身份 → 人格绑定
+        │   ├── cli-spec.md           # ⚙️ 自然语言 → cordys.sh 语义翻译
+        │   ├── cli-reference.md      # 📖 字段类型 → 操作符速查
+        │   ├── output-engine.md      # 🧾 JSON → 人类可读格式化
+        │   ├── risk-engine.md        # ⚠️ 异常检测（单模块 + 跨模块链断裂）
+        │   ├── linkage-engine.md     # 🔗 L2C 正向追溯 / 反向溯源
+        │   ├── funnel-engine.md      # 📊 管道聚合与预测
+        │   └── workflow-engine.md    # 🗺️ 意图 → 工作流匹配
+        │
+        ├── profiles/         # 人格定义
+        │   ├── sales.md              # 销售：行动优先，个人视角
+        │   ├── sales-manager.md      # 经理：排名优先，下钻分析
+        │   ├── executive.md          # 高管：趋势优先，公司全景
+        │   ├── contract-admin.md     # 商务：合规优先，合同全生命周期
+        │   └── finance.md            # 财务：资金流优先，链路完整
+        │
+        ├── scripts/
+        │   ├── cordys.sh             # Shell CLI（主力）
+        │   └── cordys.py             # Python CLI（仅兼容备用）
+        │
+        └── references/
+            └── crm-api.md            # API 接口文档 + L2C 链路说明
 ```
 
 ---
