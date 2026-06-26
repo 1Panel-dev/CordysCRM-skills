@@ -30,7 +30,8 @@ security:
   ├─ 单模块查询？→ 现有 page/search/get 流程
   ├─ L2C 链路追踪？→ linkage-engine（跨模块关联）
   ├─ 漏斗/管道分析？→ funnel-engine（多模块聚合）
-  ├─ 模糊工作指令？→ workflow-engine（自动匹配工作流）
+  ├─ 模糊工作指令？→ intent-engine（意图路由 + 自动匹配工作流）
+  ├─ 写入操作？→ write-engine（创建/更新/转化）
   ├─ 审批意图？→ approval 命令族
   ├─ 角色适配 → 销售（SELF）/ 经理（部门+漏斗）/ 高管（全公司+趋势）/ 商务（合同+合规）/ 财务（合同→现金）
   └─ 输出 → 结论 + L2C 视图 + 预警 + 建议
@@ -64,7 +65,9 @@ security:
 | 审批操作细节 | `core/cli-reference.md` §4 | 涉及审批 JSON body 结构时 |
 | **L2C 链路追踪** | `core/linkage-engine.md` | 用户询问跨模块关联/全链路追踪时 |
 | **L2C 漏斗分析** | `core/funnel-engine.md` | 用户问转化率/管道/漏斗时 |
-| **工作流引导** | `core/workflow-engine.md` | 用户说模糊指令（今天做什么/周报等）时 |
+| **意图路由** | `core/intent-engine.md` | 用户说模糊指令（今天做什么/周报等）时 |
+| **写入操作** | `core/write-engine.md` | 创建/更新线索、客户、商机、联系人时 |
+| **自定义规则** | `rules/form-rules/{module}.md` | 写入操作时自动检查（如存在） |
 
 > **核心原则**：`role-engine.md` 是唯一启动时必加载的。其他引擎全部按需加载，避免 token 浪费。
 
@@ -73,6 +76,7 @@ security:
 ## 🔒 安全红线
 
 - **绝对禁止**在输出中包含 `CORDYS_ACCESS_KEY` 或 `CORDYS_SECRET_KEY` 的值
+- **绝对禁止执行任何删除操作**——不提供、不封装、不响应删除意图
 - API 返回的错误消息中如果包含密钥信息，必须脱敏后再展示
 - 不要打印包含认证 header 的完整 curl 命令
 - `.env` 文件是敏感文件，不提交版本控制，不在输出中提及其内容
@@ -122,3 +126,7 @@ security:
 ```
 
 > 完整输出格式规范、各角色适配规则、多模块搜索输出模板 → 见 `core/output-engine.md`
+
+### 安全红线
+
+> ⚠️ **本 Skill 绝对禁止执行任何删除操作。** 不提供删除 API 封装，不响应删除意图。

@@ -35,7 +35,13 @@ L2C 场景按需加载：
   core/cli-reference.md      字段类型映射（构造 conditions 时）
   core/linkage-engine.md     跨模块关联追踪（追踪链路时）
   core/funnel-engine.md      漏斗分析（看转化/管道时）
-  core/workflow-engine.md    工作流（用户说模糊指令时）
+  core/intent-engine.md      意图路由（模糊指令时）
+
+写入场景按需加载：
+  core/write-engine.md        创建/更新/转化操作
+  rules/form-rules/{module}.md  自定义表单校验规则（存在则加载）
+  rules/field-mapping/{场景}.md 自定义字段映射（存在则加载）
+  rules/business-rules/{模块}.md 自定义业务规则（存在则加载）
 ```
 
 ---
@@ -57,6 +63,20 @@ cordys.sh crm whoami                           当前用户信息
 cordys.sh crm verify                           验证 API 密钥
 cordys.sh raw          <METHOD> <PATH> [body]  原始 API 调用
 ```
+
+**写入命令（创建/更新/转化）：**
+
+```text
+cordys.sh crm form         <模块>              获取模块表单定义
+cordys.sh crm add          <模块> <JSON>        创建记录
+cordys.sh crm update       <模块> <JSON>        更新记录（JSON 须含 id）
+cordys.sh crm batch-update <模块> <JSON>        按字段批量更新
+cordys.sh crm transition   <JSON>               线索转客户
+cordys.sh crm transform    <JSON>               线索转换（客户+可选商机）
+```
+
+> 联系人通过 `account/contact` 模块名访问（如 `crm add account/contact`）。
+> 写入操作完整规范见 `core/write-engine.md`。
 
 **审批命令：**
 
@@ -111,6 +131,10 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 | 跟进、跟进计划/记录 | `crm follow <plan\|record> <module> <JSON>` | 需 sourceId |
 | 全部、拉全量、查完所有页 | 执行 page，遍历所有页 | 每页后询问是否继续 |
 | 原始、自定义 | `cordys raw <METHOD> <PATH>` | 仅限信任域名 |
+| **创建、新建、添加 + 模块名** | `crm add <module>` | **见 write-engine.md** |
+| **修改、更新、编辑 + 模块名** | `crm update <module>` | **见 write-engine.md** |
+| **批量修改** | `crm batch-update <module>` | **见 write-engine.md** |
+| **线索转客户/商机** | `crm transition` / `crm transform` | **见 write-engine.md** |
 | **L2C 链路追踪** | `crm get` 起点 → `crm page` 上下游模块 | **见 §13** |
 | **漏斗分析** | 多模块并行 `crm page` → 聚合 | **见 §14** |
 | **Customer 360** | 全局搜索 + 多模块 page | **见 §15** |
@@ -121,9 +145,9 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 
 | 用户说 | 模块 | 常用命令 |
 |--------|------|---------|
-| 线索、潜客 | `lead` | page, get, search, follow |
-| 客户、公司、厂商 | `account` | page, get, search, follow, contact |
-| 商机、机会 | `opportunity` | page, get, search, follow |
+| 线索、潜客 | `lead` | page, get, search, follow, add, update |
+| 客户、公司、厂商 | `account` | page, get, search, follow, contact, add, update |
+| 商机、机会 | `opportunity` | page, get, search, follow, add, update |
 | 合同 | `contract` | page, get, search |
 | 回款、回款计划 | `contract/payment-plan` | page |
 | 回款记录 | `contract/payment-record` | page |
@@ -134,9 +158,11 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 | 产品 | 使用 `product` 命令 | product |
 | 组织、部门 | `org` | org |
 | 成员、人员 | `members` | members |
-| 联系人 | `contact` | contact |
+| 联系人 | `contact`（查询）/ `account/contact`（写入） | contact, add, update |
 | 线索池 | `pool/lead` | page（需 poolId） |
 | 公海 | `pool/account` | page（需 poolId） |
+
+> ⚠️ **联系人**：查询使用 `contact` 模块，写入使用 `account/contact`（因联系人归属客户）。
 
 ---
 
@@ -454,19 +480,10 @@ cordys.sh crm page contract/payment-plan '{"combineSearch":{"conditions":[
 
 ---
 
-## 15. L2C 工作流
+## 15. 意图路由与工作流
 
-> 完整规范见 `core/workflow-engine.md`。
+> 完整规范见 `core/intent-engine.md`。
 
-当用户使用模糊指令（"今天做什么"、"这周怎么样"、"团队情况"）时，AI 自动匹配并执行对应工作流。
+当用户使用模糊指令（"今天做什么"、"这周怎么样"、"团队情况"）时，AI 自动匹配并路由到对应角色 profile 中的工作流章节。
 
-| 触发词 | 工作流 |
-|--------|--------|
-| 今天/今日 + 做什么/有什么/看看 | 销售晨会速览 / 财务回款日报 |
-| 这周/本周 + 怎么样/情况 | 销售周回顾 / 经理周会 |
-| 本月/这个月 + 复盘/情况 | 月度复盘 |
-| 团队/部门 + 情况/概览 | 经理团队晨会 |
-| 批一下/待审批 | 审批巡检 |
-| 回款/欠款/催款 | 财务应收账款 |
-| 看看 XX 公司 | 客户深耕 |
-| 查查 XX 合同/这笔单子 | 全链路追踪 |
+意图→工作流映射表见 `core/intent-engine.md` §3。写操作（创建/更新/转化）路由到 `core/write-engine.md`。

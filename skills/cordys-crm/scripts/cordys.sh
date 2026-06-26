@@ -184,6 +184,60 @@ crm_follow_page() {
   api POST "${crm_base}/${module}/follow/${kind}/page" --data-binary "$body"
 }
 
+# ── 写入操作（创建/更新/转化）─────────────────────────────────────────
+
+# 获取模块表单定义
+# 用法: crm_form <模块>            → GET /{module}/module/form
+#       crm_form account/contact   → GET /account/contact/module/form
+crm_form() {
+  local module="$1"
+  [[ -n "${module}" ]] || die "form 需要指定模块"
+  api GET "${crm_base}/${module}/module/form"
+}
+
+# 创建记录
+# 用法: crm_add <模块> <JSON>
+crm_add() {
+  local module="$1" payload="${2:-}"
+  [[ -n "${module}" ]] || die "add 需要指定模块（lead/account/opportunity）"
+  [[ -n "${payload}" && "${payload}" == \{* ]] || die "add 需要 JSON body"
+  api POST "${crm_base}/${module}/add" --data-binary "$payload"
+}
+
+# 更新记录
+# 用法: crm_update <模块> <JSON>   → JSON 中必须包含 id 字段
+crm_update() {
+  local module="$1" payload="${2:-}"
+  [[ -n "${module}" ]] || die "update 需要指定模块（lead/account/opportunity）"
+  [[ -n "${payload}" && "${payload}" == \{* ]] || die "update 需要 JSON body（须包含 id）"
+  api POST "${crm_base}/${module}/update" --data-binary "$payload"
+}
+
+# 批量更新（按字段批量修改多条记录的同一字段值）
+# 用法: crm_batch_update <模块> '{"ids":["id1","id2"],"fieldId":"字段key","fieldValue":"新值"}'
+crm_batch_update() {
+  local module="$1" payload="${2:-}"
+  [[ -n "${module}" ]] || die "batch-update 需要指定模块"
+  [[ -n "${payload}" && "${payload}" == \{* ]] || die "batch-update 需要 JSON body（须包含 ids, fieldId, fieldValue）"
+  api POST "${crm_base}/${module}/batch/update" --data-binary "$payload"
+}
+
+# 线索转客户
+# 用法: crm_lead_transition '{"clueId":"线索ID","name":"客户名称",...}'
+crm_lead_transition() {
+  local payload="${1:-}"
+  [[ -n "${payload}" && "${payload}" == \{* ]] || die "transition 需要 JSON body（须包含 clueId, name）"
+  api POST "${crm_base}/lead/transition/account" --data-binary "$payload"
+}
+
+# 线索转换（快速转为客户+可选商机）
+# 用法: crm_lead_transform '{"clueId":"线索ID","oppCreated":true,"oppName":"商机名称"}'
+crm_lead_transform() {
+  local payload="${1:-}"
+  [[ -n "${payload}" && "${payload}" == \{* ]] || die "transform 需要 JSON body（须包含 clueId）"
+  api POST "${crm_base}/lead/transform" --data-binary "$payload"
+}
+
 # ── 审批相关 ──────────────────────────────────────────────────────────
 
 crm_approval_todo() {
@@ -406,6 +460,14 @@ CRM 数据操作:
   crm acct-sub <子资源> <客户ID> [JSON]    客户子资源（contract/opportunity/order/payment-plan等）
   crm contract-sub <子资源> <合同ID>       合同子资源统计（invoice-stat）
 
+写入操作（创建/更新/转化）:
+  crm form <模块>                         获取模块表单定义（lead/account/opportunity/account/contact）
+  crm add <模块> <JSON>                   创建记录
+  crm update <模块> <JSON>                更新记录（JSON 须包含 id）
+  crm batch-update <模块> <JSON>          按字段批量更新
+  crm transition <JSON>                   线索转客户
+  crm transform <JSON>                    线索转换（转客户+可选商机）
+
 用户与组织:
   crm whoami                              获取当前用户信息
   crm verify                              验证 API 密钥
@@ -430,7 +492,9 @@ CRM 数据操作:
 审批 resource 操作: push（提审）, revoke（撤销）, simple-detail（列表详情）, detail（记录详情）
 审批 flow 操作: list（列表）, get（详情）, add（新建）, update（更新）, delete（删除）, enable（启用）, disable（禁用）, by-form（按表单类型）, setting（状态权限）, webhook-test（测试webhook）
 
-示例:
+写入操作支持的模块: lead（线索）, account（客户）, opportunity（商机）, account/contact（联系人）
+
+查询示例:
   cordys crm approval todo pending '{"current":1,"pageSize":30}'
   cordys crm approval todo pending '{"resourceType":"CONTRACT"}'
   cordys crm approval todo pending '{"combineSearch":{"conditions":[{"value":"2026-05-01","operator":"GT","name":"createTime","type":"DATE_TIME"}]}}'
@@ -439,6 +503,18 @@ CRM 数据操作:
   cordys crm approval action reject '{"resourceId":"xxx","remark":"驳回原因"}'
   cordys crm approval resource push '{"resourceId":"xxx"}'
   cordys crm approval flow list '{"current":1,"pageSize":30}'
+
+写入示例:
+  cordys crm form lead                        获取线索表单定义
+  cordys crm form account/contact             获取联系人表单定义
+  cordys crm add lead '{"name":"张三","phone":"13800138000","products":["p1"]}'
+  cordys crm add account '{"name":"华星科技","owner":"user123"}'
+  cordys crm add opportunity '{"name":"华星采购项目","customerId":"xxx","contactId":"yyy","amount":120000,"owner":"user123","products":["p1"]}'
+  cordys crm add account/contact '{"customerId":"xxx","name":"张三","phone":"13800138000"}'
+  cordys crm update lead '{"id":"xxx","name":"张三（已联系）"}'
+  cordys crm batch-update lead '{"ids":["id1","id2"],"fieldId":"owner","fieldValue":"user456"}'
+  cordys crm transition '{"clueId":"xxx","name":"华星科技"}'
+  cordys crm transform '{"clueId":"xxx","oppCreated":true,"oppName":"华星采购项目"}'
 
 原始 API:
   raw <方法> <路径> [curl参数...]
@@ -471,6 +547,12 @@ case "$cmd" in
       glocount) crm_glocount "$@" ;;
       acct-sub) crm_acct_sub "$@" ;;
       contract-sub) crm_contract_sub "$@" ;;
+      form)       crm_form "$@" ;;
+      add)        crm_add "$@" ;;
+      update)     crm_update "$@" ;;
+      batch-update) crm_batch_update "$@" ;;
+      transition) crm_lead_transition "$@" ;;
+      transform)  crm_lead_transform "$@" ;;
       follow)
         kind="${1:-}"; shift || die "follow 需要 plan 或 record"
         case "${kind}" in

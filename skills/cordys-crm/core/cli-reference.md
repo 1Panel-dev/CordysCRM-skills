@@ -252,3 +252,80 @@
 | `initiatorName` | 发起人 |
 | `createTime` | 创建时间 |
 | `currentApproverName` | 当前审批人 |
+
+---
+
+## 5. 写入 API 参考
+
+> 完整写入流程和规范见 `core/write-engine.md`。本节仅列出端点速查。
+
+### 5.1 表单获取端点
+
+| 端点 | 方法 | 对应 CLI | 说明 |
+|------|------|---------|------|
+| `/lead/module/form` | GET | `crm form lead` | 线索表单定义 |
+| `/account/module/form` | GET | `crm form account` | 客户表单定义 |
+| `/opportunity/module/form` | GET | `crm form opportunity` | 商机表单定义 |
+| `/account/contact/module/form` | GET | `crm form account/contact` | 联系人表单定义 |
+
+### 5.2 创建端点
+
+| 端点 | 方法 | 对应 CLI | 必填字段 |
+|------|------|---------|---------|
+| `/lead/add` | POST | `crm add lead` | `name`, `products` |
+| `/account/add` | POST | `crm add account` | `name` |
+| `/opportunity/add` | POST | `crm add opportunity` | `name`, `contactId`, `owner`, `products` |
+| `/account/contact/add` | POST | `crm add account/contact` | `customerId`, `name` |
+
+### 5.3 更新端点
+
+| 端点 | 方法 | 对应 CLI | 说明 |
+|------|------|---------|------|
+| `/lead/update` | POST | `crm update lead` | JSON 须含 `id` |
+| `/account/update` | POST | `crm update account` | JSON 须含 `id` |
+| `/opportunity/update` | POST | `crm update opportunity` | JSON 须含 `id` + 全部必填字段 |
+| `/account/contact/update` | POST | `crm update account/contact` | JSON 须含 `id` |
+| `/lead/batch/update` | POST | `crm batch-update lead` | `ids[]` + `fieldId` + `fieldValue` |
+| `/account/batch/update` | POST | `crm batch-update account` | 同上 |
+| `/opportunity/batch/update` | POST | `crm batch-update opportunity` | 同上 |
+| `/account/contact/batch/update` | POST | `crm batch-update account/contact` | 同上 |
+
+> ⚠️ 所有写入操作使用 **POST** 方法，不存在 PUT 端点。不存在批量创建（batch-add）端点。
+
+### 5.4 线索转化端点
+
+| 端点 | 方法 | 对应 CLI | 必填字段 |
+|------|------|---------|---------|
+| `/lead/transition/account` | POST | `crm transition` | `clueId`, `name` |
+| `/lead/transform` | POST | `crm transform` | `clueId` |
+
+**transition 请求体（ClueTransitionCustomerRequest）：**
+```json
+{
+  "clueId": "线索ID",
+  "name": "客户名称",
+  "owner": "负责人（可选）",
+  "moduleFields": [{"fieldId": "industry", "fieldValue": "科技"}]
+}
+```
+
+**transform 请求体（ClueTransformRequest）：**
+```json
+{
+  "clueId": "线索ID",
+  "oppCreated": true,
+  "oppName": "商机名称"
+}
+```
+
+### 5.5 通用请求体结构
+
+自定义字段通过 `moduleFields` 数组传递：
+```json
+{
+  "name": "名称",
+  "moduleFields": [
+    {"fieldId": "自定义字段ID或key", "fieldValue": "值"}
+  ]
+}
+```
