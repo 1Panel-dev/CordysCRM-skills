@@ -176,12 +176,8 @@ crm_follow_page() {
   [[ "${kind}" == "plan" || "${kind}" == "record" ]] || die "follow 子命令只支持 plan/record"
   [[ -n "${module}" ]] || die "follow ${kind} 需要指定模块（lead/account 等）"
   local body
-  if [[ "${payload}" == \{* ]]; then
-    body="${payload}"
-  else
-    body=$(page_payload "${payload}")
-  fi
-  api POST "${crm_base}/${module}/follow/${kind}/page" --data-binary "$body"
+  body=$(merge_payload "${payload}")
+  api POST "${crm_base}/follow/${kind}/page" --data-binary "$body"
 }
 
 # ── 写入操作（创建/更新/转化）─────────────────────────────────────────

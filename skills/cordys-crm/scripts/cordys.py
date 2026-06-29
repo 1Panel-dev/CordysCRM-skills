@@ -236,12 +236,10 @@ def crm_follow_page(kind: str, module: str, payload: str = "") -> str:
     if not module:
         die(f"follow {kind} 需要指定模块（lead/account 等）")
 
-    if payload.startswith("{"):
-        body = payload
-    else:
-        body = json.dumps(page_payload(payload), ensure_ascii=False)
+    merged = merge_payload(payload)
+    body = json.dumps(merged, ensure_ascii=False)
 
-    return api("POST", f"{CORDYS_CRM_DOMAIN}/{module}/follow/{kind}/page", data=body)
+    return api("POST", f"{CORDYS_CRM_DOMAIN}/follow/{kind}/page", data=body)
 
 
 # ── 审批相关 ──────────────────────────────────────────────────────────
