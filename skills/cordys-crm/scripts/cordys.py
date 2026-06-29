@@ -303,8 +303,6 @@ def crm_approval_flow(action: str, arg: str = "") -> str:
         return api("POST", f"{base}/approval-flow/add", data=arg)
     elif action == "update":
         return api("POST", f"{base}/approval-flow/update", data=arg)
-    elif action == "delete":
-        return api("GET", f"{base}/approval-flow/delete/{arg}")
     elif action == "enable":
         return api("GET", f"{base}/approval-flow/enable/{arg}?enable=true")
     elif action == "disable":
@@ -435,6 +433,55 @@ def crm_contract_sub(sub: str, contract_id: str) -> str:
     die(f"不支持的合同子资源: {sub}。支持: invoice-stat")
 
 
+# ── 写入操作（创建/更新/转化）─────────────────────────────────────────
+def crm_form(module: str) -> str:
+    """获取模块表单定义"""
+    if not module:
+        die("form 需要指定模块")
+    return api("GET", f"{CORDYS_CRM_DOMAIN}/{module}/module/form")
+
+
+def crm_add(module: str, payload: str = "") -> str:
+    """创建记录"""
+    if not module:
+        die("add 需要指定模块（lead/account/opportunity）")
+    if not payload or not payload.strip().startswith("{"):
+        die("add 需要 JSON body")
+    return api("POST", f"{CORDYS_CRM_DOMAIN}/{module}/add", data=payload)
+
+
+def crm_update(module: str, payload: str = "") -> str:
+    """更新记录（JSON 须包含 id）"""
+    if not module:
+        die("update 需要指定模块（lead/account/opportunity）")
+    if not payload or not payload.strip().startswith("{"):
+        die("update 需要 JSON body（须包含 id）")
+    return api("POST", f"{CORDYS_CRM_DOMAIN}/{module}/update", data=payload)
+
+
+def crm_batch_update(module: str, payload: str = "") -> str:
+    """按字段批量更新（须包含 ids, fieldId, fieldValue）"""
+    if not module:
+        die("batch-update 需要指定模块")
+    if not payload or not payload.strip().startswith("{"):
+        die("batch-update 需要 JSON body（须包含 ids, fieldId, fieldValue）")
+    return api("POST", f"{CORDYS_CRM_DOMAIN}/{module}/batch/update", data=payload)
+
+
+def crm_lead_transition(payload: str = "") -> str:
+    """线索转客户（须包含 clueId, name）"""
+    if not payload or not payload.strip().startswith("{"):
+        die("transition 需要 JSON body（须包含 clueId, name）")
+    return api("POST", f"{CORDYS_CRM_DOMAIN}/lead/transition/account", data=payload)
+
+
+def crm_lead_transform(payload: str = "") -> str:
+    """线索转换（快速转为客户+可选商机，须包含 clueId）"""
+    if not payload or not payload.strip().startswith("{"):
+        die("transform 需要 JSON body（须包含 clueId）")
+    return api("POST", f"{CORDYS_CRM_DOMAIN}/lead/transform", data=payload)
+
+
 # ── 原始 API 调用 ─────────────────────────────────────────────────────
 def raw_api(method: str, path: str, *args) -> str:
     """执行原始 API 调用"""
@@ -480,6 +527,14 @@ CRM 操作:
   crm product [关键词|JSON]          查询产品列表
   crm contact <模块> <ID>           获取联系人列表
 
+写入操作（创建/更新/转化）:
+  crm form <模块>                   获取模块表单定义（lead/account/opportunity/account/contact）
+  crm add <模块> <JSON>             创建记录
+  crm update <模块> <JSON>          更新记录（JSON 须包含 id）
+  crm batch-update <模块> <JSON>    按字段批量更新
+  crm transition <JSON>             线索转客户
+  crm transform <JSON>              线索转换（转客户+可选商机）
+
 统计与管道:
   crm stat <模块> [JSON]             模块金额统计（contract/opportunity/order/payment-record）
   crm stat-home <类型> [JSON]        首页统计（lead/opportunity/success/underway/dept-tree）
@@ -511,6 +566,17 @@ CRM 操作:
   cordys crm page contract/payment-plan
   cordys crm page contract/business-title
 
+写入示例:
+  cordys crm form lead
+  cordys crm add lead '{"name":"张三","phone":"13800138000","products":["p1"]}'
+  cordys crm add account '{"name":"华星科技"}'
+  cordys crm add opportunity '{"name":"项目","customerId":"xxx","contactId":"yyy","amount":120000,"owner":"user123","products":["p1"]}'
+  cordys crm add account/contact '{"customerId":"xxx","name":"张三"}'
+  cordys crm update lead '{"id":"xxx","name":"新名称"}'
+  cordys crm batch-update lead '{"ids":["id1"],"fieldId":"635449004900383","fieldValue":"admin"}'
+  cordys crm transition '{"clueId":"xxx","name":"华星科技"}'
+  cordys crm transform '{"clueId":"xxx","oppCreated":true,"oppName":"商机名"}'
+
 原始 API:
   raw <方法> <路径> [curl参数...]
   cordys raw GET /settings/fields?module=account
@@ -528,7 +594,7 @@ CRM 操作:
 审批 todo 类型: pending, processed, initiated, cc, count
 审批 action 操作: approve, reject, back, sign, revoke, batch-approve, batch-reject
 审批 resource 操作: push, revoke, simple-detail, detail
-审批 flow 操作: list, get, add, update, delete, enable, disable, by-form, setting, webhook-test
+审批 flow 操作: list, get, add, update, enable, disable, by-form, setting, webhook-test
 
 环境变量要求:
   CORDYS_ACCESS_KEY
@@ -627,6 +693,40 @@ def handle_crm_command(args: list) -> None:
         if len(rest_args) < 2:
             die("contract-sub 需要 <子资源> <合同ID>")
         print(crm_contract_sub(rest_args[0], rest_args[1]))
+
+    elif sub_cmd == "form":
+        if not rest_args:
+            die("form 需要指定模块")
+        print(crm_form(rest_args[0]))
+
+    elif sub_cmd == "add":
+        if not rest_args:
+            die("add 需要指定模块")
+        module = rest_args[0]
+        payload = rest_args[1] if len(rest_args) > 1 else ""
+        print(crm_add(module, payload))
+
+    elif sub_cmd == "update":
+        if not rest_args:
+            die("update 需要指定模块")
+        module = rest_args[0]
+        payload = rest_args[1] if len(rest_args) > 1 else ""
+        print(crm_update(module, payload))
+
+    elif sub_cmd == "batch-update":
+        if not rest_args:
+            die("batch-update 需要指定模块")
+        module = rest_args[0]
+        payload = rest_args[1] if len(rest_args) > 1 else ""
+        print(crm_batch_update(module, payload))
+
+    elif sub_cmd == "transition":
+        payload = rest_args[0] if rest_args else ""
+        print(crm_lead_transition(payload))
+
+    elif sub_cmd == "transform":
+        payload = rest_args[0] if rest_args else ""
+        print(crm_lead_transform(payload))
 
     elif sub_cmd == "follow":
         if not rest_args:

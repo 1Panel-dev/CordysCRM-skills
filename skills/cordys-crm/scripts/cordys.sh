@@ -289,7 +289,6 @@ crm_approval_flow() {
     get)          api GET "${crm_base}/approval-flow/get/$1" ;;
     add)          api POST "${crm_base}/approval-flow/add" --data-binary "$1" ;;
     update)       api POST "${crm_base}/approval-flow/update" --data-binary "$1" ;;
-    delete)       api GET "${crm_base}/approval-flow/delete/$1" ;;
     enable)       api GET "${crm_base}/approval-flow/enable/$1?enable=true" ;;
     disable)      api GET "${crm_base}/approval-flow/enable/$1?enable=false" ;;
     by-form)      api GET "${crm_base}/approval-flow/get-by-form-type/$1" ;;
@@ -486,7 +485,7 @@ CRM 数据操作:
 审批 todo 类型: pending（待审）, processed（已处理）, initiated（我发起的）, cc（抄送我）, count（统计）
 审批 action 操作: approve（同意）, reject（驳回）, back（退回）, sign（加签）, revoke（撤回）, batch-approve（批量同意）, batch-reject（批量驳回）
 审批 resource 操作: push（提审）, revoke（撤销）, simple-detail（列表详情）, detail（记录详情）
-审批 flow 操作: list（列表）, get（详情）, add（新建）, update（更新）, delete（删除）, enable（启用）, disable（禁用）, by-form（按表单类型）, setting（状态权限）, webhook-test（测试webhook）
+审批 flow 操作: list（列表）, get（详情）, add（新建）, update（更新）, enable（启用）, disable（禁用）, by-form（按表单类型）, setting（状态权限）, webhook-test（测试webhook）
 
 写入操作支持的模块: lead（线索）, account（客户）, opportunity（商机）, account/contact（联系人）
 
@@ -508,7 +507,7 @@ CRM 数据操作:
   cordys crm add opportunity '{"name":"华星采购项目","customerId":"xxx","contactId":"yyy","amount":120000,"owner":"user123","products":["p1"]}'
   cordys crm add account/contact '{"customerId":"xxx","name":"张三","phone":"13800138000"}'
   cordys crm update lead '{"id":"xxx","name":"张三（已联系）"}'
-  cordys crm batch-update lead '{"ids":["id1","id2"],"fieldId":"owner","fieldValue":"user456"}'
+  cordys crm batch-update lead '{"ids":["id1","id2"],"fieldId":"635449004900383","fieldValue":"admin"}'
   cordys crm transition '{"clueId":"xxx","name":"华星科技"}'
   cordys crm transform '{"clueId":"xxx","oppCreated":true,"oppName":"华星采购项目"}'
 

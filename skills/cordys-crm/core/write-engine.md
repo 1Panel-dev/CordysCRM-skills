@@ -239,7 +239,8 @@ cordys.sh crm update opportunity '{"id":"xxx","name":"华星采购","contactId":
 cordys.sh crm batch-update <模块> '{"ids":["id1","id2"],"fieldId":"owner","fieldValue":"user456"}'
 ```
 
-> `fieldId` 可以是系统字段 key（如 `owner`、`name`）或自定义字段 ID。
+> `fieldId` 必须使用表单定义中的实际字段 ID（如 `"635449004900372"`）、系统字段的内部 key（如 `"owner"`），或自定义字段 ID。
+> ⚠️ **注意：** `fieldId` 不支持系统字段的 `businessKey`（如 `name`、`phone`）。必须使用系统字段的内部 key（如 `owner`）或字段的实际 `id`。如果 API 返回 "Field does not exist"，请从表单定义中找到正确的字段 ID。
 
 | 场景 | 策略 |
 |------|------|
@@ -408,7 +409,7 @@ cordys.sh crm update lead '{"id":"xxx","name":"新名称"}'
 cordys.sh crm update account '{"id":"xxx","owner":"newUser"}'
 
 # 批量更新（按字段批量修改）
-cordys.sh crm batch-update lead '{"ids":["id1","id2"],"fieldId":"owner","fieldValue":"user456"}'
+cordys.sh crm batch-update lead '{"ids":["id1","id2"],"fieldId":"635449004900383","fieldValue":"admin"}'
 
 # 线索转化
 cordys.sh crm transition '{"clueId":"xxx","name":"客户名"}'
