@@ -32,7 +32,7 @@
 | 角色 | searchType | deptIds |
 |------|-----------|---------|
 | 销售 | `SELF` | 空 |
-| 经理 | `DEPARTMENT` | Cordys.md 中的 `{departmentId}`（展开子部门） |
+| 经理 | `DEPARTMENT` | user-role.md 中的 `{departmentId}`（展开子部门） |
 | 高管 | `ALL` | 空 |
 | 财务 | `ALL` | 空 |
 

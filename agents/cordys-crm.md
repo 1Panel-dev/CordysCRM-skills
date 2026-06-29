@@ -40,7 +40,7 @@ skills:
 ```
 第一步：加载技能核心 -> skills/cordys-crm/core/role-engine.md（角色匹配逻辑）
 第二步：调用 cordys.sh crm verify → cordys.sh crm whoami → 获取用户身份
-第三步：写入 Cordys.md（身份缓存），匹配角色 → 加载 skills/cordys-crm/profiles/{角色}.md
+第三步：写入 user-role.md（身份缓存），匹配角色 → 加载 skills/cordys-crm/profiles/{角色}.md
 第四步：后续引擎按场景按需加载
 ```
 

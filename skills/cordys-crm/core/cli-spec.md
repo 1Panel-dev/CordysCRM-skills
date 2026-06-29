@@ -143,7 +143,7 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 | 查询指定部门（如"销售一部有多少人"） | 从 org 树定位该部门 → 递归收集其下所有子部门 ID → 用 `departmentIds` 数组过滤 |
 | 查询多个部门（如"一部、二部、三部各有多少人"） | **每个部门分别递归展开**，各自收集完整子部门 ID → 按部门维度分别统计 |
 | 查多个部门汇总（如"一部+二部一共多少人"） | 每个部门递归展开 → 所有 ID 合并为一个数组 → 一次查询汇总 |
-| 用户说"我部门" | 从 Cordys.md 取 `departmentId` → 递归展开所有子部门 |
+| 用户说"我部门" | 从 user-role.md 取 `departmentId` → 递归展开所有子部门 |
 | 用户说"全公司"、"全部" | 不追加部门过滤，直接查全量 |
 
 **例外**：仅当用户**明确**说"只看一级"、"不要子部门"时才跳过递归。
@@ -271,14 +271,14 @@ cordys.sh crm get account <id>
 
 ---
 
-## 6. 动态参数替换（从 Cordys.md 读取）
+## 6. 动态参数替换（从 user-role.md 读取）
 
 | 占位符 | 来源字段 | 示例值 |
 |--------|---------|-------|
-| `{userId}` | Cordys.md 用户ID | `admin` |
-| `{departmentId}` | Cordys.md 部门ID（展开后为数组） | `["dept_a","dept_b"]` |
+| `{userId}` | user-role.md 用户ID | `admin` |
+| `{departmentId}` | user-role.md 部门ID（展开后为数组） | `["dept_a","dept_b"]` |
 
-> 如果 Cordys.md 中没有对应的 ID，则不追加该过滤条件。
+> 如果 user-role.md 中没有对应的 ID，则不追加该过滤条件。
 
 ---
 
@@ -379,7 +379,7 @@ cordys.sh crm get account <id>
 
 | 场景 | 行为 |
 |------|------|
-| "我部门"、不指定部门 | 使用 Cordys.md 的 `{departmentId}`，递归展开所有子部门 |
+| "我部门"、不指定部门 | 使用 user-role.md 的 `{departmentId}`，递归展开所有子部门 |
 | 指定具体部门名（如"销售一部"） | 通过 org 树定位该部门ID，递归展开所有子部门 |
 | 指定多个部门（如"一部、二部各多少人"） | 每个部门**分别**递归展开，构造各自的完整 departmentIds |
 | "全公司"、"全部" | 不使用部门过滤，viewId 用 `ALL` |

@@ -324,7 +324,7 @@ CORDYS_CRM_DOMAIN=https://你的域名
         ├── SKILL.md          # 入口编排
         ├── registry.json     # 技能清单
         ├── .env              # API 凭证（不入库）
-        ├── Cordys.md         # 运行时身份缓存（不入库）
+        ├── user-role.md         # 运行时身份缓存（不入库）
         │
         ├── core/             # 引擎晶格
         │   ├── role-engine.md        # 🧠 身份 → 人格绑定
