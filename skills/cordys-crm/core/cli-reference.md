@@ -267,6 +267,15 @@
 | `/account/module/form` | GET | `crm form account` | 客户表单定义 |
 | `/opportunity/module/form` | GET | `crm form opportunity` | 商机表单定义 |
 | `/account/contact/module/form` | GET | `crm form account/contact` | 联系人表单定义 |
+| `/follow/plan/module/form` | GET | `crm form follow/plan` | 跟进计划表单定义 |
+| `/follow/record/module/form` | GET | `crm form follow/record` | 跟进记录表单定义 |
+| `/contract/module/form` | GET | `crm form contract` | 合同表单定义 |
+| `/contract/payment-plan/module/form` | GET | `crm form contract/payment-plan` | 回款计划表单定义 |
+| `/contract/payment-record/module/form` | GET | `crm form contract/payment-record` | 回款记录表单定义 |
+| `/invoice/module/form` | GET | `crm form invoice` | 发票记录表单定义 |
+| `/contract/business-title/module/form` | GET | `crm form contract/business-title` | 工商抬头表单定义 |
+| `/opportunity/quotation/module/form` | GET | `crm form opportunity/quotation` | 报价单表单定义 |
+| `/order/module/form` | GET | `crm form order` | 订单表单定义 |
 
 ### 5.2 创建端点
 
@@ -276,6 +285,15 @@
 | `/account/add` | POST | `crm add account` | `name` |
 | `/opportunity/add` | POST | `crm add opportunity` | `name`, `contactId`, `owner`, `products` |
 | `/account/contact/add` | POST | `crm add account/contact` | `customerId`, `name` |
+| `/{module}/follow/plan/add` | POST | `crm add <module>/follow/plan` | 对应父资源 ID + `type/content/method/owner` |
+| `/{module}/follow/record/add` | POST | `crm add <module>/follow/record` | 对应父资源 ID + `type/content/followMethod/owner` |
+| `/contract/add` | POST | `crm add contract` | 实时表单必填字段 |
+| `/contract/payment-plan/add` | POST | `crm add contract/payment-plan` | 实时表单必填字段 |
+| `/contract/payment-record/add` | POST | `crm add contract/payment-record` | 实时表单必填字段 |
+| `/invoice/add` | POST | `crm add invoice` | 实时表单必填字段 |
+| `/contract/business-title/add` | POST | `crm add contract/business-title` | 实时表单必填字段 |
+| `/opportunity/quotation/add` | POST | `crm add opportunity/quotation` | `name`, `opportunityId`, `untilTime`, `products`, `moduleFields`, `moduleFormConfigDTO` |
+| `/order/add` | POST | `crm add order` | 实时表单必填字段 |
 
 ### 5.3 更新端点
 
@@ -285,12 +303,23 @@
 | `/account/update` | POST | `crm update account` | JSON 须含 `id` |
 | `/opportunity/update` | POST | `crm update opportunity` | JSON 须含 `id` + 全部必填字段 |
 | `/account/contact/update` | POST | `crm update account/contact` | JSON 须含 `id` |
+| `/{module}/follow/plan/update` | POST | `crm update <module>/follow/plan` | JSON 含 `id`、父资源 ID及完整必填字段 |
+| `/{module}/follow/record/update` | POST | `crm update <module>/follow/record` | JSON 含 `id`、父资源 ID及完整必填字段 |
+| `/contract/update` | POST | `crm update contract` | JSON 须含 `id` + 实时表单必填字段 |
+| `/contract/payment-plan/update` | POST | `crm update contract/payment-plan` | 同上 |
+| `/contract/payment-record/update` | POST | `crm update contract/payment-record` | 同上 |
+| `/invoice/update` | POST | `crm update invoice` | 同上 |
+| `/contract/business-title/update` | POST | `crm update contract/business-title` | 同上 |
+| `/opportunity/quotation/update` | POST | `crm update opportunity/quotation` | 创建必填字段 + `id`, `approvalStatus`，完整对象更新 |
+| `/order/update` | POST | `crm update order` | 同上 |
 | `/lead/batch/update` | POST | `crm batch-update lead` | `ids[]` + `fieldId` + `fieldValue` |
 | `/account/batch/update` | POST | `crm batch-update account` | 同上 |
 | `/opportunity/batch/update` | POST | `crm batch-update opportunity` | 同上 |
 | `/account/contact/batch/update` | POST | `crm batch-update account/contact` | 同上 |
+| `/contract/batch/update` | POST | `crm batch-update contract` | 同上 |
+| `/order/batch/update` | POST | `crm batch-update order` | 同上 |
 
-> ⚠️ 所有写入操作使用 **POST** 方法，不存在 PUT 端点。不存在批量创建（batch-add）端点。
+> ⚠️ 所有写入操作使用 **POST** 方法，不存在 PUT 端点。不存在批量创建（batch-add）端点；批量编辑仅支持线索、客户、商机、联系人、合同和订单。
 
 ### 5.4 线索转化端点
 

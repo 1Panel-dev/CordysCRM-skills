@@ -2,7 +2,7 @@
 name: cordys-crm
 description: |
   Cordys CRM L2C 全链路技能。支持跨模块关联追踪、漏斗分析、Customer 360、智能工作流引导，以及完整的 CLI 指令映射。
-  触发词：线索、客户、商机、合同、回款、发票、审批、漏斗、管道、CRM
+  触发词：线索、客户、商机、跟进、报价单、合同、回款、发票、工商抬头、订单、审批、漏斗、管道、CRM
 environment:
   required:
     - CORDYS_ACCESS_KEY
@@ -66,7 +66,7 @@ security:
 | **L2C 链路追踪** | `core/linkage-engine.md` | 用户询问跨模块关联/全链路追踪时 |
 | **L2C 漏斗分析** | `core/funnel-engine.md` | 用户问转化率/管道/漏斗时 |
 | **意图路由** | `core/intent-engine.md` | 用户说模糊指令（今天做什么/周报等）时 |
-| **写入操作** | `core/write-engine.md` | 创建/更新线索、客户、商机、联系人时 |
+| **写入操作** | `core/write-engine.md` | 创建/更新线索、客户、商机、联系人、跟进、报价单、合同、回款、发票、工商抬头、订单时 |
 | **自定义规则** | `rules/form-rules/{module}.md` | 写入操作时自动检查（如存在） |
 
 > **核心原则**：`role-engine.md` 是唯一启动时必加载的。其他引擎全部按需加载，避免 token 浪费。

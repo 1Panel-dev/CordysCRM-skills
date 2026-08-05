@@ -25,6 +25,11 @@
 | 合同审批进度 | `crm approval resource detail <resourceId>` |
 | 工商抬头 | `crm page contract/business-title` |
 | 报价单（合同前链路） | `crm page opportunity/quotation` |
+| 新增/修改合同 | `crm form contract` → `crm add/update contract <JSON>` |
+| 批量修改合同 | `crm batch-update contract <JSON>` |
+| 新增/修改工商抬头 | `crm form contract/business-title` → `crm add/update contract/business-title <JSON>` |
+| 新增/修改订单 | `crm form order` → `crm add/update order <JSON>` |
+| 批量修改订单 | `crm batch-update order <JSON>` |
 
 > 审核状态=`approvalStatus`，开始时间=`startTime`，结束时间=`endTime`。
 
@@ -134,6 +139,7 @@
 |------|--------|
 | 查看所有合同 | 修改线索/商机数据 |
 | 追踪合同审批流 | 查看非关联模块的跟进记录 |
+| 创建、修改合同、工商抬头和订单 | 批量编辑工商抬头或其它不支持批量的表单 |
 | 查看工商抬头和发票 | 发起回款操作 |
 | 查看报价单（合同上游） | 查看其他部门的销售数据 |
 

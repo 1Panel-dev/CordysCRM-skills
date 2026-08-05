@@ -53,6 +53,7 @@
 | `GET` | `/{module}/{id}` | 获取单条记录详情。 |
 | `POST` | `/{module}/page` | 发送上面模型的 JSON 进行分页查询（支持复杂过滤 + 关键词）。 |
 | `POST` | `/search/{module}` | 全局搜索，JSON body 结构同上，但会额外在多个字段里查关键词。 |
+| `GET` | `/opportunity/quotation/get/{id}` | 获取报价单详情。 |
 
 > `cordys raw {METHOD} {PATH}` 就是让你任意组合上述请求，并手动填写 body/headers。
 
@@ -61,10 +62,18 @@
 ## 跟进计划与记录 API
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
-| `POST` | `/follow/plan/page` | 查询某条资源的跟进计划，必须带 `sourceId`，支持 `status`、`myPlan`、`keyword` 等字段。|
-| `POST` | `/follow/record/page` | 查询某条资源的跟进记录，以 `sourceId` 为主，并可额外筛 `keyword`。|
+| `POST` | `/{module}/follow/plan/page` | 查询跟进计划；`module` 为 `lead/account/opportunity`，body 使用 `sourceId`。|
+| `POST` | `/{module}/follow/record/page` | 查询跟进记录；`module` 为 `lead/account/opportunity`，body 使用 `sourceId`。|
+| `GET` | `/follow/plan/module/form` | 获取跟进计划表单定义。|
+| `POST` | `/{module}/follow/plan/add` | 新增跟进计划。|
+| `POST` | `/{module}/follow/plan/update` | 更新跟进计划。|
+| `GET` | `/follow/record/module/form` | 获取跟进记录表单定义。|
+| `POST` | `/{module}/follow/record/add` | 新增跟进记录。|
+| `POST` | `/{module}/follow/record/update` | 更新跟进记录。|
 
-跟进 API 不区分 module，通过 payload 中的 `sourceId`、`keyword`、`combineSearch` 等条件过滤。需要查计划时请填 `status`（推荐 `ALL` / `UNFINISHED` / `FINISHED`），`myPlan` 表示是否只看本人创建的计划，`keyword` 和 `combineSearch` 仅用于模糊匹配；如果只传 `keyword` 将不带 `sourceId`，接口会返回空内容。
+查询命令把父模块放在 CLI 参数中，body 使用 `sourceId`。写入直接把完整路径作为模块，例如 `crm add lead/follow/record`，JSON 使用对应的 `clueId`、`customerId` 或 `opportunityId`。
+
+记录新增必填 `content/followMethod/owner/type`；计划新增必填 `content/method/owner/type`。更新不是 PATCH，须提交 `id` 和表单要求的完整必填字段。
 
 `page_payload` 只会补 `current` / `pageSize` / `sort` / `filters`，所以任何需要的 `sourceId` / `status` / `myPlan` 都必须在 JSON body 里显式提供。
 
@@ -84,6 +93,20 @@ Cordys CRM 里有一些隐藏在 `contract`｜ `opportunity` 模块下的二级�
 - `cordys crm page contract/business-title`：检索工商抬头列表，同样支持关键词/filters。
 - `cordys crm page contract/payment-record`：查看回款记录列表，可结合关键词、`filters` 或 `viewId` 进行精细筛选。
 - `cordys crm page opportunity/quotation`：查看报价单列表，可结合关键词、`filters` 或 `viewId` 进行精细筛选。
+- `cordys crm search opportunity/quotation`：报价单没有通用全局搜索路径，CLI 自动复用 `POST /opportunity/quotation/page`。
+- `cordys crm get opportunity/quotation <id>`：调用 `GET /opportunity/quotation/get/{id}` 获取详情。
+
+上述 L2C 业务模块也支持统一写入端点：
+
+```text
+GET  /{module}/module/form
+POST /{module}/add
+POST /{module}/update
+```
+
+其中 `{module}` 可为 `contract`、`contract/payment-plan`、`contract/payment-record`、`invoice`、`contract/business-title`、`opportunity/quotation` 或 `order`。
+
+报价单创建必填 `name`、`opportunityId`、`untilTime`、`products`、`moduleFields`、`moduleFormConfigDTO`。更新还必须包含 `id`、`approvalStatus`，并提交完整对象；只修改单个字段时先获取详情、合并旧值，再调用 update。
 
 对这些二级模块的查询依旧遵循 `page_payload` 结构（`current`/`pageSize`/`sort`/`filters`）和关键字补全，因此你只需提供想要筛选的字段，AI 会自动补上分页元数据。
 
@@ -142,8 +165,9 @@ cordys crm get lead 987654321
 
 ### 跟进计划/记录请求示例
 ```bash
-cordys.sh crm raw POST /follow/record/page '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"回访"}'
-cordys.sh crm raw POST /follow/plan/page '{"sourceId":"1751888184018919","current":1,"pageSize":10,"status":"ALL","myPlan":false}'
+cordys.sh crm follow record lead '{"sourceId":"927627065163785","current":1,"pageSize":10,"keyword":"回访"}'
+cordys.sh crm follow plan account '{"sourceId":"1751888184018919","current":1,"pageSize":10,"status":"ALL","myPlan":false}'
+cordys.sh crm add lead/follow/record '{"type":"CLUE","clueId":"927627065163785","content":"电话回访","followMethod":"方式ID","owner":"用户ID"}'
 ```
 响应返回同样的分页结构，`data.list` 含 `planTime`、`status`、`ownerName`、`content` 等字段，例如：
 ```json

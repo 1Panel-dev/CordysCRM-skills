@@ -36,7 +36,8 @@ AI 收到用户输入后，按以下优先级匹配：
 |--------|------|
 | 创建/新建/添加 + 模块名 | `write-engine.md` → create 流程 |
 | 修改/更新/编辑 + 模块名 | `write-engine.md` → update 流程 |
-| 批量创建/批量导入 | `write-engine.md` → batch create 流程 |
+| 批量修改 + 模块名 | `write-engine.md` → batch 流程；仅支持线索、客户、商机、联系人、合同和订单，其它模块直接拒绝且不拆成单条更新 |
+| 批量创建/批量导入 | 不提供 batch-add；只能按条使用 `crm add` |
 | 线索转客户/线索转商机/转化 | `write-engine.md` → transition 流程 |
 
 > 完整写操作规范见 `core/write-engine.md`。

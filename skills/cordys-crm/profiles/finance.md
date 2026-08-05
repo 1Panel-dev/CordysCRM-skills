@@ -21,6 +21,9 @@
 | 本月合同统计 | `crm page contract '{"combineSearch":{"conditions":[{"operator":"DYNAMICS","name":"signTime","value":"MONTH","type":"TIME_RANGE_PICKER"}]}}'` |
 | 发票列表 | `crm page invoice` |
 | 工商抬头 | `crm page contract/business-title` |
+| 新增/修改回款计划 | `crm form contract/payment-plan` → `crm add/update contract/payment-plan <JSON>` |
+| 新增/修改回款记录 | `crm form contract/payment-record` → `crm add/update contract/payment-record <JSON>` |
+| 新增/修改发票记录 | `crm form invoice` → `crm add/update invoice <JSON>` |
 | 合同金额统计 | `crm search contract '{"combineSearch":{"conditions":[{"operator":"DYNAMICS","name":"signTime","value":"MONTH","type":"TIME_RANGE_PICKER"}]}}'` + 遍历分页求和 |
 | 未来7天到期回款 | `crm page contract/payment-plan '{"combineSearch":{"conditions":[{"value":[now,now+7d],"operator":"BETWEEN","name":"planPayTime","type":"DATE_TIME"}]}}'` |
 | 逾期回款 | `crm page contract/payment-plan` + 筛选到期日已过+未回款 |
@@ -113,6 +116,7 @@
 |------|--------|
 | 查看所有合同和回款数据 | 修改线索/商机数据 |
 | 查看所有发票和开票状态 | 审批非财务类审批（如报价审批） |
+| 创建、修改回款计划、回款记录和发票记录 | 批量编辑回款、发票或工商抬头 |
 | 审批财务相关审批（金额、付款） | 查看销售跟进记录和客户沟通内容 |
 | 查看工商抬头 | 创建/修改合同条款 |
 

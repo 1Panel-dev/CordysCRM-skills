@@ -22,6 +22,9 @@
 | 查看协作客户 | `crm page account '{"viewId":"CUSTOMER_COLLABORATION"}'` |
 | 查看今日新增线索 | `crm search lead '{"combineSearch":{"conditions":[{"operator":"DYNAMICS","name":"createTime","value":"TODAY","type":"TIME_RANGE_PICKER"}]}}'` |
 | 查看我的签约 | `crm page contract '{"viewId":"SELF","combineSearch":{"conditions":[{"operator":"DYNAMICS","name":"signTime","value":"MONTH","type":"TIME_RANGE_PICKER"}]}}'` |
+| 查询/新增/修改报价单 | `crm page/get opportunity/quotation`；写入先 `crm form opportunity/quotation` 再 `crm add/update` |
+| 新增/修改跟进计划 | `crm form follow/plan` → `crm add/update <父模块>/follow/plan <JSON>` |
+| 新增/修改跟进记录 | `crm form follow/record` → `crm add/update <父模块>/follow/record <JSON>` |
 
 ## L2C 典型工作流
 
@@ -125,7 +128,7 @@
 |------|--------|
 | 查自己名下线索/客户/商机/合同 | 查其他销售名下数据 |
 | 查协作客户（CUSTOMER_COLLABORATION） | 查全公司漏斗数据 |
-| 创建跟进计划和记录 | 审批合同（除非是被指定的审批人） |
+| 创建、修改本人有权限的跟进计划和记录 | 审批合同（除非是被指定的审批人） |
 | 查自己相关合同的回款和发票 | 查其他部门的财务数据 |
 
 ## 角色内子类型

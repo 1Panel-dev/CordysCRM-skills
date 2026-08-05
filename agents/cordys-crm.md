@@ -109,6 +109,10 @@ cordys.sh crm page     <模块> [关键词|JSON]     分页查询
 cordys.sh crm get      <模块> <ID>              获取详情
 cordys.sh crm search   <模块> [关键词|JSON]     全局搜索
 cordys.sh crm follow   plan|record <模块> <JSON> 跟进计划/记录
+cordys.sh crm form     <模块>              获取可写表单定义
+cordys.sh crm add      <模块> <JSON>        创建记录
+cordys.sh crm update   <模块> <JSON>        更新记录
+cordys.sh crm batch-update <模块> <JSON>    批量更新同一字段（仅线索/客户/商机/联系人/合同/订单）
 cordys.sh crm contact  <模块> <ID>             联系人列表
 cordys.sh crm product  [关键词|JSON]            产品列表
 cordys.sh crm org                              组织架构
@@ -135,6 +139,7 @@ cordys.sh crm approval flow     <操作> [参数]   审批流管理
 | 回款、回款计划 | `contract/payment-plan` | ALL |
 | 回款记录 | `contract/payment-record` | ALL |
 | 发票 | `invoice` | ALL |
+| 工商抬头 | `contract/business-title` | ALL |
 | 报价单 | `opportunity/quotation` | ALL |
 | 订单 | `order` | ALL |
 | 组织、部门 | `org` | — |

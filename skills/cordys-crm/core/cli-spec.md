@@ -165,7 +165,7 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 | 原始、自定义 | `cordys raw <METHOD> <PATH>` | 仅限信任域名 |
 | **创建、新建、添加 + 模块名** | `crm add <module>` | **见 write-engine.md** |
 | **修改、更新、编辑 + 模块名** | `crm update <module>` | **见 write-engine.md** |
-| **批量修改** | `crm batch-update <module>` | **见 write-engine.md** |
+| **批量修改** | `crm batch-update <module>` | 仅支持 `lead`、`account`、`opportunity`、`account/contact`、`contract`、`order`，见 `write-engine.md` |
 | **线索转客户/商机** | `crm transition` / `crm transform` | **见 write-engine.md** |
 | **L2C 链路追踪** | `crm get` 起点 → `crm page` 上下游模块 | **见 §13** |
 | **漏斗分析** | 多模块并行 `crm page` → 聚合 | **见 §14** |
@@ -177,24 +177,28 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 
 | 用户说 | 模块 | 常用命令 |
 |--------|------|---------|
-| 线索、潜客 | `lead` | page, get, search, follow, add, update |
-| 客户、公司、厂商 | `account` | page, get, search, follow, contact, add, update |
-| 商机、机会 | `opportunity` | page, get, search, follow, add, update |
-| 合同 | `contract` | page, get, search |
-| 回款、回款计划 | `contract/payment-plan` | page |
-| 回款记录 | `contract/payment-record` | page |
-| 发票 | `invoice` | page |
-| 报价单 | `opportunity/quotation` | page |
-| 订单 | `order` | page, statistic |
-| 工商抬头 | `contract/business-title` | page |
+| 线索、潜客 | `lead` | page, get, search, follow, form, add, update, batch-update |
+| 客户、公司、厂商 | `account` | page, get, search, follow, contact, form, add, update, batch-update |
+| 商机、机会 | `opportunity` | page, get, search, follow, form, add, update, batch-update |
+| 合同 | `contract` | page, get, search, form, add, update, batch-update |
+| 回款、回款计划 | `contract/payment-plan` | page, form, add, update |
+| 回款记录 | `contract/payment-record` | page, form, add, update |
+| 发票记录 | `invoice` | page, form, add, update |
+| 报价单 | `opportunity/quotation` | page, search, get, form, add, update |
+| 订单 | `order` | page, statistic, form, add, update, batch-update |
+| 工商抬头 | `contract/business-title` | page, form, add, update |
 | 产品 | 使用 `product` 命令 | product |
 | 组织、部门 | `org` | org | ⚠️ 见 §2.2 强制规则 |
 | 成员、人员 | `members` | members | ⚠️ 见 §2.1 + §2.2 强制规则 |
-| 联系人 | `contact`（查询）/ `account/contact`（写入） | contact, add, update |
+| 跟进计划 | `follow/plan` | follow, form, add, update |
+| 跟进记录 | `follow/record` | follow, form, add, update |
+| 联系人 | `contact`（查询）/ `account/contact`（写入） | contact, form, add, update, batch-update |
 | 线索池 | `pool/lead` | page（需 poolId） |
 | 公海 | `pool/account` | page（需 poolId） |
 
 > ⚠️ **联系人**：查询使用 `contact` 模块，写入使用 `account/contact`（因联系人归属客户）。
+> **跟进写入**：模块直接使用 `<lead|account|opportunity>/follow/<plan|record>`，JSON 传对应的 `clueId/customerId/opportunityId`。
+> **报价单**：`search` 复用 `/opportunity/quotation/page`，详情使用 `/opportunity/quotation/get/{id}`；更新不是 PATCH，须先取详情再提交完整必填字段。
 
 ---
 
