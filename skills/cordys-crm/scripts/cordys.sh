@@ -137,11 +137,7 @@ crm_view() {
 
 crm_get() {
   local module="$1" id="$2"
-  if [[ "${module}" == "opportunity/quotation" ]]; then
-    api GET "${crm_base}/${module}/get/${id}"
-  else
-    api GET "${crm_base}/${module}/${id}"
-  fi
+  api GET "${crm_base}/${module}/get/${id}"
 }
 
 crm_contact() {

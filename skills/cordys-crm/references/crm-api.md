@@ -50,7 +50,7 @@
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
 | `GET` | `/{module}/view/view` | 
-| `GET` | `/{module}/{id}` | 获取单条记录详情。 |
+| `GET` | `/{module}/get/{id}` | 获取单条记录详情。 |
 | `POST` | `/{module}/page` | 发送上面模型的 JSON 进行分页查询（支持复杂过滤 + 关键词）。 |
 | `POST` | `/search/{module}` | 全局搜索，JSON body 结构同上，但会额外在多个字段里查关键词。 |
 | `GET` | `/opportunity/quotation/get/{id}` | 获取报价单详情。 |
@@ -159,7 +159,7 @@ cordys.sh crm search account '{
 ```
 cordys crm get lead 987654321
 ```
-等价于 `GET /lead/987654321`。
+等价于 `GET /lead/get/987654321`。
 
 ---
 

@@ -1,0 +1,8318 @@
+[
+  {
+    "method": "POST",
+    "path": "/account-capacity/add",
+    "summary": "添加客户库容设置",
+    "operationId": "add_47",
+    "tags": [
+      "客户库容容量设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account-capacity/delete/{id}",
+    "summary": "删除客户库容设置",
+    "operationId": "delete_47",
+    "tags": [
+      "客户库容容量设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account-capacity/get",
+    "summary": "获取客户库容设置",
+    "operationId": "list_41",
+    "tags": [
+      "客户库容容量设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account-capacity/update",
+    "summary": "修改客户库容设置",
+    "operationId": "update_52",
+    "tags": [
+      "客户库容容量设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account-pool/add",
+    "summary": "保存公海池",
+    "operationId": "add_46",
+    "tags": [
+      "公海池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account-pool/delete/{id}",
+    "summary": "删除公海池",
+    "operationId": "delete_46",
+    "tags": [
+      "公海池"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account-pool/no-pick/{id}",
+    "summary": "公海池是否存在未领取线索",
+    "operationId": "checkNoPick_1",
+    "tags": [
+      "公海池"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account-pool/page",
+    "summary": "分页获取公海池",
+    "operationId": "page_3",
+    "tags": [
+      "公海池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account-pool/quick-update",
+    "summary": "快捷保存公海池",
+    "operationId": "quickUpdate_1",
+    "tags": [
+      "公海池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account-pool/switch/{id}",
+    "summary": "启用/禁用公海池",
+    "operationId": "switchStatus_2",
+    "tags": [
+      "公海池"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account-pool/update",
+    "summary": "编辑公海池",
+    "operationId": "update_51",
+    "tags": [
+      "公海池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/add",
+    "summary": "添加客户",
+    "operationId": "add_45",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/batch/delete",
+    "summary": "批量删除客户",
+    "operationId": "batchDelete_7",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/batch/to-pool",
+    "summary": "批量移入公海",
+    "operationId": "batchToPool_1",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/batch/transfer",
+    "summary": "批量转移客户",
+    "operationId": "batchTransfer_2",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/batch/update",
+    "summary": "批量更新客户",
+    "operationId": "batchUpdate_11",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/chart",
+    "summary": "客户图表生成",
+    "operationId": "chart_5",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/collaboration/add",
+    "summary": "添加客户协作人",
+    "operationId": "add_44",
+    "tags": [
+      "客户协作人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/collaboration/batch/delete",
+    "summary": "批量删除客户协作人",
+    "operationId": "batchDelete_6",
+    "tags": [
+      "客户协作人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/collaboration/delete/{id}",
+    "summary": "删除客户协作人",
+    "operationId": "delete_45",
+    "tags": [
+      "客户协作人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/collaboration/list/{customerId}",
+    "summary": "客户协作人列表",
+    "operationId": "list_40",
+    "tags": [
+      "客户协作人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/collaboration/update",
+    "summary": "更新客户协作人",
+    "operationId": "update_50",
+    "tags": [
+      "客户协作人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/add",
+    "summary": "添加客户联系人",
+    "operationId": "add_43",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/batch/update",
+    "summary": "批量更新客户联系人",
+    "operationId": "batchUpdate_10",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/chart",
+    "summary": "联系人图表生成",
+    "operationId": "chart_4",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/delete/{id}",
+    "summary": "删除客户联系人",
+    "operationId": "delete_44",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/disable/{id}",
+    "summary": "禁用联系人",
+    "operationId": "disable",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/enable/{id}",
+    "summary": "启用联系人",
+    "operationId": "enable_17",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/export-all",
+    "summary": "联系人导出全部",
+    "operationId": "customerContactExportAll",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/export-select",
+    "summary": "导出选中联系人",
+    "operationId": "customerContactExportSelect",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/get/{id}",
+    "summary": "客户联系人详情",
+    "operationId": "get_28",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/import",
+    "summary": "导入",
+    "operationId": "realImport_12",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_11",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/list/{customerId}",
+    "summary": "客户下的联系人列表",
+    "operationId": "list_39",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_14",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/opportunity/check/{id}",
+    "summary": "检查客户联系人是否有关联商机",
+    "operationId": "checkOpportunity",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/page",
+    "summary": "联系人列表",
+    "operationId": "list_31",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/tab",
+    "summary": "所有所有和部门联系人tab是否显示",
+    "operationId": "getTabEnableConfig_11",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_12",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/update",
+    "summary": "更新客户联系人",
+    "operationId": "update_49",
+    "tags": [
+      "客户联系人"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/view/add",
+    "summary": "添加联系人视图",
+    "operationId": "add_42",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/view/delete/{id}",
+    "summary": "删除联系人视图",
+    "operationId": "delete_43",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/view/detail/{id}",
+    "summary": "联系人视图详情",
+    "operationId": "viewDetail_13",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/view/edit/pos",
+    "summary": "联系人视图-拖拽排序",
+    "operationId": "editPos_17",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/view/enable/{id}",
+    "summary": "联系人视图-启用/禁用",
+    "operationId": "enable_16",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/view/fixed/{id}",
+    "summary": "联系人视图固定/取消固定",
+    "operationId": "fixed_13",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contact/view/list",
+    "summary": "联系人视图列表",
+    "operationId": "queryList_14",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contact/view/update",
+    "summary": "编辑联系人视图",
+    "operationId": "update_48",
+    "tags": [
+      "联系人视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contract/page",
+    "summary": "客户详情-合同列表",
+    "operationId": "contractList_1",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contract/payment-plan/page",
+    "summary": "客户详情-合同回款计划列表",
+    "operationId": "contractList",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contract/payment-plan/statistic/{accountId}",
+    "summary": "客户详情-合同回款计划列表统计",
+    "operationId": "calculateCustomerPaymentPlanStatistic",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/contract/payment-record/page",
+    "summary": "客户详情-合同回款记录列表",
+    "operationId": "recordList",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contract/payment-record/statistic/{accountId}",
+    "summary": "客户详情-合同回款记录列表统计",
+    "operationId": "calculateCustomerPaymentRecordStatistic",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/contract/statistic/{accountId}",
+    "summary": "客户详情-合同列表统计",
+    "operationId": "calculateCustomerContractStatistic",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/delete/{id}",
+    "summary": "删除客户",
+    "operationId": "delete_42",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/export-all",
+    "summary": "客户导出全部",
+    "operationId": "opportunityExportAll_1",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/export-select",
+    "summary": "导出选中客户",
+    "operationId": "opportunityExportSelect_1",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/plan/add",
+    "summary": "添加客户跟进计划",
+    "operationId": "add_41",
+    "tags": [
+      "客户跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/follow/plan/cancel/{id}",
+    "summary": "取消客户跟进计划",
+    "operationId": "cancelPlan_2",
+    "tags": [
+      "客户跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/follow/plan/delete/{id}",
+    "summary": "客户删除跟进计划",
+    "operationId": "deletePlan_2",
+    "tags": [
+      "客户跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/follow/plan/get/{id}",
+    "summary": "客户跟进计划详情",
+    "operationId": "get_27",
+    "tags": [
+      "客户跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/plan/page",
+    "summary": "客户跟进计划列表",
+    "operationId": "list_30",
+    "tags": [
+      "客户跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/plan/status/update",
+    "summary": "客户更新跟进计划状态",
+    "operationId": "updateStatus_4",
+    "tags": [
+      "客户跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/plan/update",
+    "summary": "更新客户跟进计划",
+    "operationId": "update_47",
+    "tags": [
+      "客户跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/record/add",
+    "summary": "添加客户跟进记录",
+    "operationId": "add_40",
+    "tags": [
+      "客户跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/follow/record/delete/{id}",
+    "summary": "客户删除跟进记录",
+    "operationId": "deleteRecord_2",
+    "tags": [
+      "客户跟进记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/follow/record/get/{id}",
+    "summary": "客户跟进记录详情",
+    "operationId": "get_26",
+    "tags": [
+      "客户跟进记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/record/page",
+    "summary": "客户跟进记录列表",
+    "operationId": "list_29",
+    "tags": [
+      "客户跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/record/pool/page",
+    "summary": "客户公海池跟进记录列表",
+    "operationId": "poolList_1",
+    "tags": [
+      "客户跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/follow/record/update",
+    "summary": "更新客户跟进记录",
+    "operationId": "update_46",
+    "tags": [
+      "客户跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/get/{id}",
+    "summary": "客户详情",
+    "operationId": "get_25",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/import",
+    "summary": "导入",
+    "operationId": "realImport_11",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_10",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/invoice/page",
+    "summary": "客户详情-发票列表",
+    "operationId": "invoiceList_3",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/invoice/statistic/{accountId}",
+    "summary": "客户详情-发票列表统计",
+    "operationId": "calculateCustomerInvoiceStatistic_1",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/merge",
+    "summary": "合并客户",
+    "operationId": "merge",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/merge/page",
+    "summary": "分页获取合并客户列表",
+    "operationId": "sourceCustomerPage_1",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_13",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/opportunity/page",
+    "summary": "客户详情-商机列表",
+    "operationId": "list_28",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/option",
+    "summary": "客户选项",
+    "operationId": "getCustomerOptions",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/order/page",
+    "summary": "客户详情-订单列表",
+    "operationId": "invoiceList_2",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/owner/history/list/{customerId}",
+    "summary": "客户责任人历史列表",
+    "operationId": "list_38",
+    "tags": [
+      "客户责任人历史"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/page",
+    "summary": "客户列表",
+    "operationId": "list_27",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/relation/add/{customerId}",
+    "summary": "添加客户关系",
+    "operationId": "add_39",
+    "tags": [
+      "客户关系"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/relation/delete/{id}",
+    "summary": "删除客户关系",
+    "operationId": "delete_41",
+    "tags": [
+      "客户关系"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/relation/list/{customerId}",
+    "summary": "客户关系列表",
+    "operationId": "list_37",
+    "tags": [
+      "客户关系"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/relation/save/{customerId}",
+    "summary": "整体客户关系",
+    "operationId": "save_5",
+    "tags": [
+      "客户关系"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/relation/update/{customerId}",
+    "summary": "更新客户关系",
+    "operationId": "update_45",
+    "tags": [
+      "客户关系"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/tab",
+    "summary": "所有客户和部门客户tab是否显示",
+    "operationId": "getTabEnableConfig_10",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_11",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/to-pool",
+    "summary": "移入公海",
+    "operationId": "toPool_1",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/update",
+    "summary": "更新客户",
+    "operationId": "update_44",
+    "tags": [
+      "客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/view/add",
+    "summary": "添加客户视图",
+    "operationId": "add_38",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/view/delete/{id}",
+    "summary": "删除客户视图",
+    "operationId": "delete_40",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/view/detail/{id}",
+    "summary": "客户视图详情",
+    "operationId": "viewDetail_12",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/view/edit/pos",
+    "summary": "客户视图-拖拽排序",
+    "operationId": "editPos_16",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/view/enable/{id}",
+    "summary": "客户视图-启用/禁用",
+    "operationId": "enable_15",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/view/fixed/{id}",
+    "summary": "客户视图固定/取消固定",
+    "operationId": "fixed_12",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/account/view/list",
+    "summary": "客户视图列表",
+    "operationId": "queryList_13",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/account/view/update",
+    "summary": "编辑客户视图",
+    "operationId": "update_43",
+    "tags": [
+      "客户视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/account",
+    "summary": "全局搜索客户相关数据",
+    "operationId": "advancedSearchCustomer",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/account-pool",
+    "summary": "全局搜索-公海",
+    "operationId": "advancedSearchCustomerPool",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/contact",
+    "summary": "全局搜索联系人相关数据",
+    "operationId": "advancedSearchCustomerContact",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/lead",
+    "summary": "全局搜索线索相关数据",
+    "operationId": "advancedSearchClue",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/lead-pool",
+    "summary": "全局搜索-线索池",
+    "operationId": "advancedSearchCluePool",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/lead/detail",
+    "summary": "全局搜索线索详情",
+    "operationId": "getRepeatClueDetail",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/opportunity",
+    "summary": "全局搜索-商机",
+    "operationId": "advancedSearchOpportunity",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/advanced/search/opportunity/detail",
+    "summary": "全局搜索商机详情",
+    "operationId": "getRepeatOpportunityDetail",
+    "tags": [
+      "全局高级搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/add",
+    "summary": "智能体-添加",
+    "operationId": "addAgent",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/application/config",
+    "summary": "获取智能体设置",
+    "operationId": "getApplicationConfig_1",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/application/{workspaceId}",
+    "summary": "获取智能体应用",
+    "operationId": "getApplication",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/check",
+    "summary": "配置连接检测",
+    "operationId": "checkConfig",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/collect/page",
+    "summary": "智能体收藏列表",
+    "operationId": "collectPage_1",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/collect/{id}",
+    "summary": "智能体收藏",
+    "operationId": "collect_1",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/delete/{id}",
+    "summary": "智能体-删除",
+    "operationId": "delete_39",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/detail/{id}",
+    "summary": "智能体-详情",
+    "operationId": "getDetail",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/edit/pos",
+    "summary": "智能体-拖拽排序",
+    "operationId": "editPos_15",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/edition",
+    "summary": "获取版本",
+    "operationId": "getEdition",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/module/add",
+    "summary": "智能体-添加文件夹",
+    "operationId": "addFileModule_1",
+    "tags": [
+      "智能体模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/module/count",
+    "summary": "智能体-文件树数量",
+    "operationId": "moduleCount_1",
+    "tags": [
+      "智能体模块"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/module/delete",
+    "summary": "智能体-刪除文件夹",
+    "operationId": "deleteAgentModule",
+    "tags": [
+      "智能体模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/module/move",
+    "summary": "智能体-文件夹移动",
+    "operationId": "moveNode_1",
+    "tags": [
+      "智能体模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/module/rename",
+    "summary": "智能体-重命名文件夹",
+    "operationId": "rename_4",
+    "tags": [
+      "智能体模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/module/tree",
+    "summary": "智能体-文件树查询",
+    "operationId": "getTree_2",
+    "tags": [
+      "智能体模块"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/option",
+    "summary": "用户可选智能体下拉option",
+    "operationId": "getAgentList",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/page",
+    "summary": "智能体列表",
+    "operationId": "list_26",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/rename",
+    "summary": "智能体-重命名",
+    "operationId": "rename_3",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/script",
+    "summary": "获取脚本信息",
+    "operationId": "getScript",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/un-collect/{id}",
+    "summary": "智能体取消收藏",
+    "operationId": "unCollect_1",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/agent/update",
+    "summary": "智能体-更新",
+    "operationId": "updateAgent",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/agent/workspace",
+    "summary": "获取用户工作空间",
+    "operationId": "getWorkspace",
+    "tags": [
+      "智能体"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/announcement/add",
+    "summary": "新增公告",
+    "operationId": "addAnnouncement",
+    "tags": [
+      "公告"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/announcement/delete/{announcementId}",
+    "summary": "删除公告",
+    "operationId": "deleteAnnouncement",
+    "tags": [
+      "公告"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/announcement/edit",
+    "summary": "编辑公告",
+    "operationId": "updateAnnouncement",
+    "tags": [
+      "公告"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/announcement/get/{announcementId}",
+    "summary": "获取公告",
+    "operationId": "addAnnouncement_1",
+    "tags": [
+      "公告"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/announcement/page",
+    "summary": "公告列表分页查询",
+    "operationId": "getAnnouncementPage",
+    "tags": [
+      "公告"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-action/approve",
+    "summary": "同意",
+    "operationId": "approve_1",
+    "tags": [
+      "审批操作"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-action/back",
+    "summary": "退回",
+    "operationId": "back",
+    "tags": [
+      "审批操作"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-action/batch-approve",
+    "summary": "批量同意",
+    "operationId": "batchApprove_1",
+    "tags": [
+      "审批操作"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-action/batch-reject",
+    "summary": "批量驳回",
+    "operationId": "batchReject",
+    "tags": [
+      "审批操作"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-action/reject",
+    "summary": "驳回",
+    "operationId": "reject",
+    "tags": [
+      "审批操作"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-action/revoke",
+    "summary": "撤回",
+    "operationId": "revoke_1",
+    "tags": [
+      "审批操作"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-action/sign",
+    "summary": "加签",
+    "operationId": "add_37",
+    "tags": [
+      "审批操作"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-flow/add",
+    "summary": "新建审批流",
+    "operationId": "add_36",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-flow/delete/{id}",
+    "summary": "删除审批流",
+    "operationId": "delete_38",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-flow/enable/{id}",
+    "summary": "启用/禁用审批流",
+    "operationId": "updateEnable",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-flow/get-by-form-type/{formType}",
+    "summary": "根据表单类型获取审批流信息",
+    "operationId": "getByFormType",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-flow/get/{id}",
+    "summary": "获取审批流详情",
+    "operationId": "get_24",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-flow/page",
+    "summary": "审批流列表",
+    "operationId": "list_25",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-flow/status-permission/setting/{formType}",
+    "summary": "根据表单类型获取审批流状态权限配置",
+    "operationId": "getStatusPermissionSetting",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-flow/update",
+    "summary": "更新审批流",
+    "operationId": "update_42",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-flow/webhook/test",
+    "summary": "webhook-测试连接",
+    "operationId": "verifyEmailConnection_1",
+    "tags": [
+      "审批流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-resource/detail/{resourceId}",
+    "summary": "记录详情",
+    "operationId": "getRecordDetail",
+    "tags": [
+      "审批资源"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-resource/push",
+    "summary": "提审",
+    "operationId": "push",
+    "tags": [
+      "审批资源"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-resource/revoke",
+    "summary": "撤销",
+    "operationId": "revoke",
+    "tags": [
+      "审批资源"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-resource/simple-detail/{resourceId}",
+    "summary": "列表详情",
+    "operationId": "resourceDetail",
+    "tags": [
+      "审批资源"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-todo/cc/page",
+    "summary": "审核代办-抄送我的审批分页",
+    "operationId": "ccPage",
+    "tags": [
+      "审核代办"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-todo/initiated/page",
+    "summary": "审核代办-我发起的审批分页",
+    "operationId": "initiatedPage",
+    "tags": [
+      "审核代办"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/approval-todo/pending/count",
+    "summary": "审核代办-待我审批统计",
+    "operationId": "pendingCount",
+    "tags": [
+      "审核代办"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-todo/pending/page",
+    "summary": "审核代办-当前用户待审核资源分页",
+    "operationId": "todo",
+    "tags": [
+      "审核代办"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/approval-todo/processed/page",
+    "summary": "审核代办-当前用户已处理审批分页",
+    "operationId": "processedPage",
+    "tags": [
+      "审核代办"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/attachment/download/{id}",
+    "summary": "下载附件",
+    "operationId": "download_3",
+    "tags": [
+      "附件管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/attachment/preview/{id}",
+    "summary": "预览附件",
+    "operationId": "preview_2",
+    "tags": [
+      "附件管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/attachment/upload/temp",
+    "summary": "上传临时附件",
+    "operationId": "uploadTmp",
+    "tags": [
+      "附件管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/business-title/config/get",
+    "summary": "获取工商抬头配置",
+    "operationId": "getStageConfigList_3",
+    "tags": [
+      "工商抬头配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/business-title/config/switch/{id}",
+    "summary": "必填/非必填设置",
+    "operationId": "switchRequired",
+    "tags": [
+      "工商抬头配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/add",
+    "summary": "创建",
+    "operationId": "add_35",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/batch/update",
+    "summary": "批量更新合同",
+    "operationId": "batchUpdate_9",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/add",
+    "summary": "创建",
+    "operationId": "add_34",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/approval",
+    "summary": "审核通过/不通过",
+    "operationId": "approval",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/business-title/delete/{id}",
+    "summary": "删除",
+    "operationId": "delete_37",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/export-all",
+    "summary": "导出全部",
+    "operationId": "exportAll_8",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/export-select",
+    "summary": "导出选中工商抬头",
+    "operationId": "exportSelect_8",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/business-title/get/{id}",
+    "summary": "详情",
+    "operationId": "get_23",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/import",
+    "summary": "导入",
+    "operationId": "realImport_10",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/import/pre-check",
+    "summary": "excel导入检查",
+    "operationId": "preCheck_9",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/business-title/invoice/check/{id}",
+    "summary": "检查工商抬头是否开过票",
+    "operationId": "checkInvoice",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/business-title/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_12",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/page",
+    "summary": "列表",
+    "operationId": "list_24",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/business-title/revoke/{id}",
+    "summary": "撤销审批",
+    "operationId": "revoke_3",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/business-title/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_10",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/business-title/third-query",
+    "summary": "第三方接口查询工商抬头信息",
+    "operationId": "thirdQuery",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/third-query/option",
+    "summary": "第三方接口分页模糊查询工商名称",
+    "operationId": "thirdQueryOptions",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/business-title/update",
+    "summary": "更新",
+    "operationId": "update_41",
+    "tags": [
+      "工商抬头"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/contract-payment-plan/page",
+    "summary": "合同详情-回款列表",
+    "operationId": "paymentPlanList",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/contract-payment-record/page",
+    "summary": "合同详情-回款记录",
+    "operationId": "paymentRecordList",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/delete/{id}",
+    "summary": "删除",
+    "operationId": "delete_36",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/export-all",
+    "summary": "导出全部合同",
+    "operationId": "exportAll_7",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/export-select",
+    "summary": "导出选中合同",
+    "operationId": "exportSelect_7",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/get/snapshot/{id}",
+    "summary": "获取详情快照",
+    "operationId": "getSnapshot_3",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/get/{id}",
+    "summary": "详情",
+    "operationId": "get_22",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/invoice/page",
+    "summary": "合同详情-发票列表",
+    "operationId": "invoiceList_1",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/invoice/statistic/{contractId}",
+    "summary": "合同详情-发票列表统计",
+    "operationId": "calculateCustomerInvoiceStatistic",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_11",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/module/form/snapshot/{id}",
+    "summary": "获取表单快照配置",
+    "operationId": "getFormSnapshot_3",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/order/page",
+    "summary": "合同详情-订单列表",
+    "operationId": "invoiceList",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/page",
+    "summary": "列表",
+    "operationId": "list_23",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/add",
+    "summary": "添加合同回款计划",
+    "operationId": "add_33",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/delete/{id}",
+    "summary": "删除合同回款计划",
+    "operationId": "delete_35",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/export-all",
+    "summary": "导出全部回款计划",
+    "operationId": "exportAll_6",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/export-select",
+    "summary": "导出选中回款计划",
+    "operationId": "exportSelect_6",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/get/{id}",
+    "summary": "合同回款计划详情",
+    "operationId": "get_21",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/import",
+    "summary": "导入",
+    "operationId": "realImport_9",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_8",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_10",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/page",
+    "summary": "合同回款计划列表",
+    "operationId": "list_22",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/tab",
+    "summary": "tab是否显示",
+    "operationId": "getTabEnableConfig_9",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_9",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/update",
+    "summary": "更新合同回款计划",
+    "operationId": "update_40",
+    "tags": [
+      "合同回款计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/view/add",
+    "summary": "添加回款计划视图",
+    "operationId": "add_32",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/view/delete/{id}",
+    "summary": "删除回款计划视图",
+    "operationId": "delete_34",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/view/detail/{id}",
+    "summary": "回款计划视图详情",
+    "operationId": "viewDetail_11",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/view/edit/pos",
+    "summary": "回款计划视图-拖拽排序",
+    "operationId": "editPos_14",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/view/enable/{id}",
+    "summary": "回款计划视图-启用/禁用",
+    "operationId": "enable_14",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/view/fixed/{id}",
+    "summary": "回款计划视图固定/取消固定",
+    "operationId": "fixed_11",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-plan/view/list",
+    "summary": "回款计划视图列表",
+    "operationId": "queryList_12",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-plan/view/update",
+    "summary": "编辑回款计划视图",
+    "operationId": "update_39",
+    "tags": [
+      "合同回款计划视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/add",
+    "summary": "添加回款记录",
+    "operationId": "add_31",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/delete/{id}",
+    "summary": "删除回款记录",
+    "operationId": "delete_33",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/export-all",
+    "summary": "导出全部回款记录",
+    "operationId": "exportAll_5",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/export-select",
+    "summary": "导出选中回款记录",
+    "operationId": "exportSelect_5",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/get/{id}",
+    "summary": "回款记录详情",
+    "operationId": "get_20",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/import",
+    "summary": "导入",
+    "operationId": "realImport_8",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_7",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_9",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/page",
+    "summary": "回款记录列表",
+    "operationId": "list_21",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/statistic",
+    "summary": "回款统计",
+    "operationId": "searchStatistic_3",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/tab",
+    "summary": "视图TAB显示配置",
+    "operationId": "getTabEnableConfig_8",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_8",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/update",
+    "summary": "修改回款记录",
+    "operationId": "update_38",
+    "tags": [
+      "合同回款记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/view/add",
+    "summary": "添加回款记录视图",
+    "operationId": "add_30",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/view/delete/{id}",
+    "summary": "删除回款记录视图",
+    "operationId": "delete_32",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/view/detail/{id}",
+    "summary": "回款记录视图详情",
+    "operationId": "viewDetail_10",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/view/edit/pos",
+    "summary": "回款记录视图-拖拽排序",
+    "operationId": "editPos_13",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/view/enable/{id}",
+    "summary": "回款记录视图-启用/禁用",
+    "operationId": "enable_13",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/view/fixed/{id}",
+    "summary": "回款记录视图固定/取消固定",
+    "operationId": "fixed_10",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/payment-record/view/list",
+    "summary": "回款记录视图列表",
+    "operationId": "queryList_11",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/payment-record/view/update",
+    "summary": "编辑回款记录视图",
+    "operationId": "update_37",
+    "tags": [
+      "合同回款记录视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/sort",
+    "summary": "合同阶段看板拖拽排序",
+    "operationId": "sortModule_5",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/stage/add",
+    "summary": "添加合同状态流",
+    "operationId": "add_29",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/stage/advanced/config",
+    "summary": "合同流转配置保存",
+    "operationId": "advancedConfigAdd_1",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/stage/circulation-type/{type}",
+    "summary": "基础/高级流转切换",
+    "operationId": "circulationType_1",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/stage/delete/{id}",
+    "summary": "删除合同状态流",
+    "operationId": "delete_31",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/stage/get",
+    "summary": "合同状态配置列表",
+    "operationId": "getStageConfigList_2",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/stage/sort",
+    "summary": "合同阶段排序",
+    "operationId": "sort_3",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/stage/update",
+    "summary": "更新合同阶段配置",
+    "operationId": "update_35",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/stage/update-rollback",
+    "summary": "合同状态流回退设置",
+    "operationId": "update_36",
+    "tags": [
+      "合同状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/statistic",
+    "summary": "合同统计",
+    "operationId": "searchStatistic_2",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/tab",
+    "summary": "tab是否显示",
+    "operationId": "getTabEnableConfig_7",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/update",
+    "summary": "更新",
+    "operationId": "update_34",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/update/stage",
+    "summary": "更新合同阶段",
+    "operationId": "updateStage_2",
+    "tags": [
+      "合同"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/view/add",
+    "summary": "添加合同视图",
+    "operationId": "add_28",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/view/delete/{id}",
+    "summary": "删除合同视图",
+    "operationId": "delete_30",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/view/detail/{id}",
+    "summary": "合同视图详情",
+    "operationId": "viewDetail_9",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/view/edit/pos",
+    "summary": "视图-拖拽排序",
+    "operationId": "editPos_12",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/view/enable/{id}",
+    "summary": "视图-启用/禁用",
+    "operationId": "enable_12",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/view/fixed/{id}",
+    "summary": "视图固定/取消固定",
+    "operationId": "fixed_9",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/contract/view/list",
+    "summary": "合同视图列表",
+    "operationId": "queryList_10",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/contract/view/update",
+    "summary": "编辑合同视图",
+    "operationId": "update_33",
+    "tags": [
+      "合同视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/add",
+    "summary": "创建自定义表单",
+    "operationId": "create",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/admin/get/{customFormId}",
+    "summary": "查询表单管理员",
+    "operationId": "getAdmins",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/admin/set",
+    "summary": "设置表单管理员",
+    "operationId": "setAdmins",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/add",
+    "summary": "创建表单数据",
+    "operationId": "add_27",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/batch/delete",
+    "summary": "批量删除表单数据",
+    "operationId": "batchDelete_5",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/batch/update",
+    "summary": "批量更新表单数据",
+    "operationId": "batchUpdate_8",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/data/delete/{id}",
+    "summary": "删除表单数据",
+    "operationId": "delete_29",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/export-all",
+    "summary": "导出全部表单数据",
+    "operationId": "exportAll_4",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/export-select",
+    "summary": "导出选中表单数据",
+    "operationId": "exportSelect_4",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/data/get/{id}",
+    "summary": "表单数据详情",
+    "operationId": "get_19",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/import",
+    "summary": "导入表单数据",
+    "operationId": "realImport_7",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/import/pre-check",
+    "summary": "导入预检查",
+    "operationId": "importPreCheck",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/page",
+    "summary": "表单数据列表",
+    "operationId": "page_2",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/data/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_7",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/data/update",
+    "summary": "更新表单数据",
+    "operationId": "update_32",
+    "tags": [
+      "自定义表单数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/delete/{id}",
+    "summary": "删除自定义表单",
+    "operationId": "delete_28",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/disable/{id}",
+    "summary": "禁用自定义表单",
+    "operationId": "disable_2",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/enable/{id}",
+    "summary": "启用自定义表单",
+    "operationId": "enable_11",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/get/{id}",
+    "summary": "自定义表单详情",
+    "operationId": "get_18",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/list",
+    "summary": "自定义表单列表",
+    "operationId": "list_36",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/option",
+    "summary": "自定义表单选项(开启的)",
+    "operationId": "getOptions",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/role/list/{customFormId}",
+    "summary": "获取表单角色列表",
+    "operationId": "listByFormId",
+    "tags": [
+      "自定义表单角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/role/user/add",
+    "summary": "角色添加用户",
+    "operationId": "addUsers",
+    "tags": [
+      "自定义表单角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/role/user/dept/tree",
+    "summary": "获取部门用户树",
+    "operationId": "getDeptUserTree_3",
+    "tags": [
+      "自定义表单角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/role/user/remove",
+    "summary": "角色移除用户",
+    "operationId": "removeUsers",
+    "tags": [
+      "自定义表单角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/custom-form/role/user/role/tree",
+    "summary": "获取角色用户树",
+    "operationId": "getRoleUserTree_1",
+    "tags": [
+      "自定义表单角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/role/users",
+    "summary": "获取角色用户列表",
+    "operationId": "listUsersByRole",
+    "tags": [
+      "自定义表单角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/custom-form/update",
+    "summary": "更新自定义表单",
+    "operationId": "update_31",
+    "tags": [
+      "自定义表单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/add",
+    "summary": "仪表板-添加",
+    "operationId": "addDashboard",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/collect/page",
+    "summary": "仪表板收藏列表",
+    "operationId": "collectPage",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dashboard/collect/{id}",
+    "summary": "仪表板收藏",
+    "operationId": "collect",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dashboard/delete/{id}",
+    "summary": "仪表板-删除",
+    "operationId": "delete_27",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dashboard/detail/{id}",
+    "summary": "仪表板-详情",
+    "operationId": "getDashboardDetail",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/edit/pos",
+    "summary": "仪表板-拖拽排序",
+    "operationId": "editPos_11",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/module/add",
+    "summary": "仪表板-添加文件夹",
+    "operationId": "addFileModule",
+    "tags": [
+      "仪表板模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dashboard/module/count",
+    "summary": "仪表板-文件树数量",
+    "operationId": "moduleCount",
+    "tags": [
+      "仪表板模块"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/module/delete",
+    "summary": "仪表板-刪除文件夹",
+    "operationId": "deleteDashboardModule",
+    "tags": [
+      "仪表板模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/module/move",
+    "summary": "仪表板-文件夹移动",
+    "operationId": "moveNode",
+    "tags": [
+      "仪表板模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/module/rename",
+    "summary": "仪表板-重命名文件夹",
+    "operationId": "rename_2",
+    "tags": [
+      "仪表板模块"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dashboard/module/tree",
+    "summary": "仪表板-文件树查询",
+    "operationId": "getTree_1",
+    "tags": [
+      "仪表板模块"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/page",
+    "summary": "仪表板列表",
+    "operationId": "list_20",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/rename",
+    "summary": "仪表板-重命名",
+    "operationId": "rename_1",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dashboard/un-collect/{id}",
+    "summary": "仪表板取消收藏",
+    "operationId": "unCollect",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dashboard/update",
+    "summary": "仪表板-更新",
+    "operationId": "updateDashboard",
+    "tags": [
+      "仪表板"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/department/add",
+    "summary": "组织架构-添加子部门",
+    "operationId": "addDepartment",
+    "tags": [
+      "组织架构"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/department/delete",
+    "summary": "组织架构-删除部门",
+    "operationId": "deleteDepartment",
+    "tags": [
+      "组织架构"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/department/delete/check",
+    "summary": "组织架构-删除部门校验",
+    "operationId": "deleteCheck",
+    "tags": [
+      "组织架构"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/department/rename",
+    "summary": "组织架构-重命名子部门",
+    "operationId": "rename",
+    "tags": [
+      "组织架构"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/department/set-commander",
+    "summary": "组织架构-设置部门负责人",
+    "operationId": "setCommander",
+    "tags": [
+      "组织架构"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/department/sort",
+    "summary": "组织架构-部门排序",
+    "operationId": "sort_2",
+    "tags": [
+      "组织架构"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/department/tree",
+    "summary": "组织架构-部门树查询",
+    "operationId": "getTree",
+    "tags": [
+      "组织架构"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dict/add",
+    "summary": "添加字典值",
+    "operationId": "addDict",
+    "tags": [
+      "模块配置-字典管理"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dict/config/{module}",
+    "summary": "获取字典配置",
+    "operationId": "getDictConf",
+    "tags": [
+      "模块配置-字典管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dict/delete/{id}",
+    "summary": "删除字典值",
+    "operationId": "deleteDict",
+    "tags": [
+      "模块配置-字典管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/dict/get/{module}",
+    "summary": "获取字典列表",
+    "operationId": "getDictListByType",
+    "tags": [
+      "模块配置-字典管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dict/sort",
+    "summary": "字典排序",
+    "operationId": "sortModule_4",
+    "tags": [
+      "模块配置-字典管理"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dict/switch",
+    "summary": "字典开启关闭",
+    "operationId": "switchDict",
+    "tags": [
+      "模块配置-字典管理"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/dict/update",
+    "summary": "修改字典值",
+    "operationId": "updateDict",
+    "tags": [
+      "模块配置-字典管理"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/export/center/cancel/{taskId}",
+    "summary": "取消导出",
+    "operationId": "cancel",
+    "tags": [
+      "导出中心"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/export/center/download/{taskId}",
+    "summary": "下载",
+    "operationId": "download_2",
+    "tags": [
+      "导出中心"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/export/center/list",
+    "summary": "查询导出任务列表",
+    "operationId": "queryList",
+    "tags": [
+      "导出中心"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/check/repeat",
+    "summary": "校验重复值",
+    "operationId": "checkRepeat",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/field/dept/tree",
+    "summary": "获取部门树",
+    "operationId": "getDeptTree_1",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/field/display/{formKey}",
+    "summary": "获取表单配置",
+    "operationId": "getFieldList_1",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/resolve/business",
+    "summary": "解析业务ID",
+    "operationId": "resolveBusinessId",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/account",
+    "summary": "分页获取客户",
+    "operationId": "sourceCustomerPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/business-title",
+    "summary": "分页获取工商抬头信息",
+    "operationId": "sourceBusinessTitlePage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/field/source/config/{formKey}",
+    "summary": "获取数据源表单配置",
+    "operationId": "getSourceFormConfig",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/contact",
+    "summary": "分页获取联系人",
+    "operationId": "sourceContactPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/contract",
+    "summary": "分页获取合同",
+    "operationId": "sourceContractPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/contract/payment-plan",
+    "summary": "分页获取合同回款计划",
+    "operationId": "sourcePlanPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/contract/payment-record",
+    "summary": "分页获取合同回款记录",
+    "operationId": "sourceRecordPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/custom-form-data",
+    "summary": "分页获取自定义表单数据",
+    "operationId": "sourceCustomFormDataPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/invoice",
+    "summary": "分页获取发票信息",
+    "operationId": "list_19",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/lead",
+    "summary": "分页获取线索",
+    "operationId": "sourceCluePage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/opportunity",
+    "summary": "分页获取商机",
+    "operationId": "sourceOpportunityPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/order",
+    "summary": "分页获取订单列表",
+    "operationId": "list_18",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/price",
+    "summary": "分页获取产品价格表",
+    "operationId": "sourceProductPage_1",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/product",
+    "summary": "分页获取产品",
+    "operationId": "sourceProductPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/quotation",
+    "summary": "分页获取报价单",
+    "operationId": "sourceOpportunityQuotationPage",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/field/source/ref-detail",
+    "summary": "批量获取数据源引用详情",
+    "operationId": "getDatasourceRefDetail",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/field/user/dept/tree",
+    "summary": "获取部门用户树",
+    "operationId": "getDeptUserTree_2",
+    "tags": [
+      "字段管理-数据"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/plan/add",
+    "summary": "添加跟进计划",
+    "operationId": "add_26",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/delete/{id}",
+    "summary": "删除跟进计划",
+    "operationId": "delete_26",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/get/{id}",
+    "summary": "跟进计划详情",
+    "operationId": "get_17",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_8",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/plan/page",
+    "summary": "跟进记录列表",
+    "operationId": "list_17",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/plan/status/update",
+    "summary": "更新跟进计划状态",
+    "operationId": "updateStatus_3",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/tab",
+    "summary": "数据权限TAB",
+    "operationId": "getTabEnableConfig_6",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/plan/update",
+    "summary": "更新跟进计划",
+    "operationId": "update_30",
+    "tags": [
+      "跟进计划统一页面"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/plan/view/add",
+    "summary": "添加计划视图",
+    "operationId": "add_25",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/view/delete/{id}",
+    "summary": "删除计划视图",
+    "operationId": "delete_25",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/view/detail/{id}",
+    "summary": "计划视图详情",
+    "operationId": "viewDetail_8",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/plan/view/edit/pos",
+    "summary": "计划视图-拖拽排序",
+    "operationId": "editPos_10",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/view/enable/{id}",
+    "summary": "计划视图-启用/禁用",
+    "operationId": "enable_10",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/view/fixed/{id}",
+    "summary": "计划视图固定/取消固定",
+    "operationId": "fixed_8",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/plan/view/list",
+    "summary": "计划视图列表",
+    "operationId": "queryList_9",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/plan/view/update",
+    "summary": "编辑计划视图",
+    "operationId": "update_29",
+    "tags": [
+      "计划视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/record/add",
+    "summary": "添加跟进记录",
+    "operationId": "add_24",
+    "tags": [
+      "跟进记录统一页面"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/delete/{id}",
+    "summary": "删除跟进记录",
+    "operationId": "delete_24",
+    "tags": [
+      "跟进记录统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/get/{id}",
+    "summary": "跟进记录详情",
+    "operationId": "get_16",
+    "tags": [
+      "跟进记录统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_7",
+    "tags": [
+      "跟进记录统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/record/page",
+    "summary": "跟进记录列表",
+    "operationId": "list_16",
+    "tags": [
+      "跟进记录统一页面"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/tab",
+    "summary": "数据权限TAB",
+    "operationId": "getTabEnableConfig_5",
+    "tags": [
+      "跟进记录统一页面"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/record/update",
+    "summary": "更新跟进记录",
+    "operationId": "update_28",
+    "tags": [
+      "跟进记录统一页面"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/record/view/add",
+    "summary": "添加记录视图",
+    "operationId": "add_23",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/view/delete/{id}",
+    "summary": "删除记录视图",
+    "operationId": "delete_23",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/view/detail/{id}",
+    "summary": "记录视图详情",
+    "operationId": "viewDetail_7",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/record/view/edit/pos",
+    "summary": "记录视图-拖拽排序",
+    "operationId": "editPos_9",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/view/enable/{id}",
+    "summary": "记录视图-启用/禁用",
+    "operationId": "enable_9",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/view/fixed/{id}",
+    "summary": "记录视图固定/取消固定",
+    "operationId": "fixed_7",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/follow/record/view/list",
+    "summary": "记录视图列表",
+    "operationId": "queryList_8",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/follow/record/view/update",
+    "summary": "编辑记录视图",
+    "operationId": "update_27",
+    "tags": [
+      "记录视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/get-key",
+    "summary": "获取公钥",
+    "operationId": "getKey",
+    "tags": [
+      "登录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/global/search/account",
+    "summary": "全局搜索-客户",
+    "operationId": "globalSearchCustomer",
+    "tags": [
+      "全局搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/global/search/clue_pool",
+    "summary": "全局搜索-线索池",
+    "operationId": "globalSearchCluePool",
+    "tags": [
+      "全局搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/global/search/contact",
+    "summary": "全局搜索-联系人",
+    "operationId": "globalSearchContact",
+    "tags": [
+      "全局搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/global/search/customer_pool",
+    "summary": "全局搜索-公海",
+    "operationId": "globalSearchCustomerPool",
+    "tags": [
+      "全局搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/global/search/lead",
+    "summary": "全局搜索-线索",
+    "operationId": "globalSearchClue",
+    "tags": [
+      "全局搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/global/search/module/count",
+    "summary": "全局搜索-模块数量统计",
+    "operationId": "globalSearchCount",
+    "tags": [
+      "全局搜索"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/global/search/opportunity",
+    "summary": "全局搜索-商机",
+    "operationId": "globalSearchOpportunity",
+    "tags": [
+      "全局搜索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/home/statistic/department/tree",
+    "summary": "用户部门权限树",
+    "operationId": "getDepartmentTree",
+    "tags": [
+      "首页统计"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/home/statistic/lead",
+    "summary": "线索统计",
+    "operationId": "getClueStatistic",
+    "tags": [
+      "首页统计"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/home/statistic/opportunity",
+    "summary": "商机统计",
+    "operationId": "getOpportunityStatistic",
+    "tags": [
+      "首页统计"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/home/statistic/opportunity/success",
+    "summary": "赢单统计",
+    "operationId": "getSuccessOpportunityStatistic",
+    "tags": [
+      "首页统计"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/home/statistic/opportunity/underway",
+    "summary": "进行中商机统计",
+    "operationId": "getUnderwayOpportunityStatistic",
+    "tags": [
+      "首页统计"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/add",
+    "summary": "创建",
+    "operationId": "add_22",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/batch/delete",
+    "summary": "批量删除客户",
+    "operationId": "batchDelete_4",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/delete/{id}",
+    "summary": "删除",
+    "operationId": "delete_22",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/export-all",
+    "summary": "导出全部合同",
+    "operationId": "exportAll_3",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/export-select",
+    "summary": "导出选中发票",
+    "operationId": "exportSelect_3",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/get/snapshot/{id}",
+    "summary": "获取详情快照",
+    "operationId": "getSnapshot_2",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/get/{id}",
+    "summary": "详情",
+    "operationId": "get_15",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/import",
+    "summary": "导入",
+    "operationId": "realImport_6",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_6",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_6",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/module/form/snapshot/{id}",
+    "summary": "获取表单快照配置",
+    "operationId": "getFormSnapshot_2",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/page",
+    "summary": "列表",
+    "operationId": "list_15",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/tab",
+    "summary": "tab是否显示",
+    "operationId": "getTabEnableConfig_4",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_6",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/update",
+    "summary": "更新",
+    "operationId": "update_26",
+    "tags": [
+      "发票"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/view/add",
+    "summary": "添加发票视图",
+    "operationId": "add_21",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/view/delete/{id}",
+    "summary": "删除发票视图",
+    "operationId": "delete_21",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/view/detail/{id}",
+    "summary": "发票视图详情",
+    "operationId": "viewDetail_6",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/view/edit/pos",
+    "summary": "视图-拖拽排序",
+    "operationId": "editPos_8",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/view/enable/{id}",
+    "summary": "视图-启用/禁用",
+    "operationId": "enable_8",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/view/fixed/{id}",
+    "summary": "发票固定/取消固定",
+    "operationId": "fixed_6",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/invoice/view/list",
+    "summary": "发票视图列表",
+    "operationId": "queryList_7",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/invoice/view/update",
+    "summary": "编辑发票视图",
+    "operationId": "update_25",
+    "tags": [
+      "发票视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/is-login",
+    "summary": "是否登录",
+    "operationId": "isLogin",
+    "tags": [
+      "登录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead-capacity/add",
+    "summary": "添加线索库容设置",
+    "operationId": "add_20",
+    "tags": [
+      "线索库容设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead-capacity/delete/{id}",
+    "summary": "删除线索库容设置",
+    "operationId": "delete_20",
+    "tags": [
+      "线索库容设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead-capacity/get",
+    "summary": "获取线索库容设置",
+    "operationId": "list_35",
+    "tags": [
+      "线索库容设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead-capacity/update",
+    "summary": "修改线索库容设置",
+    "operationId": "update_24",
+    "tags": [
+      "线索库容设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead-pool/add",
+    "summary": "新增线索池",
+    "operationId": "add_19",
+    "tags": [
+      "线索池设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead-pool/delete/{id}",
+    "summary": "删除线索池",
+    "operationId": "delete_19",
+    "tags": [
+      "线索池设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead-pool/no-pick/{id}",
+    "summary": "线索池是否存在未领取线索",
+    "operationId": "checkNoPick",
+    "tags": [
+      "线索池设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead-pool/page",
+    "summary": "分页获取线索池",
+    "operationId": "page_1",
+    "tags": [
+      "线索池设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead-pool/quick-update",
+    "summary": "快捷保存线索池",
+    "operationId": "quickUpdate",
+    "tags": [
+      "线索池设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead-pool/switch/{id}",
+    "summary": "启用/禁用线索池",
+    "operationId": "switchStatus_1",
+    "tags": [
+      "线索池设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead-pool/update",
+    "summary": "编辑线索池",
+    "operationId": "update_23",
+    "tags": [
+      "线索池设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/add",
+    "summary": "添加线索",
+    "operationId": "add_18",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/batch/delete",
+    "summary": "批量删除线索",
+    "operationId": "batchDelete_3",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/batch/to-pool",
+    "summary": "批量移入线索池",
+    "operationId": "batchToPool",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/batch/transfer",
+    "summary": "批量转移线索",
+    "operationId": "batchTransfer_1",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/batch/update",
+    "summary": "批量更新线索",
+    "operationId": "batchUpdate_7",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/chart",
+    "summary": "客户图表生成",
+    "operationId": "chart_3",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/delete/{id}",
+    "summary": "删除线索",
+    "operationId": "delete_18",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/export",
+    "summary": "导出全部",
+    "operationId": "exportAll_2",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/export-select",
+    "summary": "导出选中",
+    "operationId": "exportSelect_2",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/plan/add",
+    "summary": "添加线索跟进计划",
+    "operationId": "add_17",
+    "tags": [
+      "线索跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/follow/plan/cancel/{id}",
+    "summary": "取消线索跟进计划",
+    "operationId": "cancelPlan_1",
+    "tags": [
+      "线索跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/follow/plan/delete/{id}",
+    "summary": "线索删除跟进计划",
+    "operationId": "deletePlan_1",
+    "tags": [
+      "线索跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/follow/plan/get/{id}",
+    "summary": "线索跟进计划详情",
+    "operationId": "get_14",
+    "tags": [
+      "线索跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/plan/page",
+    "summary": "线索跟进计划列表",
+    "operationId": "list_14",
+    "tags": [
+      "线索跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/plan/status/update",
+    "summary": "线索更新跟进计划状态",
+    "operationId": "updateStatus_2",
+    "tags": [
+      "线索跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/plan/update",
+    "summary": "更新线索跟进计划",
+    "operationId": "update_22",
+    "tags": [
+      "线索跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/record/add",
+    "summary": "添加线索跟进记录",
+    "operationId": "add_16",
+    "tags": [
+      "线索跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/follow/record/delete/{id}",
+    "summary": "线索删除跟进记录",
+    "operationId": "deleteRecord_1",
+    "tags": [
+      "线索跟进记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/follow/record/get/{id}",
+    "summary": "线索跟进记录详情",
+    "operationId": "get_13",
+    "tags": [
+      "线索跟进记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/record/page",
+    "summary": "线索跟进记录列表",
+    "operationId": "list_13",
+    "tags": [
+      "线索跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/record/pool/page",
+    "summary": "线索池跟进记录列表",
+    "operationId": "poolList",
+    "tags": [
+      "线索跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/follow/record/update",
+    "summary": "更新线索跟进记录",
+    "operationId": "update_21",
+    "tags": [
+      "线索跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/get/{id}",
+    "summary": "线索详情",
+    "operationId": "get_12",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/import",
+    "summary": "导入",
+    "operationId": "realImport_5",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_5",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_5",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/owner/history/list/{clueId}",
+    "summary": "线索责任人历史列表",
+    "operationId": "list_34",
+    "tags": [
+      "线索责任人历史"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/page",
+    "summary": "线索列表",
+    "operationId": "list_12",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/re-transition/account",
+    "summary": "批量关联已有客户",
+    "operationId": "batchTransition",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/status/update",
+    "summary": "更新线索状态",
+    "operationId": "updateStatus_1",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/tab",
+    "summary": "所有线索和部门线索tab是否显示",
+    "operationId": "getTabEnableConfig_3",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_5",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/to-pool",
+    "summary": "移入线索池",
+    "operationId": "toPool",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/transform",
+    "summary": "转换",
+    "operationId": "transform",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/transition/account",
+    "summary": "转为客户",
+    "operationId": "transitionCustomer",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/transition/account/page",
+    "summary": "客户转移分页查询",
+    "operationId": "transitionCustomerPage",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/update",
+    "summary": "更新线索",
+    "operationId": "update_20",
+    "tags": [
+      "线索"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/view/add",
+    "summary": "添加线索视图",
+    "operationId": "add_15",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/view/delete/{id}",
+    "summary": "删除线索视图",
+    "operationId": "delete_17",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/view/detail/{id}",
+    "summary": "线索视图详情",
+    "operationId": "viewDetail_5",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/view/edit/pos",
+    "summary": "线索视图-拖拽排序",
+    "operationId": "editPos_7",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/view/enable/{id}",
+    "summary": "线索视图-启用/禁用",
+    "operationId": "enable_7",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/view/fixed/{id}",
+    "summary": "线索视图固定/取消固定",
+    "operationId": "fixed_5",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/lead/view/list",
+    "summary": "线索视图列表",
+    "operationId": "queryList_6",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/lead/view/update",
+    "summary": "编辑线索视图",
+    "operationId": "update_19",
+    "tags": [
+      "线索视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/license/add",
+    "summary": "添加License",
+    "operationId": "addLicense",
+    "tags": [
+      "系统设置-授权管理"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/license/validate",
+    "summary": "License 校验",
+    "operationId": "validate_1",
+    "tags": [
+      "系统设置-授权管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/locale-language/change",
+    "summary": "修改本地语言",
+    "operationId": "localeLanguageChange",
+    "tags": [
+      "本地语言"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/login",
+    "summary": "登录",
+    "operationId": "login",
+    "tags": [
+      "登录"
+    ],
+    "requestBody": true,
+    "parameters": false
+  },
+  {
+    "method": "POST",
+    "path": "/login/log/list",
+    "summary": "系统管理-登录日志-列表查询",
+    "operationId": "loginList",
+    "tags": [
+      "登入日志"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/logout",
+    "summary": "退出登录",
+    "operationId": "logout",
+    "tags": [
+      "登录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/mask/config/get",
+    "summary": "获取脱敏字段配置",
+    "operationId": "get_11",
+    "tags": [
+      "脱敏字段配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/mask/config/save",
+    "summary": "保存配置",
+    "operationId": "save_4",
+    "tags": [
+      "脱敏字段配置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/mcp/form/config/{formKey}",
+    "summary": "获取表单配置",
+    "operationId": "getMcpField",
+    "tags": [
+      "MCP三方接口"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/message/task/batch/save",
+    "summary": "项目管理-消息管理-消息设置-批量编辑",
+    "operationId": "batchSaveMessage",
+    "tags": [
+      "消息设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/message/task/config/query",
+    "summary": "项目管理-消息管理-消息设置-获取消息配置",
+    "operationId": "getMessageConfig",
+    "tags": [
+      "消息设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/message/task/get",
+    "summary": "项目管理-消息管理-消息设置-获取消息设置",
+    "operationId": "getMessageList",
+    "tags": [
+      "消息设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/message/task/save",
+    "summary": "项目管理-消息管理-消息设置-保存消息设置",
+    "operationId": "saveMessage",
+    "tags": [
+      "消息设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/module/advanced-search/settings",
+    "summary": "高级搜索开关设置",
+    "operationId": "getAdvancedSetting",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/module/advanced-search/switch",
+    "summary": "高级搜索开关设置",
+    "operationId": "switchAdvanced",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/module/form/config/{formKey}",
+    "summary": "获取表单配置",
+    "operationId": "getFieldList",
+    "tags": [
+      "模块-表单设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/module/form/list",
+    "summary": "获取表单列表",
+    "operationId": "getFormList",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/module/form/save",
+    "summary": "保存",
+    "operationId": "save_3",
+    "tags": [
+      "模块-表单设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/module/list",
+    "summary": "获取模块设置列表",
+    "operationId": "getModuleList",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/module/role/tree",
+    "summary": "获取角色树",
+    "operationId": "getRoleTree",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/module/sort",
+    "summary": "模块排序",
+    "operationId": "sortModule_3",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/module/switch/{id}",
+    "summary": "单个模块开启或关闭",
+    "operationId": "switchModule",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/module/user/dept/tree",
+    "summary": "获取部门用户树",
+    "operationId": "getDeptUserTree_1",
+    "tags": [
+      "模块配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/navigation/list",
+    "summary": "获取导航栏列表",
+    "operationId": "getNavigationList",
+    "tags": [
+      "导航栏设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/navigation/sort",
+    "summary": "导航栏排序",
+    "operationId": "sortModule_2",
+    "tags": [
+      "导航栏设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/notification/count",
+    "summary": "消息中心-获取消息中心消息具体类型具体状态的数量",
+    "operationId": "countNotification",
+    "tags": [
+      "消息中心"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/notification/last/announcement/list",
+    "summary": "消息中心-获取用户未读的公告列表",
+    "operationId": "listLastAnnouncement",
+    "tags": [
+      "消息中心"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/notification/last/list",
+    "summary": "消息中心-获取消息中未读的最新部分消息",
+    "operationId": "listLastNotification",
+    "tags": [
+      "消息中心"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/notification/list/all/page",
+    "summary": "消息中心-获取消息中心所有消息列表",
+    "operationId": "listNotification",
+    "tags": [
+      "消息中心"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/notification/read/all",
+    "summary": "消息中心-将消息中心所有信息设置为已读消息",
+    "operationId": "readAll",
+    "tags": [
+      "消息中心"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/notification/read/{id}",
+    "summary": "消息中心-将消息设置为已读",
+    "operationId": "read",
+    "tags": [
+      "消息中心"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/operation/log/detail/{id}",
+    "summary": "系统管理-操作日志-详情",
+    "operationId": "logDetail",
+    "tags": [
+      "日志"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/operation/log/list",
+    "summary": "系统管理-操作日志-列表查询",
+    "operationId": "list_11",
+    "tags": [
+      "日志"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity-rule/add",
+    "summary": "添加商机规则",
+    "operationId": "save_2",
+    "tags": [
+      "商机规则"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity-rule/delete/{id}",
+    "summary": "删除商机规则",
+    "operationId": "delete_16",
+    "tags": [
+      "商机规则"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity-rule/page",
+    "summary": "分页获取商机规则",
+    "operationId": "page",
+    "tags": [
+      "商机规则"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity-rule/switch/{id}",
+    "summary": "启用/禁用商机规则",
+    "operationId": "switchStatus",
+    "tags": [
+      "商机规则"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity-rule/update",
+    "summary": "修改商机规则",
+    "operationId": "update_18",
+    "tags": [
+      "商机规则"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/add",
+    "summary": "添加商机",
+    "operationId": "add_14",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/batch/delete",
+    "summary": "批量删除商机",
+    "operationId": "delete",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/batch/transfer",
+    "summary": "批量转移商机",
+    "operationId": "batchTransfer",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/batch/update",
+    "summary": "批量更新商机",
+    "operationId": "batchUpdate_6",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/chart",
+    "summary": "客户图表生成",
+    "operationId": "chart_2",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/contact/list/{opportunityId}",
+    "summary": "商机下的联系人列表",
+    "operationId": "list_33",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/delete/{id}",
+    "summary": "删除商机",
+    "operationId": "deleteOpportunity",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/export-all",
+    "summary": "商机导出全部",
+    "operationId": "opportunityExportAll",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/export-select",
+    "summary": "导出选中商机",
+    "operationId": "opportunityExportSelect",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/follow/plan/add",
+    "summary": "添加商机跟进计划",
+    "operationId": "add_13",
+    "tags": [
+      "商机跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/follow/plan/cancel/{id}",
+    "summary": "取消商机跟进计划",
+    "operationId": "cancelPlan",
+    "tags": [
+      "商机跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/follow/plan/delete/{id}",
+    "summary": "商机删除跟进计划",
+    "operationId": "deletePlan",
+    "tags": [
+      "商机跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/follow/plan/get/{id}",
+    "summary": "商机跟进计划详情",
+    "operationId": "get_10",
+    "tags": [
+      "商机跟进计划"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/follow/plan/page",
+    "summary": "商机跟进计划列表",
+    "operationId": "list_10",
+    "tags": [
+      "商机跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/follow/plan/status/update",
+    "summary": "商机更新跟进计划状态",
+    "operationId": "updateStatus",
+    "tags": [
+      "商机跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/follow/plan/update",
+    "summary": "更新商机跟进计划",
+    "operationId": "update_17",
+    "tags": [
+      "商机跟进计划"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/follow/record/add",
+    "summary": "添加商机跟进记录",
+    "operationId": "add_12",
+    "tags": [
+      "商机跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/follow/record/delete/{id}",
+    "summary": "客户删除跟进记录",
+    "operationId": "deleteRecord",
+    "tags": [
+      "商机跟进记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/follow/record/get/{id}",
+    "summary": "商机跟进记录详情",
+    "operationId": "get_9",
+    "tags": [
+      "商机跟进记录"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/follow/record/page",
+    "summary": "商机跟进记录列表",
+    "operationId": "list_9",
+    "tags": [
+      "商机跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/follow/record/update",
+    "summary": "更新商机跟进记录",
+    "operationId": "update_16",
+    "tags": [
+      "商机跟进记录"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/get/{id}",
+    "summary": "商机详情",
+    "operationId": "get_8",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/import",
+    "summary": "导入",
+    "operationId": "realImport_4",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_4",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_4",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/page",
+    "summary": "商机列表",
+    "operationId": "list_8",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/add",
+    "summary": "新增报价单",
+    "operationId": "add_11",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/approve",
+    "summary": "审批报价单",
+    "operationId": "approve",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/batch/approve",
+    "summary": "批量审批报价单",
+    "operationId": "batchApprove",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/batch/update",
+    "summary": "批量更新报价单",
+    "operationId": "batchUpdate_5",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/batch/voided",
+    "summary": "批量作废报价单",
+    "operationId": "batchVoidQuotation",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/delete/{id}",
+    "summary": "删除报价单",
+    "operationId": "delete_15",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/download/{id}",
+    "summary": "下载报价单日志记录",
+    "operationId": "download_1",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/get/snapshot/{id}",
+    "summary": "获取报价单快照详情",
+    "operationId": "getSnapshot_1",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/get/{id}",
+    "summary": "获取报价单详情",
+    "operationId": "get_7",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_3",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/module/form/snapshot/{id}",
+    "summary": "获取表单快照配置",
+    "operationId": "getFormSnapshot_1",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/page",
+    "summary": "报价单列表",
+    "operationId": "list_7",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/revoke/{id}",
+    "summary": "撤销报价单审批",
+    "operationId": "revoke_2",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/tab",
+    "summary": "所有商机报价单和部门商机报价单tab是否显示",
+    "operationId": "getTabEnableConfig_2",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/update",
+    "summary": "更新报价单",
+    "operationId": "update_15",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/view/add",
+    "summary": "添加报价单视图",
+    "operationId": "add_10",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/view/delete/{id}",
+    "summary": "删除报价单视图",
+    "operationId": "delete_14",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/view/detail/{id}",
+    "summary": "报价单视图详情",
+    "operationId": "viewDetail_4",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/view/edit/pos",
+    "summary": "报价单视图-拖拽排序",
+    "operationId": "editPos_6",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/view/enable/{id}",
+    "summary": "报价单视图-启用/禁用",
+    "operationId": "enable_6",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/view/fixed/{id}",
+    "summary": "报价单视图固定/取消固定",
+    "operationId": "fixed_4",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/view/list",
+    "summary": "报价单视图列表",
+    "operationId": "queryList_5",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/quotation/view/update",
+    "summary": "编辑报价单视图",
+    "operationId": "update_14",
+    "tags": [
+      "商机报价单视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/quotation/voided/{id}",
+    "summary": "作废报价单",
+    "operationId": "voidQuotation",
+    "tags": [
+      "商机报价单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/sort",
+    "summary": "商机阶段看板拖拽排序",
+    "operationId": "sortModule_1",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/stage/add",
+    "summary": "添加商机阶段",
+    "operationId": "add_9",
+    "tags": [
+      "商机阶段设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/stage/delete/{id}",
+    "summary": "删除商机阶段",
+    "operationId": "delete_13",
+    "tags": [
+      "商机阶段设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/stage/get",
+    "summary": "商机阶段配置列表",
+    "operationId": "getStageConfigList_1",
+    "tags": [
+      "商机阶段设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/stage/sort",
+    "summary": "商机阶段排序",
+    "operationId": "sort_1",
+    "tags": [
+      "商机阶段设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/stage/update",
+    "summary": "更新商机阶段配置",
+    "operationId": "update_12",
+    "tags": [
+      "商机阶段设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/stage/update-rollback",
+    "summary": "商机阶段回退设置",
+    "operationId": "update_13",
+    "tags": [
+      "商机阶段设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/statistic",
+    "summary": "商机统计",
+    "operationId": "searchStatistic_1",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/tab",
+    "summary": "所有商机和部门商机tab是否显示",
+    "operationId": "getTabEnableConfig_1",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_4",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/update",
+    "summary": "更新商机",
+    "operationId": "update_11",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/update/stage",
+    "summary": "更新商机阶段",
+    "operationId": "updateStage_1",
+    "tags": [
+      "商机"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/view/add",
+    "summary": "添加商机视图",
+    "operationId": "add_8",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/view/delete/{id}",
+    "summary": "删除商机视图",
+    "operationId": "delete_12",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/view/detail/{id}",
+    "summary": "商机视图详情",
+    "operationId": "viewDetail_3",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/view/edit/pos",
+    "summary": "商机视图-拖拽排序",
+    "operationId": "editPos_5",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/view/enable/{id}",
+    "summary": "商机视图-启用/禁用",
+    "operationId": "enable_5",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/view/fixed/{id}",
+    "summary": "商机视图固定/取消固定",
+    "operationId": "fixed_3",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/opportunity/view/list",
+    "summary": "商机视图列表",
+    "operationId": "queryList_4",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/opportunity/view/update",
+    "summary": "编辑商机视图",
+    "operationId": "update_10",
+    "tags": [
+      "商机视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/add",
+    "summary": "创建",
+    "operationId": "add_7",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/batch/update",
+    "summary": "批量更新订单",
+    "operationId": "batchUpdate_4",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/delete/{id}",
+    "summary": "删除",
+    "operationId": "delete_11",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/download/{id}",
+    "summary": "下载订单日志记录",
+    "operationId": "download",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/get/snapshot/{id}",
+    "summary": "获取详情快照",
+    "operationId": "getSnapshot",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/get/{id}",
+    "summary": "详情",
+    "operationId": "get_6",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_2",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/module/form/snapshot/{id}",
+    "summary": "获取表单快照配置",
+    "operationId": "getFormSnapshot",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/page",
+    "summary": "列表",
+    "operationId": "list_6",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/sort",
+    "summary": "订单看板拖拽排序",
+    "operationId": "sortModule",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/stage/add",
+    "summary": "添加订单状态流",
+    "operationId": "add_6",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/stage/advanced/config",
+    "summary": "订单流转配置保存",
+    "operationId": "advancedConfigAdd",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/stage/circulation-type/{type}",
+    "summary": "基础/高级流转切换",
+    "operationId": "circulationType",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/stage/delete/{id}",
+    "summary": "删除订单状态流",
+    "operationId": "delete_10",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/stage/get",
+    "summary": "订单状态配置列表",
+    "operationId": "getStageConfigList",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/stage/sort",
+    "summary": "订单阶段排序",
+    "operationId": "sort",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/stage/update",
+    "summary": "更新订单阶段配置",
+    "operationId": "update_8",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/stage/update-rollback",
+    "summary": "订单状态流回退设置",
+    "operationId": "update_9",
+    "tags": [
+      "订单状态流设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/statistic",
+    "summary": "订单统计",
+    "operationId": "searchStatistic",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/tab",
+    "summary": "tab是否显示",
+    "operationId": "getTabEnableConfig",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/update",
+    "summary": "更新",
+    "operationId": "update_7",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/update/stage",
+    "summary": "更新订单阶段",
+    "operationId": "updateStage",
+    "tags": [
+      "订单"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/view/add",
+    "summary": "添加订单视图",
+    "operationId": "add_5",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/view/delete/{id}",
+    "summary": "删除订单视图",
+    "operationId": "delete_9",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/view/detail/{id}",
+    "summary": "订单视图详情",
+    "operationId": "viewDetail_2",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/view/edit/pos",
+    "summary": "视图-拖拽排序",
+    "operationId": "editPos_4",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/view/enable/{id}",
+    "summary": "视图-启用/禁用",
+    "operationId": "enable_4",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/view/fixed/{id}",
+    "summary": "视图固定/取消固定",
+    "operationId": "fixed_2",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/order/view/list",
+    "summary": "订单视图列表",
+    "operationId": "queryList_3",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/order/view/update",
+    "summary": "编辑订单视图",
+    "operationId": "update_6",
+    "tags": [
+      "订单视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/de-token",
+    "summary": "生成DE-Token",
+    "operationId": "generateToken",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/organization/settings/de/org/list",
+    "summary": "获取de组织列表",
+    "operationId": "getDeOrgList",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/de/sync",
+    "summary": "同步DE数据",
+    "operationId": "syncDataEase",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/email",
+    "summary": "获取邮件设置",
+    "operationId": "getEmail",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/organization/settings/email/edit",
+    "summary": "编辑邮件设置",
+    "operationId": "editEmail",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/organization/settings/email/test",
+    "summary": "系统设置-系统-系统参数-基本设置-邮件设置-测试连接",
+    "operationId": "verifyEmailConnection",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/switch-third-party",
+    "summary": "切换三方设置",
+    "operationId": "switchThirdPartySetting",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/third-party",
+    "summary": "获取三方设置",
+    "operationId": "getThirdConfig",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/organization/settings/third-party/edit",
+    "summary": "编辑三方设置",
+    "operationId": "editThirdConfig",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/third-party/get/{type}",
+    "summary": "根据类型获取开启的三方扫码设置",
+    "operationId": "getThirdConfigByType",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/third-party/sync/resource",
+    "summary": "获取最新的三方同步来源",
+    "operationId": "getLatestSyncResource",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/organization/settings/third-party/test",
+    "summary": "校验配置是否链接成功",
+    "operationId": "validate",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/organization/settings/third-party/types",
+    "summary": "获取三方应用扫码类型集合",
+    "operationId": "getThirdTypeList",
+    "tags": [
+      "企业设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/personal/center/follow/plan/list",
+    "summary": "用户跟进计划列表",
+    "operationId": "list_5",
+    "tags": [
+      "个人中心"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/personal/center/info",
+    "summary": "当前用户详情",
+    "operationId": "getUserDetail_1",
+    "tags": [
+      "个人中心"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/personal/center/info/reset",
+    "summary": "用户密码重置",
+    "operationId": "resetUserPassword",
+    "tags": [
+      "个人中心"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/personal/center/mail/code/send",
+    "summary": "",
+    "operationId": "sendCode",
+    "tags": [
+      "个人中心"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/personal/center/update",
+    "summary": "更新户详情",
+    "operationId": "updateInfo",
+    "tags": [
+      "个人中心"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pic/preview/{id}",
+    "summary": "预览图片",
+    "operationId": "preview_1",
+    "tags": [
+      "图片管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pic/upload/temp",
+    "summary": "上传临时图片",
+    "operationId": "uploadTmpPic",
+    "tags": [
+      "图片管理"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/assign",
+    "summary": "分配客户",
+    "operationId": "assign_1",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/batch-assign",
+    "summary": "批量分配客户",
+    "operationId": "batchAssign_1",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/batch-delete",
+    "summary": "批量删除客户",
+    "operationId": "batchDelete_2",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/batch-pick",
+    "summary": "批量领取客户",
+    "operationId": "batchPick_1",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/batch-update",
+    "summary": "批量更新客户",
+    "operationId": "batchUpdate_3",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/chart",
+    "summary": "客户图表生成",
+    "operationId": "chart_1",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/delete/{id}",
+    "summary": "删除客户",
+    "operationId": "delete_8",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/export-all",
+    "summary": "客户导出全部",
+    "operationId": "customerPoolExportAll",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/export-select",
+    "summary": "导出选中客户",
+    "operationId": "customerPoolExportSelect",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/get/{id}",
+    "summary": "客户详情",
+    "operationId": "get_5",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/import",
+    "summary": "导入",
+    "operationId": "realImport_3",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_3",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/options",
+    "summary": "获取当前用户公海选项",
+    "operationId": "getPoolOptions_1",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/page",
+    "summary": "客户列表",
+    "operationId": "list_4",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/pick",
+    "summary": "领取客户",
+    "operationId": "pick_1",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_3",
+    "tags": [
+      "公海客户"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/view/add",
+    "summary": "添加公海视图",
+    "operationId": "add_4",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/view/delete/{id}",
+    "summary": "删除公海视图",
+    "operationId": "delete_7",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/view/detail/{id}",
+    "summary": "公海视图详情",
+    "operationId": "viewDetail_1",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/view/edit/pos",
+    "summary": "公海视图-拖拽排序",
+    "operationId": "editPos_3",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/view/enable/{id}",
+    "summary": "公海视图-启用/禁用",
+    "operationId": "enable_3",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/view/fixed/{id}",
+    "summary": "公海视图固定/取消固定",
+    "operationId": "fixed_1",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/account/view/list",
+    "summary": "公海视图列表",
+    "operationId": "queryList_2",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/account/view/update",
+    "summary": "编辑公海视图",
+    "operationId": "update_5",
+    "tags": [
+      "公海视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/assign",
+    "summary": "分配线索",
+    "operationId": "assign",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/batch-assign",
+    "summary": "批量分配线索",
+    "operationId": "batchAssign",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/batch-delete",
+    "summary": "批量删除线索",
+    "operationId": "batchDelete_1",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/batch-pick",
+    "summary": "批量领取线索",
+    "operationId": "batchPick",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/batch-update",
+    "summary": "批量更新线索",
+    "operationId": "batchUpdate_2",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/chart",
+    "summary": "客户图表生成",
+    "operationId": "chart",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/delete/{id}",
+    "summary": "删除线索",
+    "operationId": "delete_6",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/export-all",
+    "summary": "导出全部",
+    "operationId": "exportAll_1",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/export-select",
+    "summary": "导出选中",
+    "operationId": "exportSelect_1",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/get/{id}",
+    "summary": "线索详情",
+    "operationId": "get_4",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/import",
+    "summary": "导入",
+    "operationId": "realImport_2",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_2",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/options",
+    "summary": "获取当前用户线索池选项",
+    "operationId": "getPoolOptions",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/page",
+    "summary": "线索列表",
+    "operationId": "list_3",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/pick",
+    "summary": "领取线索",
+    "operationId": "pick",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_2",
+    "tags": [
+      "线索池"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/view/add",
+    "summary": "添加线索池视图",
+    "operationId": "add_3",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/view/delete/{id}",
+    "summary": "删除线索池视图",
+    "operationId": "delete_5",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/view/detail/{id}",
+    "summary": "线索池视图详情",
+    "operationId": "viewDetail",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/view/edit/pos",
+    "summary": "线索池视图-拖拽排序",
+    "operationId": "editPos_2",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/view/enable/{id}",
+    "summary": "线索池视图-启用/禁用",
+    "operationId": "enable_2",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/view/fixed/{id}",
+    "summary": "线索池视图固定/取消固定",
+    "operationId": "fixed",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/pool/lead/view/list",
+    "summary": "线索池视图列表",
+    "operationId": "queryList_1",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/pool/lead/view/update",
+    "summary": "编辑线索池视图",
+    "operationId": "update_4",
+    "tags": [
+      "线索池视图"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/add",
+    "summary": "添加价格表",
+    "operationId": "add_2",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/batch/update",
+    "summary": "批量更新价格表",
+    "operationId": "batchUpdate_1",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/price/copy/{id}",
+    "summary": "复制价格表",
+    "operationId": "copy",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/price/delete/{id}",
+    "summary": "删除价格表",
+    "operationId": "delete_4",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/edit/pos",
+    "summary": "拖拽排序",
+    "operationId": "editPos_1",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/export",
+    "summary": "导出全部",
+    "operationId": "exportAll",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/export-select",
+    "summary": "导出选中",
+    "operationId": "exportSelect",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/price/get/{id}",
+    "summary": "价格表详情",
+    "operationId": "get_3",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/import",
+    "summary": "导入",
+    "operationId": "realImport_1",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck_1",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/price/module/form",
+    "summary": "获取表单配置",
+    "operationId": "getModuleFormConfig_1",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/page",
+    "summary": "价格列表",
+    "operationId": "list_2",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/price/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl_1",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/price/update",
+    "summary": "修改价格表",
+    "operationId": "update_3",
+    "tags": [
+      "价格表"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/add",
+    "summary": "添加产品",
+    "operationId": "add_1",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/batch/delete",
+    "summary": "批量删除产品",
+    "operationId": "batchDelete",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/batch/update",
+    "summary": "批量更新产品",
+    "operationId": "batchUpdate",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/product/delete/{id}",
+    "summary": "删除产品",
+    "operationId": "delete_3",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/edit/pos",
+    "summary": "拖拽排序",
+    "operationId": "editPos",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/product/get/{id}",
+    "summary": "产品详情",
+    "operationId": "get_2",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/import",
+    "summary": "导入产品",
+    "operationId": "realImport",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/import/pre-check",
+    "summary": "导入检查",
+    "operationId": "preCheck",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/product/list/option",
+    "summary": "获取当前组织下全部产品的id,和name集合",
+    "operationId": "listOption",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/product/module/form",
+    "summary": "获取产品表单配置",
+    "operationId": "getModuleFormConfig",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/page",
+    "summary": "产品列表",
+    "operationId": "list_1",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/product/template/download",
+    "summary": "下载导入模板",
+    "operationId": "downloadImportTpl",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/product/update",
+    "summary": "更新产品",
+    "operationId": "update_2",
+    "tags": [
+      "产品"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/role/add",
+    "summary": "添加角色",
+    "operationId": "add",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/delete/{id}",
+    "summary": "删除角色",
+    "operationId": "delete_2",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/dept/tree",
+    "summary": "获取部门树",
+    "operationId": "getDeptTree",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/get/{id}",
+    "summary": "角色详情",
+    "operationId": "get_1",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/list",
+    "summary": "角色列表",
+    "operationId": "list_32",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/permission/setting",
+    "summary": "获取权限配置",
+    "operationId": "getPermissionSetting",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/role/update",
+    "summary": "更新角色",
+    "operationId": "update_1",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/role/user/batch/delete",
+    "summary": "角色批量移除用户",
+    "operationId": "batchDeleteRoleUser",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/user/delete/{id}",
+    "summary": "角色移除用户",
+    "operationId": "deleteRoleUser",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/user/dept/tree/{roleId}",
+    "summary": "获取部门用户树",
+    "operationId": "getDeptUserTree",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/user/option/{roleId}",
+    "summary": "获取所有用户选项",
+    "operationId": "RoleUserOptionResponse",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/role/user/page",
+    "summary": "查看拥有该权限的用户",
+    "operationId": "listUser",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/role/user/relate",
+    "summary": "角色关联添加用户",
+    "operationId": "relateUser",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/role/user/role/tree/{roleId}",
+    "summary": "获取角色用户树",
+    "operationId": "getRoleUserTree",
+    "tags": [
+      "角色"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/search/config/get",
+    "summary": "获取搜索字段配置",
+    "operationId": "get",
+    "tags": [
+      "用户全局搜索字段配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/search/config/reset",
+    "summary": "重置",
+    "operationId": "reset",
+    "tags": [
+      "用户全局搜索字段配置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/search/config/save",
+    "summary": "保存配置",
+    "operationId": "save_1",
+    "tags": [
+      "用户全局搜索字段配置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sse/close",
+    "summary": "主动断开客户端连接",
+    "operationId": "close",
+    "tags": [
+      "消息通知-SSE"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sse/subscribe",
+    "summary": "客户端订阅 SSE 事件流",
+    "operationId": "subscribe",
+    "tags": [
+      "消息通知-SSE"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sso/callback/ding-talk",
+    "summary": "获取钉钉扫码登陆验证",
+    "operationId": "callbackDingTalk",
+    "tags": [
+      "sso-controller"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sso/callback/lark",
+    "summary": "获取飞书扫码登陆验证",
+    "operationId": "callbackLark",
+    "tags": [
+      "sso-controller"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sso/callback/oauth/ding-talk",
+    "summary": "",
+    "operationId": "callbackDingTalkOauth",
+    "tags": [
+      "sso-controller"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sso/callback/oauth/lark",
+    "summary": "",
+    "operationId": "callbackLarkOauth",
+    "tags": [
+      "sso-controller"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sso/callback/oauth/lark-mobile",
+    "summary": "",
+    "operationId": "callbackLarkOauthByMobile",
+    "tags": [
+      "sso-controller"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sso/callback/oauth/wecom",
+    "summary": "",
+    "operationId": "callbackWeComOauth",
+    "tags": [
+      "sso-controller"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/sso/callback/wecom",
+    "summary": "获取企业微信登陆验证",
+    "operationId": "callbackWeCom",
+    "tags": [
+      "sso-controller"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/system/version",
+    "summary": "获取当前系统版本",
+    "operationId": "getVersion",
+    "tags": [
+      "系统版本"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/tender/application/config",
+    "summary": "获取标讯设置",
+    "operationId": "getApplicationConfig",
+    "tags": [
+      "标讯"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/ui/display/info",
+    "summary": "系统设置-界面设置-保获取界面设置信息",
+    "operationId": "uiInfo",
+    "tags": [
+      "系统-界面设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/ui/display/preview",
+    "summary": "预览图片",
+    "operationId": "preview",
+    "tags": [
+      "系统-界面设置"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/ui/display/save",
+    "summary": "系统设置-界面设置-保存界面设置信息",
+    "operationId": "save",
+    "tags": [
+      "系统-界面设置"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/add",
+    "summary": "用户(员工)-添加员工",
+    "operationId": "addUser",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/admin/option",
+    "summary": "获取管理员用户下拉option",
+    "operationId": "getAdminUserList",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/api/key/add",
+    "summary": "个人中心-APIKEY-新增",
+    "operationId": "add_48",
+    "tags": [
+      "个人中心-API Keys"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/api/key/delete/{id}",
+    "summary": "个人中心-APIKEY-删除",
+    "operationId": "delete_1",
+    "tags": [
+      "个人中心-API Keys"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/api/key/disable/{id}",
+    "summary": "个人中心-APIKEY-启用",
+    "operationId": "disable_1",
+    "tags": [
+      "个人中心-API Keys"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/api/key/enable/{id}",
+    "summary": "个人中心-APIKEY-启用",
+    "operationId": "enable_1",
+    "tags": [
+      "个人中心-API Keys"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/api/key/list",
+    "summary": "个人中心-APIKEY-列表",
+    "operationId": "getUserKeysInfo",
+    "tags": [
+      "个人中心-API Keys"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/api/key/update",
+    "summary": "个人中心-APIKEY-更新",
+    "operationId": "update",
+    "tags": [
+      "个人中心-API Keys"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/batch-enable",
+    "summary": "用户(员工)-批量启用/禁用",
+    "operationId": "enable",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/batch/edit",
+    "summary": "用户(员工)-批量编辑",
+    "operationId": "batchEditUser",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/batch/reset-password",
+    "summary": "用户(员工)-批量重置密码",
+    "operationId": "batchResetPassword",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/delete/check/{id}",
+    "summary": "用户(员工)-删除校验",
+    "operationId": "deleteCheck_1",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/delete/{id}",
+    "summary": "用户(员工)-删除",
+    "operationId": "deleteUser",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/detail/{id}",
+    "summary": "用户(员工)-员工详情",
+    "operationId": "getUserDetail",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/download/template",
+    "summary": "用户(员工)-excel导入-下载模板",
+    "operationId": "userTemplateExport",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/get/{departmentId}",
+    "summary": "获取指定部门下用户",
+    "operationId": "getDepartmentUser",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/import",
+    "summary": "用户(员工)-excel导入",
+    "operationId": "importUser",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/import/pre-check",
+    "summary": "用户(员工)-excel导入检查",
+    "operationId": "preCheckXMind",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/list",
+    "summary": "用户(员工)-列表查询",
+    "operationId": "list",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/option",
+    "summary": "获取用户下拉option",
+    "operationId": "getUserList",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/reset-password/{userId}",
+    "summary": "用户(员工)-重置密码",
+    "operationId": "resetPassword",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/role/option",
+    "summary": "获取用户角色下拉option",
+    "operationId": "getUserRoleList",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/sync-check",
+    "summary": "用户(员工)-是否为第三方同步数据",
+    "operationId": "syncCheck",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/sync/check",
+    "summary": "用户(员工)-检查是否还在同步组织架构",
+    "operationId": "checkSyncUser",
+    "tags": [
+      "用户(员工)同步"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "GET",
+    "path": "/user/sync/{type}",
+    "summary": "用户(员工)-同步组织架构",
+    "operationId": "syncUser",
+    "tags": [
+      "用户(员工)同步"
+    ],
+    "requestBody": false,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/update",
+    "summary": "用户(员工)-更新",
+    "operationId": "updateUser",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/update/name",
+    "summary": "用户(员工)-更新名称",
+    "operationId": "updateName",
+    "tags": [
+      "用户(员工)"
+    ],
+    "requestBody": true,
+    "parameters": true
+  }
+]

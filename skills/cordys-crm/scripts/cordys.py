@@ -230,9 +230,7 @@ def crm_view(module: str, opts: str = "") -> str:
 
 def crm_get(module: str, id: str) -> str:
     """获取单条记录详情"""
-    if module == "opportunity/quotation":
-        return api("GET", f"{CORDYS_CRM_DOMAIN}/{module}/get/{id}")
-    return api("GET", f"{CORDYS_CRM_DOMAIN}/{module}/{id}")
+    return api("GET", f"{CORDYS_CRM_DOMAIN}/{module}/get/{id}")
 
 
 def crm_contact(module: str, id: str) -> str:
