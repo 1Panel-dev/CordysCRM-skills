@@ -118,6 +118,8 @@ cordys.sh crm approval flow     <操作> [参数]         审批流管理
 | 给完整 JSON | 原样传递，不修改 |
 | 没给任何参数 | 全部默认值 |
 
+> 商机 `page opportunity` 的 `keyword` 匹配商机名称或客户名称，不是按 ID 查询。已知 ID 时使用 `crm get opportunity <ID>`，该命令直接调用 `GET /opportunity/get/{id}`，无需改用 `raw`。按名称定位时须核对返回记录，不能默认取列表首条；需要名称精确匹配时使用 `combineSearch.conditions` 的 `name EQUALS` 条件。
+
 ### 2.1 ⚠️ 成员查询强制规则
 
 **构造 `crm members` 的 JSON 时，必须默认追加 `status=true`（启用状态）条件。**

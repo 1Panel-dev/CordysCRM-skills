@@ -40,7 +40,7 @@
 - `pageSize`：每页条数，默认 30，建议 ≤200
 - `sort`：排序对象，例如 `{"followTime":"desc"}`
 - `combineSearch.conditions`：组合筛选条件
-- `keyword`：全局关键词，模糊匹配名称/说明/电话等
+- `keyword`：关键词，匹配范围取决于接口；商机 `/opportunity/page` 匹配商机名称或客户名称，不匹配记录 ID
 - `viewId`：ALL（全部）/ SELF（我的）/ CUSTOMER_COLLABORATION（协作客户，仅 account）
 - `filters`：精细字段级过滤
 
@@ -84,6 +84,8 @@
 cordys.sh crm page opportunity "{\"current\":1,\"pageSize\":20,\"keyword\":\"线索\"}"
 ```
 会调用 `POST /opportunity/page`，body 同上。
+
+已知商机 ID 时用 `cordys.sh crm get opportunity <ID>`，对应 `GET /opportunity/get/{id}`；不要把 ID 当关键词，也不要直接取搜索结果首条作为目标。按商机名称精确定位可使用 `combineSearch.conditions` 的 `name EQUALS` 条件。
 
 ### 二级模块支持
 Cordys CRM 里有一些隐藏在 `contract`｜ `opportunity` 模块下的二级资源（比如回款计划、发票等），`cordys` CLI 通过接受包含斜杠路径的模块名来访问它们。

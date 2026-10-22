@@ -506,7 +506,27 @@ def crm_batch_update(module: str, payload: str = "") -> str:
     validate_batch_update_module(module)
     if not payload or not payload.strip().startswith("{"):
         die("batch-update 需要 JSON body（须包含 ids, fieldId, fieldValue）")
-    return api("POST", f"{CORDYS_CRM_DOMAIN}/{module}/batch/update", data=payload)
+    response = api("POST", f"{CORDYS_CRM_DOMAIN}/{module}/batch/update", data=payload)
+    try:
+        result = json.loads(response)
+        data = result.get("data")
+        if result.get("code") != 100200:
+            message = "批量更新失败，请检查响应中的 code/message"
+        elif isinstance(data, dict) and "fail" in data:
+            success, fail, skip = (data.get(key, 0) for key in ("success", "fail", "skip"))
+            if not all(type(count) is int and count >= 0 for count in (success, fail, skip)):
+                raise ValueError("invalid batch counts")
+            # errorMessages 在全部成功时也可能带有默认错误文案，以计数为准。
+            if fail or skip or not success:
+                message = f"批量更新未全部完成：成功 {success}，失败 {fail}，跳过 {skip}"
+            else:
+                return response
+        else:
+            return response
+    except (ValueError, AttributeError, TypeError):
+        message = "批量更新响应无法识别，更新结果未知"
+    print(response)
+    die(f"{message}；重试前请先核对记录，勿重复提交整个批次")
 
 
 def crm_lead_transition(payload: str = "") -> str:

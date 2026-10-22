@@ -244,7 +244,33 @@ crm_batch_update() {
   local module="${1:-}" payload="${2:-}"
   validate_batch_update_module "${module}"
   [[ -n "${payload}" && "${payload}" == \{* ]] || die "batch-update 需要 JSON body（须包含 ids, fieldId, fieldValue）"
-  api POST "${crm_base}/${module}/batch/update" --data-binary "$payload"
+  local response
+  response=$(api POST "${crm_base}/${module}/batch/update" --data-binary "$payload") || return $?
+  printf '%s\n' "$response"
+  python3 - "$response" <<'PY'
+import json, sys
+
+try:
+    result = json.loads(sys.argv[1])
+    data = result.get("data")
+    if result.get("code") != 100200:
+        message = "批量更新失败，请检查响应中的 code/message"
+    elif isinstance(data, dict) and "fail" in data:
+        success, fail, skip = (data.get(key, 0) for key in ("success", "fail", "skip"))
+        if not all(type(count) is int and count >= 0 for count in (success, fail, skip)):
+            raise ValueError("invalid batch counts")
+        # errorMessages 在全部成功时也可能带有默认错误文案，以计数为准。
+        if fail or skip or not success:
+            message = f"批量更新未全部完成：成功 {success}，失败 {fail}，跳过 {skip}"
+        else:
+            sys.exit(0)
+    else:
+        sys.exit(0)
+except (ValueError, AttributeError, TypeError):
+    message = "批量更新响应无法识别，更新结果未知"
+print(f"错误: {message}；重试前请先核对记录，勿重复提交整个批次", file=sys.stderr)
+sys.exit(1)
+PY
 }
 
 # 线索转客户

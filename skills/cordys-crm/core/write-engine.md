@@ -265,6 +265,15 @@ cordys.sh crm batch-update <模块> '{"ids":["id1","id2"],"fieldId":"owner","fie
 > `fieldId` 必须使用表单定义中的实际字段 ID（如 `"635449004900372"`）、系统字段的内部 key（如 `"owner"`），或自定义字段 ID。
 > ⚠️ **注意：** `fieldId` 不支持系统字段的 `businessKey`（如 `name`、`phone`）。必须使用系统字段的内部 key（如 `owner`）或字段的实际 `id`。如果 API 返回 "Field does not exist"，请从表单定义中找到正确的字段 ID。
 
+**批量结果判断：** 先检查顶层 `code`，再检查 `data.success / data.fail / data.skip`（接口返回计数时）。`errorMessages` 可能始终包含 `No permission or violation of field constraints!`，即使全部成功也会出现，不能仅凭该文案判断权限不足。
+
+- `success > 0`、`fail = 0`、`skip = 0`：全部成功，忽略默认错误文案。
+- `fail > 0` 或 `skip > 0`：报告成功、失败、跳过数量；仅在确有失败时结合 `errorMessages` 排查权限或字段约束。
+- 三项均为 0：没有记录被更新，不能宣称成功；先核对目标 ID 是否存在。
+- 未返回计数的接口（如商机批量更新）：检查 `code`，再用 `crm get <模块> <ID>` 回读验证。
+
+Shell 和 Python CLI 对业务错误、未全部完成或无法识别的响应返回非零退出码，同时保留原始响应在 stdout、诊断写入 stderr。部分记录可能已成功更新，重试前须逐条核对，不能自动重试整个批次。
+
 | 场景 | 策略 |
 |------|------|
 | 用户明确指定字段+值 | 直接更新该字段 |
@@ -407,6 +416,7 @@ AI: 即将批量创建 5 条线索，预览如下：
 | 响应 | 处理 |
 |------|------|
 | `code ≠ 100200` | 读取 message，格式化后展示给用户 |
+| `code = 100200`，批量结果包含计数 | 按 §4.3 检查 success/fail/skip；不能仅凭 code 宣称全部成功，也不能仅凭 errorMessages 宣称失败 |
 | 必填字段缺失 | 列出缺失字段，引导用户补充 |
 | 字段值不合法 | 说明原因 + 列出合法选项 |
 | 权限不足 | 提示用户联系管理员 |
